@@ -1,3 +1,8 @@
+![current look](image.png)
+
+
+---------------------------------
+
 # Intellij Plugin Template
 
 This is a complete template to push your Plugins much faster to the store.

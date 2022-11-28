@@ -26,7 +26,7 @@ public class TextExtension extends DiffExtension {
     var left = ((SimpleDiffViewer) viewer).getEditor1();
     var right = ((SimpleDiffViewer) viewer).getEditor2();
 
-    var textAttributes = new TextAttributes(null, null, JBColor.RED, EffectType.BOXED, Font.PLAIN);
+    var textAttributes = new TextAttributes(null, JBColor.RED, null, null, Font.PLAIN);
 
     var index = request.getUserData(PullrequestToolWindow.TEST_123);
     var reviewComments = getPullrequestService().getMergeRequests().get(index).getFiles().get(0).getReviewComments();
