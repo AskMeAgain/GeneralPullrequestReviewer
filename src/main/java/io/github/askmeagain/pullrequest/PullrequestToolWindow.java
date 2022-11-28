@@ -19,6 +19,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
+
+  public static final @NotNull Key<Integer> TEST_123 = Key.create("test123");
 
   @Getter(lazy = true)
   private final PullrequestService pullrequestService = PullrequestService.getInstance();
@@ -74,7 +77,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
         DocumentContent content1 = DiffContentFactory.getInstance().create(string);
         DocumentContent content2 = DiffContentFactory.getInstance().create(string);
         SimpleDiffRequest request = new SimpleDiffRequest("Window Title", content1, content2, "Title 1", "Title 2");
-        request.putUserData(Key.create("test123"), index);
+        request.putUserData(TEST_123, index);
         DiffManager.getInstance().showDiff(project, request);
       }
     }));

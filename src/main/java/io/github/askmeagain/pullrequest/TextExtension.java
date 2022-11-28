@@ -5,19 +5,16 @@ import com.intellij.diff.DiffExtension;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.simple.SimpleDiffViewer;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
-import io.github.askmeagain.pullrequest.dto.ReviewComment;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.List;
 
 public class TextExtension extends DiffExtension {
 
@@ -29,8 +26,9 @@ public class TextExtension extends DiffExtension {
     var left = ((SimpleDiffViewer) viewer).getEditor1();
     var right = ((SimpleDiffViewer) viewer).getEditor2();
 
-    var textAttributes = new TextAttributes(null, null, JBColor.RED, EffectType.BOLD_DOTTED_LINE, Font.PLAIN);
-    var index = context.getUserData(Key.<Integer>create("test123"));
+    var textAttributes = new TextAttributes(null, null, JBColor.RED, EffectType.BOXED, Font.PLAIN);
+
+    var index = request.getUserData(PullrequestToolWindow.TEST_123);
     var reviewComments = getPullrequestService().getMergeRequests().get(index).getFiles().get(0).getReviewComments();
 
     for (var reviewComment : reviewComments) {
