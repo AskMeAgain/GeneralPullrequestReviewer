@@ -1,0 +1,2 @@
+byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+    fileContent = new String (bytes);

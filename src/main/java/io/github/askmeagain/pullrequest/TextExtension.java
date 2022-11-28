@@ -31,7 +31,7 @@ public class TextExtension extends DiffExtension {
 
     var textAttributes = new TextAttributes(null, null, JBColor.RED, EffectType.BOLD_DOTTED_LINE, Font.PLAIN);
     var index = context.getUserData(Key.<Integer>create("test123"));
-    var reviewComments = getPullrequestService().getMergeRequests().get(index).getReviewComments();
+    var reviewComments = getPullrequestService().getMergeRequests().get(index).getFiles().get(0).getReviewComments();
 
     for (var reviewComment : reviewComments) {
       var textRange = reviewComment.getTextRange();

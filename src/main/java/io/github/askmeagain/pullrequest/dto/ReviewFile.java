@@ -8,10 +8,10 @@ import java.util.List;
 
 @Value
 @Builder
-public class MergeRequest {
+public class ReviewFile {
 
-  String name;
-
+  String fileName;
+  String fileContent;
   @Singular
-  List<ReviewFile> files;
+  List<ReviewComment> reviewComments;
 }

@@ -17,6 +17,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
+import io.github.askmeagain.pullrequest.dto.MergeRequest;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -65,20 +66,18 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
 
     jList.addMouseListener((new MouseAdapter() {
       public void mouseClicked(MouseEvent evt) {
-        JList list = (JList) evt.getSource();
+        var list = (JList<MergeRequest>) evt.getSource();
         var index = list.getSelectedIndex();
 
-        var string = theRealList.get(index);
+        var string = theRealList.get(index).getFiles().get(0).getFileContent();
 
         DocumentContent content1 = DiffContentFactory.getInstance().create(string);
-        DocumentContent content2 = DiffContentFactory.getInstance().create(string + " DIFF!!!!");
+        DocumentContent content2 = DiffContentFactory.getInstance().create(string);
         SimpleDiffRequest request = new SimpleDiffRequest("Window Title", content1, content2, "Title 1", "Title 2");
         request.putUserData(Key.create("test123"), index);
         DiffManager.getInstance().showDiff(project, request);
       }
     }));
-
-
 
     return createListPanel(buttonToolBar, jList);
   }
