@@ -1,7 +1,6 @@
-package io.github.askmeagain.pullrequest;
+package io.github.askmeagain.pullrequest.windows;
 
 import com.intellij.diff.DiffContentFactory;
-import com.intellij.diff.DiffDialogHints;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.requests.SimpleDiffRequest;
@@ -10,7 +9,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.WindowWrapper;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -18,6 +16,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
+import io.github.askmeagain.pullrequest.service.PluginStateService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,13 +24,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
 
-  public static final @NotNull Key<Integer> TEST_123 = Key.create("test123");
+  public static final @NotNull Key<MergeRequest> DataContextKey = Key.create("selectedFileIndex");
 
   @Getter(lazy = true)
-  private final PullrequestService pullrequestService = PullrequestService.getInstance();
+  private final PluginStateService pluginStateService = PluginStateService.getInstance();
 
   @Override
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
@@ -46,7 +47,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     gbc.gridwidth = 1;
 
     var panel = new JPanel(new GridBagLayout());
-    panel.add(createHistoryPanel(panel, project), gbc);
+    panel.add(createPanel(panel, project), gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -60,10 +61,10 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     contentManager.addContent(content);
   }
 
-  private JComponent createHistoryPanel(JPanel parent, Project project) {
-    var buttonToolBar = createButtonToolBar("history", parent);
+  private JComponent createPanel(JPanel parent, Project project) {
+    var buttonToolBar = createButtonToolBar(parent);
 
-    var theRealList = getPullrequestService().getDefaultListModelString();
+    var theRealList = getPluginStateService().getDefaultListModelString();
 
     var jList = new JBList<>(theRealList);
 
@@ -72,12 +73,20 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
         var list = (JList<MergeRequest>) evt.getSource();
         var index = list.getSelectedIndex();
 
-        var string = theRealList.get(index).getFiles().get(0).getFileContent();
+        var mergeRequest1 = theRealList.get(index);
+        var reviewFile = mergeRequest1.getFiles().get(0);
+        var splittedFile = new ArrayList<>(List.of(reviewFile.getFileContent().split("\n")));
+
+        reviewFile.getReviewComments().stream()
+            .sorted((l, r) -> -1 * Integer.compare(l.getLine(), r.getLine()))
+            .forEach(comment -> splittedFile.add(comment.getLine(), comment.getText()));
+
+        var string = String.join("\n", splittedFile);
 
         DocumentContent content1 = DiffContentFactory.getInstance().create(string);
         DocumentContent content2 = DiffContentFactory.getInstance().create(string);
         SimpleDiffRequest request = new SimpleDiffRequest("Window Title", content1, content2, "Title 1", "Title 2");
-        request.putUserData(TEST_123, index);
+        request.putUserData(DataContextKey, mergeRequest1);
         DiffManager.getInstance().showDiff(project, request);
       }
     }));
@@ -114,11 +123,10 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     return panel;
   }
 
-  private JComponent createButtonToolBar(String groupName, JPanel parent) {
-
+  private JComponent createButtonToolBar(JPanel parent) {
     var instance = ActionManager.getInstance();
     var actionGroup = (ActionGroup) instance.getAction("io.github.askmeagain.pullrequest.group.pullrequests");
-    var toolbar = instance.createActionToolbar("macro_magic_group_" + groupName, actionGroup, true);
+    var toolbar = instance.createActionToolbar("macro_magic_group_history", actionGroup, true);
     toolbar.setTargetComponent(parent);
     return toolbar.getComponent();
   }

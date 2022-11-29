@@ -17,8 +17,11 @@
         <toolWindow id="Pullrequests" secondary="false"
                     icon="AllIcons.Diff.MagicResolveToolbar"
                     anchor="right"
-                    factoryClass="io.github.askmeagain.pullrequest.PullrequestToolWindow"/>
-        <diff.DiffExtension order="first" implementation="io.github.askmeagain.pullrequest.TextExtension"/>
+                    factoryClass="io.github.askmeagain.pullrequest.windows.PullrequestToolWindow"/>
+        <diff.DiffExtension order="first" implementation="io.github.askmeagain.pullrequest.extensions.DiffWindowExtension"/>
+        <lang.foldingBuilder
+                language="JAVA"
+                implementationClass="org.intellij.sdk.language.SimpleFoldingBuilder"/>
     </extensions>
 
     <actions>

@@ -8,7 +8,7 @@ import lombok.Value;
 @Builder
 public class ReviewComment {
 
-  TextRange textRange;
+  Integer line;
 
   String text;
 
