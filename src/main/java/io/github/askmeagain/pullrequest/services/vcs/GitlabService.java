@@ -1,11 +1,11 @@
-package io.github.askmeagain.pullrequest.service.vcs;
+package io.github.askmeagain.pullrequest.services.vcs;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
 import io.github.askmeagain.pullrequest.dto.ReviewComment;
 import io.github.askmeagain.pullrequest.dto.ReviewFile;
-import io.github.askmeagain.pullrequest.service.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginStateService;
 import lombok.SneakyThrows;
 
 import java.util.List;

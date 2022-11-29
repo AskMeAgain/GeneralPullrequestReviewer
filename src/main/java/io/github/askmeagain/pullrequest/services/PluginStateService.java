@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.service;
+package io.github.askmeagain.pullrequest.services;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;

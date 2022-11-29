@@ -2,7 +2,7 @@ package io.github.askmeagain.pullrequest.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import io.github.askmeagain.pullrequest.service.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginStateService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,11 +1,11 @@
-package io.github.askmeagain.pullrequest.service;
+package io.github.askmeagain.pullrequest.services;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
 import io.github.askmeagain.pullrequest.dto.VcsImplementation;
-import io.github.askmeagain.pullrequest.service.vcs.GitlabService;
-import io.github.askmeagain.pullrequest.service.vcs.VcsService;
+import io.github.askmeagain.pullrequest.services.vcs.GitlabService;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 
 import java.util.List;
 import java.util.Map;

@@ -14,7 +14,7 @@ import com.intellij.ui.JBColor;
 import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.windows.PullrequestToolWindow;
 import io.github.askmeagain.pullrequest.dto.ReviewComment;
-import io.github.askmeagain.pullrequest.service.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginStateService;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;

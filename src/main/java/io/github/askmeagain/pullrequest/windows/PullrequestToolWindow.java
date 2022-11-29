@@ -16,7 +16,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
-import io.github.askmeagain.pullrequest.service.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginStateService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

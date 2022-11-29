@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.service.vcs;
+package io.github.askmeagain.pullrequest.services.vcs;
 
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
 
