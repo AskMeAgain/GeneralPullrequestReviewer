@@ -73,8 +73,8 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
         var list = (JList<MergeRequest>) evt.getSource();
         var index = list.getSelectedIndex();
 
-        var mergeRequest1 = theRealList.get(index);
-        var reviewFile = mergeRequest1.getFiles().get(0);
+        var mergeRequest = theRealList.get(index);
+        var reviewFile = mergeRequest.getFiles().get(0);
         var splittedFile = new ArrayList<>(List.of(reviewFile.getFileContent().split("\n")));
 
         reviewFile.getReviewComments().stream()
@@ -83,10 +83,16 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
 
         var string = String.join("\n", splittedFile);
 
-        DocumentContent content1 = DiffContentFactory.getInstance().create(string);
-        DocumentContent content2 = DiffContentFactory.getInstance().create(string);
-        SimpleDiffRequest request = new SimpleDiffRequest("Window Title", content1, content2, "Title 1", "Title 2");
-        request.putUserData(DataContextKey, mergeRequest1);
+        var content1 = DiffContentFactory.getInstance().create(string);
+        var content2 = DiffContentFactory.getInstance().create(string);
+        var request = new SimpleDiffRequest(
+            mergeRequest.getName(),
+            content1,
+            content2,
+            mergeRequest.getSourceBranch(),
+            mergeRequest.getTargetBranch()
+        );
+        request.putUserData(DataContextKey, mergeRequest);
         DiffManager.getInstance().showDiff(project, request);
       }
     }));

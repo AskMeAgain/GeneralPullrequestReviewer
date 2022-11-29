@@ -11,7 +11,7 @@ import lombok.SneakyThrows;
 import java.util.List;
 
 @Service
-public final class GitlabService implements VcsService{
+public final class GitlabService implements VcsService {
 
   public static GitlabService getInstance() {
     return ApplicationManager.getApplication().getService(GitlabService.class);
@@ -29,6 +29,8 @@ public final class GitlabService implements VcsService{
   private static final List<MergeRequest> LIST = List.of(
       MergeRequest.builder()
           .name("first PR")
+          .sourceBranch("source Branch")
+          .targetBranch("target Branch")
           .file(ReviewFile.builder()
               .reviewComments(List.of(
                   ReviewComment.builder()
@@ -53,6 +55,8 @@ public final class GitlabService implements VcsService{
           .build(),
       MergeRequest.builder()
           .name("another PR")
+          .sourceBranch("source Branch 2")
+          .targetBranch("target Branch 2")
           .file(ReviewFile.builder()
               .reviewComments(List.of(
                   ReviewComment.builder()

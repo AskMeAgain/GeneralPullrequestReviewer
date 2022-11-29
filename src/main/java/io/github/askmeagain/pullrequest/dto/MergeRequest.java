@@ -12,6 +12,14 @@ public class MergeRequest {
 
   String name;
 
+  String sourceBranch;
+  String targetBranch;
+
   @Singular
   List<ReviewFile> files;
+
+  @Override
+  public String toString(){
+    return name;
+  }
 }
