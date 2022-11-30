@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.ui.JBColor;
 import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.windows.PullrequestToolWindow;
-import io.github.askmeagain.pullrequest.dto.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;

@@ -14,7 +14,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
-import io.github.askmeagain.pullrequest.dto.MergeRequest;
+import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

@@ -3,7 +3,7 @@ package io.github.askmeagain.pullrequest.settings;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.*;
 import com.intellij.util.ui.FormBuilder;
-import io.github.askmeagain.pullrequest.dto.VcsImplementation;
+import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import lombok.Getter;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.dto;
+package io.github.askmeagain.pullrequest.dto.application;
 
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialAttributesKt;

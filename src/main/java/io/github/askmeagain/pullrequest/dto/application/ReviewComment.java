@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.dto;
+package io.github.askmeagain.pullrequest.dto.application;
 
 import com.intellij.openapi.util.TextRange;
 import lombok.Builder;

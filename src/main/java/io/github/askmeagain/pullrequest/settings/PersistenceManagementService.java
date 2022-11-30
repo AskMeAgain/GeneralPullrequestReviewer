@@ -5,7 +5,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import io.github.askmeagain.pullrequest.dto.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import org.jetbrains.annotations.NotNull;
 
 @Service

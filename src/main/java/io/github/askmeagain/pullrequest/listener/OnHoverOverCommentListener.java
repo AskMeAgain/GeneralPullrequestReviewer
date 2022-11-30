@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
-import io.github.askmeagain.pullrequest.dto.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

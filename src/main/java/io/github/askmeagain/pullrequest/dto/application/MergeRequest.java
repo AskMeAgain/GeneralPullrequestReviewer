@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.dto;
+package io.github.askmeagain.pullrequest.dto.application;
 
 import lombok.Builder;
 import lombok.Singular;
