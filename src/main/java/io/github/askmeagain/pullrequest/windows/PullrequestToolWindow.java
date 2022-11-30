@@ -2,7 +2,6 @@ package io.github.askmeagain.pullrequest.windows;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
-import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -16,7 +15,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
-import io.github.askmeagain.pullrequest.services.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +31,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
   public static final @NotNull Key<MergeRequest> DataContextKey = Key.create("selectedFileIndex");
 
   @Getter(lazy = true)
-  private final PluginStateService pluginStateService = PluginStateService.getInstance();
+  private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
 
   @Override
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
@@ -64,7 +63,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
   private JComponent createPanel(JPanel parent, Project project) {
     var buttonToolBar = createButtonToolBar(parent);
 
-    var theRealList = getPluginStateService().getDefaultListModelString();
+    var theRealList = getPluginManagementService().getDefaultListModelString();
 
     var jList = new JBList<>(theRealList);
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 import javax.swing.*;
 
 @Service
-public final class PluginStateService {
+public final class PluginManagementService {
 
   @Getter
   private final DefaultListModel<MergeRequest> defaultListModelString = new DefaultListModel<>();
@@ -22,8 +22,8 @@ public final class PluginStateService {
     getDataRequestService().getMergeRequests().forEach(defaultListModelString::addElement);
   }
 
-  public static PluginStateService getInstance() {
-    return ApplicationManager.getApplication().getService(PluginStateService.class);
+  public static PluginManagementService getInstance() {
+    return ApplicationManager.getApplication().getService(PluginManagementService.class);
   }
 
 }

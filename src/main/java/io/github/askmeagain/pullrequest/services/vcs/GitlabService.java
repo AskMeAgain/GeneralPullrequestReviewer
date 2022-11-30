@@ -3,9 +3,12 @@ package io.github.askmeagain.pullrequest.services.vcs;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
+import io.github.askmeagain.pullrequest.dto.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.ReviewComment;
 import io.github.askmeagain.pullrequest.dto.ReviewFile;
-import io.github.askmeagain.pullrequest.services.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginManagementService;
+import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.util.List;
@@ -13,17 +16,24 @@ import java.util.List;
 @Service
 public final class GitlabService implements VcsService {
 
+  @Getter(lazy = true)
+  private final PullrequestPluginState state = PersistenceManagementService.getInstance().getState();
+
   public static GitlabService getInstance() {
     return ApplicationManager.getApplication().getService(GitlabService.class);
   }
 
   public List<MergeRequest> getMergeRequests() {
+    //this is how you get the PW/url:
+    var url = getState().getGitlabUrl();
+    var token = getState().getGitlabUrl();
+
     return LIST;
   }
 
   @SneakyThrows
   private static String getReadString(String path) {
-    return new String(PluginStateService.class.getClassLoader().getResourceAsStream(path).readAllBytes());
+    return new String(PluginManagementService.class.getClassLoader().getResourceAsStream(path).readAllBytes());
   }
 
   private static final List<MergeRequest> LIST = List.of(

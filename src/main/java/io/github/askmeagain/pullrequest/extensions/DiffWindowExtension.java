@@ -14,7 +14,7 @@ import com.intellij.ui.JBColor;
 import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.windows.PullrequestToolWindow;
 import io.github.askmeagain.pullrequest.dto.ReviewComment;
-import io.github.askmeagain.pullrequest.services.PluginStateService;
+import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class DiffWindowExtension extends DiffExtension {
 
   @Getter(lazy = true)
-  private final PluginStateService pluginStateService = PluginStateService.getInstance();
+  private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
 
   @Override
   public void onViewerCreated(FrameDiffTool.@NotNull DiffViewer viewer, @NotNull DiffContext context, @NotNull DiffRequest request) {

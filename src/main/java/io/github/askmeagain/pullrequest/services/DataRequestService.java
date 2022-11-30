@@ -3,9 +3,13 @@ package io.github.askmeagain.pullrequest.services;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.MergeRequest;
+import io.github.askmeagain.pullrequest.dto.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.vcs.GitlabService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
+import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -13,21 +17,23 @@ import java.util.Map;
 @Service
 public final class DataRequestService {
 
-  //hardcoding right now
-  private static final VcsImplementation VCS_IMPLEMENTATION = VcsImplementation.Gitlab;
-
   private final Map<VcsImplementation, VcsService> mapVcsImplementation;
+
+  @Getter(lazy = true)
+  private final PullrequestPluginState state = PersistenceManagementService.getInstance().getState();
+
+  @Getter(lazy = true)
+  private final VcsImplementation selectedImplementation = getState().getSelectedVcsImplementation();
 
   public DataRequestService() {
     mapVcsImplementation = Map.of(
-        VcsImplementation.Gitlab, GitlabService.getInstance()
+        VcsImplementation.GITLAB, GitlabService.getInstance()
     );
   }
 
   public List<MergeRequest> getMergeRequests() {
-    return mapVcsImplementation.get(VCS_IMPLEMENTATION).getMergeRequests();
+    return mapVcsImplementation.get(getSelectedImplementation()).getMergeRequests();
   }
-
 
   public static DataRequestService getInstance() {
     return ApplicationManager.getApplication().getService(DataRequestService.class);
