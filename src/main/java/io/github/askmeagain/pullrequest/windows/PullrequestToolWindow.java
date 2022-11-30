@@ -14,17 +14,25 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
 
@@ -63,43 +71,83 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
   private JComponent createPanel(JPanel parent, Project project) {
     var buttonToolBar = createButtonToolBar(parent);
 
-    var theRealList = getPluginManagementService().getDefaultListModelString();
+    var tree = getPluginManagementService().getTree();
+    tree.setRootVisible(false);
 
-    var jList = new JBList<>(theRealList);
+    var flag = new AtomicBoolean(false);
 
-    jList.addMouseListener((new MouseAdapter() {
-      public void mouseClicked(MouseEvent evt) {
-        var list = (JList<MergeRequest>) evt.getSource();
-        var index = list.getSelectedIndex();
-
-        var mergeRequest = theRealList.get(index);
-        var reviewFile = mergeRequest.getFiles().get(0);
-        var splittedFile = new ArrayList<>(List.of(reviewFile.getFileContent().split("\n")));
-
-        reviewFile.getReviewComments().stream()
-            .sorted((l, r) -> -1 * Integer.compare(l.getLine(), r.getLine()))
-            .forEach(comment -> splittedFile.add(comment.getLine(), comment.getText()));
-
-        var string = String.join("\n", splittedFile);
-
-        var content1 = DiffContentFactory.getInstance().create(string);
-        var content2 = DiffContentFactory.getInstance().create(string);
-        var request = new SimpleDiffRequest(
-            mergeRequest.getName(),
-            content1,
-            content2,
-            mergeRequest.getSourceBranch(),
-            mergeRequest.getTargetBranch()
-        );
-        request.putUserData(DataContextKey, mergeRequest);
-        DiffManager.getInstance().showDiff(project, request);
+    tree.addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent me) {
+        TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+        if (tp != null) {
+          var lastPathComponent = (DefaultMutableTreeNode) tp.getLastPathComponent();
+          if (lastPathComponent.getChildCount() == 0) {
+            openDiffWindow(lastPathComponent, project);
+          }
+        }
       }
-    }));
+    });
 
-    return createListPanel(buttonToolBar, jList);
+    tree.addTreeExpansionListener(new TreeExpansionListener() {
+      @Override
+      public void treeExpanded(TreeExpansionEvent treeExpansionEvent) {
+        if (flag.get()) {
+          return;
+        }
+        var lastNode = (DefaultMutableTreeNode) treeExpansionEvent.getPath().getLastPathComponent();
+        lastNode.removeAllChildren();
+        //get files now
+        getPluginManagementService().getDataRequestService().getFilesOfPr().forEach(file -> {
+          var newChild = new DefaultMutableTreeNode(file);
+          lastNode.add(newChild);
+        });
+        var model = (DefaultTreeModel) tree.getModel();
+        model.reload();
+        flag.set(true);
+        tree.expandPath(treeExpansionEvent.getPath());
+        flag.set(false);
+      }
+
+      @Override
+      public void treeCollapsed(TreeExpansionEvent treeExpansionEvent) {
+      }
+    });
+
+    return createListPanel(buttonToolBar, tree);
   }
 
-  private JComponent createListPanel(JComponent buttonToolBar, JBList<?> anActionJbList) {
+  private void openDiffWindow(DefaultMutableTreeNode lastPathComponent, Project project) {
+    var prName = (String) lastPathComponent.getUserObject();
+
+    //var splittedFile = new ArrayList<>(List.of(reviewFile.getFileContent().split("\n")));
+
+//    getPluginManagementService().getDataRequestService().getCommentsOfPr()
+//        .stream()
+//        .sorted((l, r) -> -1 * Integer.compare(l.getLine(), r.getLine()))
+//        .forEach(comment -> splittedFile.add(comment.getLine(), comment.getText()));
+
+    var sourceBranch = "file1.txt";
+    var targetBranch = "file2.txt";
+    var left = getPluginManagementService().getDataRequestService().getFileOfBranch(sourceBranch);
+    var right = getPluginManagementService().getDataRequestService().getFileOfBranch(targetBranch);
+
+//    var string = String.join("\n", splittedFile);
+
+    var content1 = DiffContentFactory.getInstance().create(left);
+    var content2 = DiffContentFactory.getInstance().create(right);
+    var request = new SimpleDiffRequest(
+        prName,
+        content1,
+        content2,
+        sourceBranch,
+        targetBranch
+    );
+
+    //request.putUserData(DataContextKey, mergeRequest);
+    DiffManager.getInstance().showDiff(project, request);
+  }
+
+  private JComponent createListPanel(JComponent buttonToolBar, Tree tree) {
 
     var gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -120,8 +168,8 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     gbc.gridheight = 100;
     gbc.fill = GridBagConstraints.BOTH;
 
-    var pane = new JBScrollPane(anActionJbList);
-    panel.add(pane, gbc);
+
+    panel.add(tree, gbc);
 
     panel.setPreferredSize(new Dimension(0, 200));
 

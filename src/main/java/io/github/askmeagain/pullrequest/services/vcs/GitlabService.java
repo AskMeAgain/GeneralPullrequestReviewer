@@ -36,6 +36,21 @@ public final class GitlabService implements VcsService {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public List<String> getFilesOfPr() {
+    return List.of("File1", "File2", "File3", "File4");
+  }
+
+  @Override
+  public List<ReviewComment> getCommentsOfPr() {
+    return List.of(ReviewComment.builder().build());
+  }
+
+  @Override
+  public String getFileOfBranch(String branch) {
+    return getReadString(branch);
+  }
+
   @SneakyThrows
   private List<GitlabDiscussionResponse> getDiscussionsOfPr(){
     //GET /projects/:id/merge_requests/:merge_request_iid/discussions

@@ -22,16 +22,17 @@ import java.util.List;
 public class TextExtension extends DiffExtension {
 
   @Getter(lazy = true)
-  private final PullrequestService pullrequestService = PullrequestService.getInstance();
+  private final ABC pullrequestService = PullrequestService.getInstance();
 
   @Override
   public void onViewerCreated(FrameDiffTool.@NotNull DiffViewer viewer, @NotNull DiffContext context, @NotNull DiffRequest request) {
     var left = ((SimpleDiffViewer) viewer).getEditor1();
     var right = ((SimpleDiffViewer) viewer).getEditor2();
 
+
+
     var textAttributes = new TextAttributes(null, null, JBColor.RED, EffectType.BOLD_DOTTED_LINE, Font.PLAIN);
     var index = context.getUserData(Key.<Integer>create("test123"));
-    var reviewComments = getPullrequestService().getMergeRequests().get(index).getFiles().get(0).getReviewComments();
 
     for (var reviewComment : reviewComments) {
       var textRange = reviewComment.getTextRange();

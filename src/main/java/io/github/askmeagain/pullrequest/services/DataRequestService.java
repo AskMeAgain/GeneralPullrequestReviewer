@@ -2,9 +2,7 @@ package io.github.askmeagain.pullrequest.services;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
-import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
+import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.services.vcs.GitlabService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
@@ -28,6 +26,18 @@ public final class DataRequestService {
 
   public List<MergeRequest> getMergeRequests() {
     return mapVcsImplementation.get(getSelectedImplementation()).getMergeRequests();
+  }
+
+  public List<String> getFilesOfPr(){
+    return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr();
+  }
+
+  public List<ReviewComment> getCommentsOfPr(){
+    return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr();
+  }
+
+  public String getFileOfBranch(String branch){
+    return mapVcsImplementation.get(getSelectedImplementation()).getFileOfBranch(branch);
   }
 
   public static DataRequestService getInstance() {

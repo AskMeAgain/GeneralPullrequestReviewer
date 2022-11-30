@@ -34,40 +34,42 @@ public class DiffWindowExtension extends DiffExtension {
 
     var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
 
-    var mergeRequest = request.getUserData(PullrequestToolWindow.DataContextKey);
-    var reviewComments = mergeRequest.getFiles().get(0).getReviewComments();
+    return;
 
-    var foldRegionList = new ArrayList<FoldRegion>();
-    var foldingModel = left.getFoldingModel();
-
-    for (int i = 0; i < reviewComments.size(); i++) {
-      ReviewComment reviewComment = reviewComments.get(i);
-      var line = reviewComment.getLine() + i;
-      var startOffset = left.getDocument().getLineStartOffset(line);
-      var endOffset = left.getDocument().getLineEndOffset(line);
-      var markupModel = left.getMarkupModel();
-
-      foldingModel.runBatchFoldingOperation(() -> {
-        var foldRegion = foldingModel.createFoldRegion(
-            startOffset,
-            endOffset,
-            " ^--- " + StringUtils.abbreviate(reviewComment.getText(), 10) + " ---^ ",
-            FoldingGroup.newGroup(line + ""),
-            false
-        );
-        if (foldRegion != null) {
-          foldRegion.setExpanded(false);
-          foldRegion.setGutterMarkEnabledForSingleLine(true);
-          foldRegionList.add(foldRegion);
-        }
-      });
-
-      markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
-    }
-
-    var listener = new OnHoverOverCommentListener(reviewComments, foldRegionList, foldingModel);
-    left.addEditorMouseMotionListener(listener);
-    left.addEditorMouseListener(listener);
+//    var mergeRequest = request.getUserData(PullrequestToolWindow.DataContextKey);
+//    var reviewComments = mergeRequest.getFiles().get(0).getReviewComments();
+//
+//    var foldRegionList = new ArrayList<FoldRegion>();
+//    var foldingModel = left.getFoldingModel();
+//
+//    for (int i = 0; i < reviewComments.size(); i++) {
+//      ReviewComment reviewComment = reviewComments.get(i);
+//      var line = reviewComment.getLine() + i;
+//      var startOffset = left.getDocument().getLineStartOffset(line);
+//      var endOffset = left.getDocument().getLineEndOffset(line);
+//      var markupModel = left.getMarkupModel();
+//
+//      foldingModel.runBatchFoldingOperation(() -> {
+//        var foldRegion = foldingModel.createFoldRegion(
+//            startOffset,
+//            endOffset,
+//            " ^--- " + StringUtils.abbreviate(reviewComment.getText(), 10) + " ---^ ",
+//            FoldingGroup.newGroup(line + ""),
+//            false
+//        );
+//        if (foldRegion != null) {
+//          foldRegion.setExpanded(false);
+//          foldRegion.setGutterMarkEnabledForSingleLine(true);
+//          foldRegionList.add(foldRegion);
+//        }
+//      });
+//
+//      markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
+//    }
+//
+//    var listener = new OnHoverOverCommentListener(reviewComments, foldRegionList, foldingModel);
+//    left.addEditorMouseMotionListener(listener);
+//    left.addEditorMouseListener(listener);
 
   }
 }
