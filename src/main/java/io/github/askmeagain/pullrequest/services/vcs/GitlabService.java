@@ -43,7 +43,14 @@ public final class GitlabService implements VcsService {
 
   @Override
   public List<ReviewComment> getCommentsOfPr() {
-    return List.of(ReviewComment.builder().build());
+    return List.of(ReviewComment.builder()
+            .text("Another banger!")
+            .line(25)
+            .build(),
+        ReviewComment.builder()
+            .text("Wow this is awesome!")
+            .line(45)
+        .build());
   }
 
   @Override

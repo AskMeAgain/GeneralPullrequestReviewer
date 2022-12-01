@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.listener;
+package io.github.askmeagain.pullrequest.gui;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
@@ -18,16 +18,11 @@ import java.util.Map;
 
 public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  private final List<ReviewComment> comments;
-  private final List<FoldRegion> foldRegionList;
   private final FoldingModelEx foldingModelEx;
 
   private final Map<Integer, FoldRegion> linesPerFoldRegion = new HashMap<>();
 
   public OnHoverOverCommentListener(List<ReviewComment> comments, List<FoldRegion> foldRegionList, FoldingModelEx foldingModel) {
-    this.comments = comments;
-    this.foldRegionList = foldRegionList;
-
     for (int i = 0; i < comments.size(); i++) {
       linesPerFoldRegion.put(comments.get(i).getLine() + i, foldRegionList.get(i));
     }
@@ -49,15 +44,4 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
       }
     }
   }
-
-  @Override
-  public void mouseMoved(EditorMouseEvent e) {
-
-
-//    comments.stream()
-//        .filter(x -> x.getLine() == pos.line)
-//        .findFirst()
-//        .ifPresent(comment -> System.out.println(comment.getText()));
-  }
-
 }
