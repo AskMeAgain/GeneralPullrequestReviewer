@@ -14,9 +14,10 @@ public class MergeRequestNode {
 
   private final String display;
   private final String mergeRequestId;
-
   private final Tree tree;
   private final Project project;
+  private final String sourceBranch;
+  private final String targetBranch;
 
   @Getter(lazy = true)
   private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
@@ -25,7 +26,7 @@ public class MergeRequestNode {
     lastNode.removeAllChildren();
     //get files now
     getPluginManagementService().getDataRequestService().getFilesOfPr(mergeRequestId).forEach(file -> {
-      var newChild = new DefaultMutableTreeNode(new FileNodes(file, project));
+      var newChild = new DefaultMutableTreeNode(new FileNodes(file, project, sourceBranch, targetBranch, file));
       lastNode.add(newChild);
     });
     var model = (DefaultTreeModel) tree.getModel();

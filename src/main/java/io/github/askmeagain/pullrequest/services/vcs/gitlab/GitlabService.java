@@ -6,6 +6,7 @@ import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
@@ -35,16 +36,17 @@ public final class GitlabService implements VcsService {
         .map(pr -> MergeRequest.builder()
             .id(pr.getIid() + "")
             .name(pr.getTitle())
+            .sourceBranch(pr.getSource_branch())
+            .targetBranch(pr.getTarget_branch())
             .build())
         .collect(Collectors.toList());
   }
 
   @Override
   public List<String> getFilesOfPr(String mergeRequestId) {
-    //return List.of("File1", "File2", "File3", "File4");
     var projectId = getState().getGitlabProjects().get(0);
     return GitlabRestClient.getInstance().getMergeRequestDiff(projectId, mergeRequestId).stream()
-        .map(x -> x.getNew_path())
+        .map(GitlabMergeRequestFileDiff::getNew_path)
         .collect(Collectors.toList());
   }
 
@@ -62,8 +64,9 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public String getFileOfBranch(String branch) {
-    return getReadString(branch);
+  public String getFileOfBranch(String branch, String filePath) {
+    var projectId = getState().getGitlabProjects().get(0);
+    return GitlabRestClient.getInstance().getFileOfBranch(projectId, filePath, branch);
   }
 
   @SneakyThrows

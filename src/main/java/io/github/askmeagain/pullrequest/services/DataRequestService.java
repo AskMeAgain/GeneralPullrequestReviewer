@@ -28,16 +28,16 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getMergeRequests();
   }
 
-  public List<String> getFilesOfPr(String mergeRequestId){
+  public List<String> getFilesOfPr(String mergeRequestId) {
     return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr(mergeRequestId);
   }
 
-  public List<ReviewComment> getCommentsOfPr(){
+  public List<ReviewComment> getCommentsOfPr() {
     return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr();
   }
 
-  public String getFileOfBranch(String branch){
-    return mapVcsImplementation.get(getSelectedImplementation()).getFileOfBranch(branch);
+  public String getFileOfBranch(String branch, String filePath) {
+    return mapVcsImplementation.get(getSelectedImplementation()).getFileOfBranch(branch, filePath);
   }
 
   public static DataRequestService getInstance() {

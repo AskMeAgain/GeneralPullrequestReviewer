@@ -6,6 +6,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileD
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GitlabApi {
 
@@ -20,5 +21,13 @@ public interface GitlabApi {
       @Param("projectId") String projectId,
       @Param("merge_request_iid") String mergeRequestId,
       @Param("token") String token
+  );
+
+  @RequestLine("GET /projects/{projectId}/repository/files/{filePath}?private_token={token}&ref={branch}")
+  Map<String, String> getFileOfBranch(
+      @Param("projectId") String projectId,
+      @Param("filePath") String filePath,
+      @Param("token") String token,
+      @Param("branch") String branch
   );
 }

@@ -6,12 +6,15 @@ import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
+import feign.template.UriUtils;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
 import lombok.Getter;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -36,6 +39,14 @@ public final class GitlabRestClient {
 
   public List<GitlabMergeRequestResponse> getMergeRequests(String projectId) {
     return gitlabApi.getMergeRequests(projectId, getState().getGitlabToken());
+  }
+
+  public String getFileOfBranch(String projectId, String filePath, String branch) {
+    var encodedFilePath = filePath.replace(".", "%2E");
+
+    var base64 = gitlabApi.getFileOfBranch(projectId, encodedFilePath, getState().getGitlabToken(), branch).get("content");
+
+    return new String(Base64.getDecoder().decode(base64));
   }
 
   public List<GitlabMergeRequestFileDiff> getMergeRequestDiff(String projectId, String mergeRequestId) {

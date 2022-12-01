@@ -19,24 +19,23 @@ public class FileNodes {
 
   private final String prName;
   private final Project project;
+  private final String sourceBranch;
+  private final String targetBranch;
+  private final String filePath;
 
   @Getter(lazy = true)
   private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
 
   public void openFile() {
-
-
-    var sourceBranch = "file1.txt";
-    var targetBranch = "file2.txt";
-
-    var sourceFile = getPluginManagementService().getDataRequestService().getFileOfBranch(sourceBranch);
-    var targetFile = getPluginManagementService().getDataRequestService().getFileOfBranch(targetBranch);
+    var sourceFile = getPluginManagementService().getDataRequestService().getFileOfBranch(sourceBranch, filePath);
+    var targetFile = getPluginManagementService().getDataRequestService().getFileOfBranch(targetBranch, filePath);
 
     var comments = getPluginManagementService().getDataRequestService().getCommentsOfPr();
 
+    comments.clear();
+
     String commentedSourceFile = injectCommentsIntoFile(sourceFile, comments);
     String commentedTargetFile = injectCommentsIntoFile(targetFile, comments);
-
 
     var sourceReviewFile = ReviewFile.builder()
         .fileContent(commentedSourceFile)
