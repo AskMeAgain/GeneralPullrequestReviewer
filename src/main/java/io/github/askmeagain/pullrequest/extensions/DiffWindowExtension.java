@@ -46,7 +46,7 @@ public class DiffWindowExtension extends DiffExtension {
 
     var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
 
-    var reviewComments = request.getUserData(fileKey).getReviewComments();
+    var reviewComments = new ArrayList<>(request.getUserData(fileKey).getReviewComments());
 
     var foldRegionList = new ArrayList<FoldRegion>();
     var foldingModel = editor.getFoldingModel();
@@ -57,6 +57,12 @@ public class DiffWindowExtension extends DiffExtension {
       var startOffset = editor.getDocument().getLineStartOffset(line);
       var endOffset = editor.getDocument().getLineEndOffset(line);
       var markupModel = editor.getMarkupModel();
+
+      if (startOffset == endOffset) {
+        reviewComments.remove(i);
+        i--;
+        continue;
+      }
 
       foldingModel.runBatchFoldingOperation(() -> {
         var foldRegion = foldingModel.createFoldRegion(

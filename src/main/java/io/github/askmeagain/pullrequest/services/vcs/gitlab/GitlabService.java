@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.services.vcs;
+package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationManager;
@@ -6,14 +6,15 @@ import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
-import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,8 @@ public final class GitlabService implements VcsService {
 
   @SneakyThrows
   public List<MergeRequest> getMergeRequests() {
-    return getGitlabMergeRequests().stream()
+    return getGitlabMergeRequests()
+        .stream()
         .map(pr -> MergeRequest.builder()
             .name(pr.getTitle())
             .build())
@@ -43,14 +45,15 @@ public final class GitlabService implements VcsService {
 
   @Override
   public List<ReviewComment> getCommentsOfPr() {
-    return List.of(ReviewComment.builder()
-            .text("Another banger!")
-            .line(25)
-            .build(),
-        ReviewComment.builder()
-            .text("Wow this is awesome!")
-            .line(45)
-        .build());
+    return getDiscussionsOfPr()
+        .stream()
+        .map(GitlabDiscussionResponse::getNotes)
+        .flatMap(Collection::stream)
+        .map(x -> ReviewComment.builder()
+            .line(x.getPosition().getOld_line())
+            .text(x.getBody())
+            .build())
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -59,19 +62,22 @@ public final class GitlabService implements VcsService {
   }
 
   @SneakyThrows
-  private List<GitlabDiscussionResponse> getDiscussionsOfPr(){
+  private List<GitlabDiscussionResponse> getDiscussionsOfPr() {
     //GET /projects/:id/merge_requests/:merge_request_iid/discussions
     var exampleString = getReadString("gitlab-discussion-example.json");
-    var actualResponse = new ObjectMapper().readValue(exampleString, GitlabDiscussionResponse.class);
+    var actualResponse = new ObjectMapper().readValue(exampleString, GitlabDiscussionResponse[].class);
     return List.of(actualResponse);
   }
 
   @SneakyThrows
-  private List<GitlabMergeRequestResponse> getGitlabMergeRequests(){
+  private List<GitlabMergeRequestResponse> getGitlabMergeRequests() {
     //GET /merge_requests?state=opened
     var exampleString = getReadString("gitlab-mergerequest-example.json");
-    var actualResponse = new ObjectMapper().readValue(exampleString, GitlabMergeRequestResponse.class);
-    return List.of(actualResponse);
+    var actualResponse = new ObjectMapper().readValue(exampleString, GitlabMergeRequestResponse[].class);
+
+    var projectId = getState().getGitlabProjects().get(0);
+
+    return GitlabRestClient.getInstance().getMergeRequests(projectId);
   }
 
   @SneakyThrows

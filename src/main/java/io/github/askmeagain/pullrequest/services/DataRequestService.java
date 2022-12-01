@@ -3,7 +3,7 @@ package io.github.askmeagain.pullrequest.services;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.*;
-import io.github.askmeagain.pullrequest.services.vcs.GitlabService;
+import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
 import lombok.Getter;

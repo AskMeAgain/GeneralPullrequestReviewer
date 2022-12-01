@@ -7,6 +7,7 @@ import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import lombok.Getter;
 
 import javax.swing.*;
+import java.util.List;
 
 public class PullrequestSettingsWindow {
 
@@ -15,6 +16,8 @@ public class PullrequestSettingsWindow {
 
   private final JBPasswordField gitlabApiToken = new JBPasswordField();
   private final JBTextField gitlabUrl = new JBTextField();
+  private final JBTextField groupId = new JBTextField();
+  private final JBTextField gitlabProjects = new JBTextField();
   private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{VcsImplementation.GITLAB, VcsImplementation.GITLAB});
 
   public PullrequestSettingsWindow() {
@@ -26,14 +29,16 @@ public class PullrequestSettingsWindow {
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
-    var vcsIntegration = FormBuilder.createFormBuilder()
-        .addLabeledComponent(new JBLabel("Gitlab Api token: "), gitlabApiToken, 1, false)
-        .addLabeledComponent(new JBLabel("Gitlab url: "), gitlabUrl, 1, false)
+    var gitlabIntegration = FormBuilder.createFormBuilder()
+        .addLabeledComponent(new JBLabel("Gitlab Api token"), gitlabApiToken, 1, false)
+        .addLabeledComponent(new JBLabel("Gitlab url"), gitlabUrl, 1, false)
+        .addLabeledComponent(new JBLabel("Group id"), groupId, 1, false)
+        .addLabeledComponent(new JBLabel("Projects"), gitlabProjects, 1, false)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
     tabbedPane.addTab("General", general);
-    tabbedPane.addTab("Gitlab", vcsIntegration);
+    tabbedPane.addTab("Gitlab", gitlabIntegration);
   }
 
   public JComponent getPreferredFocusedComponent() {
@@ -54,6 +59,22 @@ public class PullrequestSettingsWindow {
 
   public void setGitlabUrl(String url) {
     gitlabUrl.setText(url);
+  }
+
+  public String getGitlabGroup() {
+    return groupId.getText();
+  }
+
+  public void setGitlabGroup(String groupId) {
+    this.groupId.setText(groupId);
+  }
+
+  public List<String> getGitlabProjects() {
+    return List.of(gitlabProjects.getText().split(","));
+  }
+
+  public void setGitlabProjects(List<String> projectIds) {
+    gitlabProjects.setText(String.join(",", projectIds));
   }
 
   public VcsImplementation getVcsImplementation() {

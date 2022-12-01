@@ -31,7 +31,9 @@ public class SettingsGuiManager implements Configurable {
     settingsComponent = new PullrequestSettingsWindow();
 
     settingsComponent.setGitlabApiToken(state.getGitlabToken());
+    settingsComponent.setGitlabGroup(state.getGitlabGroupId());
     settingsComponent.setGitlabUrl(state.getGitlabUrl());
+    settingsComponent.setGitlabProjects(state.getGitlabProjects());
     settingsComponent.setVcsImplementation(state.getSelectedVcsImplementation());
 
     return settingsComponent.getTabbedPane();
@@ -43,9 +45,11 @@ public class SettingsGuiManager implements Configurable {
 
     var urlChanged = !Objects.equals(state.getGitlabUrl(), settingsComponent.getGitlabUrl());
     var gitlabTokenChanged = !Objects.equals(state.getGitlabToken(), settingsComponent.getGitlabApiToken());
-    var selectedVcsIntegrationChanged = Objects.equals(state.getSelectedVcsImplementation(), settingsComponent.getVcsImplementation());
+    var selectedVcsIntegrationChanged = !Objects.equals(state.getSelectedVcsImplementation(), settingsComponent.getVcsImplementation());
+    var groupChanged = !Objects.equals(state.getGitlabGroupId(), settingsComponent.getGitlabGroup());
+    var gitlabProjectsChanged = !Objects.equals(state.getGitlabProjects(), settingsComponent.getGitlabProjects());
 
-    return urlChanged || gitlabTokenChanged || selectedVcsIntegrationChanged;
+    return urlChanged || gitlabTokenChanged || selectedVcsIntegrationChanged || groupChanged || gitlabProjectsChanged;
   }
 
   @Override
@@ -54,6 +58,8 @@ public class SettingsGuiManager implements Configurable {
     state.setGitlabUrl(settingsComponent.getGitlabUrl());
     state.setGitlabToken(settingsComponent.getGitlabApiToken());
     state.setSelectedVcsImplementation(settingsComponent.getVcsImplementation());
+    state.setGitlabGroupId(settingsComponent.getGitlabGroup());
+    state.setGitlabProjects(settingsComponent.getGitlabProjects());
   }
 
   @Override
