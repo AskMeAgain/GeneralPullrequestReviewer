@@ -33,14 +33,19 @@ public final class GitlabService implements VcsService {
     return getGitlabMergeRequests()
         .stream()
         .map(pr -> MergeRequest.builder()
+            .id(pr.getIid() + "")
             .name(pr.getTitle())
             .build())
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<String> getFilesOfPr() {
-    return List.of("File1", "File2", "File3", "File4");
+  public List<String> getFilesOfPr(String mergeRequestId) {
+    //return List.of("File1", "File2", "File3", "File4");
+    var projectId = getState().getGitlabProjects().get(0);
+    return GitlabRestClient.getInstance().getMergeRequestDiff(projectId, mergeRequestId).stream()
+        .map(x -> x.getNew_path())
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -71,12 +76,7 @@ public final class GitlabService implements VcsService {
 
   @SneakyThrows
   private List<GitlabMergeRequestResponse> getGitlabMergeRequests() {
-    //GET /merge_requests?state=opened
-    var exampleString = getReadString("gitlab-mergerequest-example.json");
-    var actualResponse = new ObjectMapper().readValue(exampleString, GitlabMergeRequestResponse[].class);
-
     var projectId = getState().getGitlabProjects().get(0);
-
     return GitlabRestClient.getInstance().getMergeRequests(projectId);
   }
 

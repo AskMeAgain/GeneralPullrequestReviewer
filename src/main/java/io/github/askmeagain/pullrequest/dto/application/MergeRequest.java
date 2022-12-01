@@ -11,6 +11,7 @@ import java.util.List;
 public class MergeRequest {
 
   String name;
+  String id;
 
   String sourceBranch;
   String targetBranch;

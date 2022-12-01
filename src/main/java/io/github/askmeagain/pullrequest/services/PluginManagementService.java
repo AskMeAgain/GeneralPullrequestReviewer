@@ -30,7 +30,7 @@ public final class PluginManagementService {
     rootNode.removeAllChildren();
 
     getDataRequestService().getMergeRequests().forEach(pr -> {
-      var prNode = new DefaultMutableTreeNode(new MergeRequestNode(pr.getName(), tree, getActiveProject()));
+      var prNode = new DefaultMutableTreeNode(new MergeRequestNode(pr.getName(), pr.getId() , tree, getActiveProject()));
       rootNode.add(prNode);
       //hacky node
       prNode.add(new DefaultMutableTreeNode(new FileNodes("dummyfile.txt", getActiveProject())));

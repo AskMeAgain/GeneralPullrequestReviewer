@@ -28,8 +28,8 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getMergeRequests();
   }
 
-  public List<String> getFilesOfPr(){
-    return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr();
+  public List<String> getFilesOfPr(String mergeRequestId){
+    return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr(mergeRequestId);
   }
 
   public List<ReviewComment> getCommentsOfPr(){

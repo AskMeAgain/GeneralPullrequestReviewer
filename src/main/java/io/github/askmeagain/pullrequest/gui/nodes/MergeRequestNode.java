@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultTreeModel;
 public class MergeRequestNode {
 
   private final String display;
+  private final String mergeRequestId;
 
   private final Tree tree;
   private final Project project;
@@ -23,7 +24,7 @@ public class MergeRequestNode {
   public void beforeOpening(DefaultMutableTreeNode lastNode) {
     lastNode.removeAllChildren();
     //get files now
-    getPluginManagementService().getDataRequestService().getFilesOfPr().forEach(file -> {
+    getPluginManagementService().getDataRequestService().getFilesOfPr(mergeRequestId).forEach(file -> {
       var newChild = new DefaultMutableTreeNode(new FileNodes(file, project));
       lastNode.add(newChild);
     });

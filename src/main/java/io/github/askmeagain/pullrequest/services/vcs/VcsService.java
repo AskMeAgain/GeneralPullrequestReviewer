@@ -9,7 +9,7 @@ public interface VcsService {
 
   List<MergeRequest> getMergeRequests();
 
-  List<String> getFilesOfPr();
+  List<String> getFilesOfPr(String mergeRequestId);
 
   List<ReviewComment> getCommentsOfPr();
   String getFileOfBranch(String branch);

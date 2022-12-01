@@ -7,6 +7,7 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
 import lombok.Getter;
@@ -35,6 +36,10 @@ public final class GitlabRestClient {
 
   public List<GitlabMergeRequestResponse> getMergeRequests(String projectId) {
     return gitlabApi.getMergeRequests(projectId, getState().getGitlabToken());
+  }
+
+  public List<GitlabMergeRequestFileDiff> getMergeRequestDiff(String projectId, String mergeRequestId) {
+    return gitlabApi.getMergerequestDiff(projectId, mergeRequestId, getState().getGitlabToken());
   }
 
 }
