@@ -26,7 +26,7 @@ public class MergeRequestNode {
     lastNode.removeAllChildren();
     //get files now
     getPluginManagementService().getDataRequestService().getFilesOfPr(mergeRequestId).forEach(file -> {
-      var newChild = new DefaultMutableTreeNode(new FileNodes(file, project, sourceBranch, targetBranch, file));
+      var newChild = new DefaultMutableTreeNode(new FileNodes(file, project, sourceBranch, targetBranch, file, mergeRequestId));
       lastNode.add(newChild);
     });
     var model = (DefaultTreeModel) tree.getModel();

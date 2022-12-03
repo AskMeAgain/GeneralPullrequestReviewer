@@ -33,7 +33,7 @@ public final class PluginManagementService {
       var prNode = new DefaultMutableTreeNode(new MergeRequestNode(pr.getName(), pr.getId(), tree, getActiveProject(), pr.getSourceBranch(), pr.getTargetBranch()));
       rootNode.add(prNode);
       //hacky node
-      prNode.add(new DefaultMutableTreeNode(new FileNodes("dummyfile.txt", getActiveProject(), null, null, null)));
+      prNode.add(new DefaultMutableTreeNode(new FileNodes("dummyfile.txt", getActiveProject(), null, null, null, null)));
     });
 
     var model = (DefaultTreeModel) tree.getModel();

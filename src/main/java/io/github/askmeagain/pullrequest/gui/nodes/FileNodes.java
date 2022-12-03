@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class FileNodes {
@@ -22,6 +23,7 @@ public class FileNodes {
   private final String sourceBranch;
   private final String targetBranch;
   private final String filePath;
+  private final String mergeRequestId;
 
   @Getter(lazy = true)
   private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
@@ -30,32 +32,34 @@ public class FileNodes {
     var sourceFile = getPluginManagementService().getDataRequestService().getFileOfBranch(sourceBranch, filePath);
     var targetFile = getPluginManagementService().getDataRequestService().getFileOfBranch(targetBranch, filePath);
 
-    var comments = getPluginManagementService().getDataRequestService().getCommentsOfPr();
+    var comments = getPluginManagementService().getDataRequestService().getCommentsOfPr(mergeRequestId);
 
-    comments.clear();
+    var sourceComments = comments.stream().filter(ReviewComment::isSourceComment).collect(Collectors.toList());
+    var targetComments = comments.stream().filter(x -> !x.isSourceComment()).collect(Collectors.toList());
 
-    String commentedSourceFile = injectCommentsIntoFile(sourceFile, comments);
-    String commentedTargetFile = injectCommentsIntoFile(targetFile, comments);
+    var commentedSourceFile = injectCommentsIntoFile(sourceFile, sourceComments);
+    var commentedTargetFile = injectCommentsIntoFile(targetFile, targetComments);
 
     var sourceReviewFile = ReviewFile.builder()
         .fileContent(commentedSourceFile)
         .fileName(sourceBranch)
-        .reviewComments(comments)
+        .reviewComments(sourceComments)
         .build();
 
     var targetReviewFile = ReviewFile.builder()
         .fileContent(commentedTargetFile)
         .fileName(targetBranch)
+        .reviewComments(targetComments)
         .build();
 
     var content1 = DiffContentFactory.getInstance().create(commentedSourceFile);
     var content2 = DiffContentFactory.getInstance().create(commentedTargetFile);
     var request = new SimpleDiffRequest(
         prName,
-        content1,
         content2,
-        sourceBranch,
-        targetBranch
+        content1,
+        targetBranch,
+        sourceBranch
     );
 
     request.putUserData(MouseClickListener.DataContextKeySource, sourceReviewFile);
@@ -69,7 +73,7 @@ public class FileNodes {
 
     commentsOfPr.stream()
         .sorted((l, r) -> -1 * Integer.compare(l.getLine(), r.getLine()))
-        .forEach(comment -> splittedFile.add(comment.getLine(), comment.getText()));
+        .forEach(comment -> splittedFile.add(comment.getLine(), comment.toString()));
 
     return String.join("\n", splittedFile);
   }

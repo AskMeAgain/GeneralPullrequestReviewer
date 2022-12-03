@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 import feign.Param;
 import feign.RequestLine;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 
 import java.util.List;
@@ -29,5 +30,12 @@ public interface GitlabApi {
       @Param("filePath") String filePath,
       @Param("token") String token,
       @Param("branch") String branch
+  );
+
+  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/discussions?private_token={token}")
+  List<GitlabDiscussionResponse> getDiscussions(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("token") String token
   );
 }

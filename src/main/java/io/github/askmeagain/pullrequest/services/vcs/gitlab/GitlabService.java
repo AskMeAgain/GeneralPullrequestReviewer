@@ -1,6 +1,5 @@
 package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
@@ -11,7 +10,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionRe
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
-import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
+import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -51,15 +50,20 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public List<ReviewComment> getCommentsOfPr() {
-    return getDiscussionsOfPr()
+  public List<ReviewComment> getCommentsOfPr(String mergeRequestId) {
+    return getDiscussionsOfPr(mergeRequestId)
         .stream()
         .map(GitlabDiscussionResponse::getNotes)
         .flatMap(Collection::stream)
-        .map(x -> ReviewComment.builder()
-            .line(x.getPosition().getOld_line())
-            .text(x.getBody())
-            .build())
+        .map(x -> {
+          var isNotSource = x.getPosition().getOld_line() != 0;
+          return ReviewComment.builder()
+              .line(isNotSource ? x.getPosition().getOld_line(): x.getPosition().getNew_line())
+              .sourceComment(!isNotSource)
+              .text(x.getBody())
+              .author(x.getAuthor().getName())
+              .build();
+        })
         .collect(Collectors.toList());
   }
 
@@ -70,11 +74,9 @@ public final class GitlabService implements VcsService {
   }
 
   @SneakyThrows
-  private List<GitlabDiscussionResponse> getDiscussionsOfPr() {
-    //GET /projects/:id/merge_requests/:merge_request_iid/discussions
-    var exampleString = getReadString("gitlab-discussion-example.json");
-    var actualResponse = new ObjectMapper().readValue(exampleString, GitlabDiscussionResponse[].class);
-    return List.of(actualResponse);
+  private List<GitlabDiscussionResponse> getDiscussionsOfPr(String mergeRequestId) {
+    var projectId = getState().getGitlabProjects().get(0);
+    return GitlabRestClient.getInstance().getDiscussions(projectId, mergeRequestId);
   }
 
   @SneakyThrows

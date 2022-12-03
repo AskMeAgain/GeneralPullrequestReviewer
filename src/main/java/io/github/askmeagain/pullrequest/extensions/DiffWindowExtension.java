@@ -37,8 +37,8 @@ public class DiffWindowExtension extends DiffExtension {
     var left = ((SimpleDiffViewer) viewer).getEditor1();
     var right = ((SimpleDiffViewer) viewer).getEditor2();
 
-    doForEditor(left, request, MouseClickListener.DataContextKeySource);
-    doForEditor(right, request, MouseClickListener.DataContextKeyTarget);
+    doForEditor(left, request, MouseClickListener.DataContextKeyTarget);
+    doForEditor(right, request, MouseClickListener.DataContextKeySource);
   }
 
   private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey) {
@@ -68,7 +68,7 @@ public class DiffWindowExtension extends DiffExtension {
         var foldRegion = foldingModel.createFoldRegion(
             startOffset,
             endOffset,
-            " ^--- " + StringUtils.abbreviate(reviewComment.getText(), 10) + " ---^ ",
+            StringUtils.abbreviate(reviewComment.toString(), 30),
             FoldingGroup.newGroup(line + ""),
             false
         );

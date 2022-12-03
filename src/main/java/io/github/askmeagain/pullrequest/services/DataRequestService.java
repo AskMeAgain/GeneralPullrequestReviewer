@@ -5,7 +5,6 @@ import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
-import io.github.askmeagain.pullrequest.settings.PersistenceManagementService;
 import lombok.Getter;
 
 import java.util.List;
@@ -32,8 +31,8 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr(mergeRequestId);
   }
 
-  public List<ReviewComment> getCommentsOfPr() {
-    return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr();
+  public List<ReviewComment> getCommentsOfPr(String mergeRequestId) {
+    return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr(mergeRequestId);
   }
 
   public String getFileOfBranch(String branch, String filePath) {

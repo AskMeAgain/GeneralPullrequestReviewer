@@ -11,5 +11,12 @@ public class ReviewComment {
   Integer line;
 
   String text;
+  boolean sourceComment;
+  String author;
+
+  @Override
+  public String toString() {
+    return author + ":" + text;
+  }
 
 }

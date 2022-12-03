@@ -1,6 +1,7 @@
 package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.openapi.options.Configurable;
+import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 
