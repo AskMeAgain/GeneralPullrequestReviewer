@@ -56,4 +56,7 @@ public final class GitlabRestClient {
     return gitlabApi.getDiscussions(project, mergeRequestId, getState().getGitlabToken());
   }
 
+  public void addMergeRequestComment(String projectId, String mergeRequestId) {
+    gitlabApi.addMergeRequestComment(projectId, mergeRequestId, getState().getGitlabToken());
+  }
 }

@@ -23,7 +23,8 @@
                     icon="AllIcons.Diff.MagicResolveToolbar"
                     anchor="right"
                     factoryClass="io.github.askmeagain.pullrequest.windows.PullrequestToolWindow"/>
-        <diff.DiffExtension order="first" implementation="io.github.askmeagain.pullrequest.extensions.DiffWindowExtension"/>
+        <diff.DiffExtension order="first"
+                            implementation="io.github.askmeagain.pullrequest.extensions.DiffWindowExtension"/>
     </extensions>
 
     <actions>
@@ -35,6 +36,11 @@
                     text="RefreshMergeRequestList"
             />
         </group>
+        <action class="io.github.askmeagain.pullrequest.actions.AddCommentAction"
+                icon="AllIcons.Actions.AddFile"
+                text="AddCommentAction">
+            <add-to-group group-id="BlankDiffViewerEditorPopupMenu" anchor="first"/>
+        </action>
     </actions>
 
 </idea-plugin>

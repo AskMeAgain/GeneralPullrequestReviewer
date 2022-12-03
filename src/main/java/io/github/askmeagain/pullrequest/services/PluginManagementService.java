@@ -24,6 +24,10 @@ public final class PluginManagementService {
   @Getter
   private final Tree tree = new Tree(rootNode);
 
+  public void addPullrequestComment(String pullrequest, String comment){
+    getDataRequestService().addMergeRequestComment(pullrequest, comment);
+  }
+
   public void refreshList() {
     System.out.println("Refresh list!");
 

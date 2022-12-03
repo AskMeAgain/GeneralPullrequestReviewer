@@ -8,7 +8,10 @@ import com.intellij.diff.tools.simple.SimpleDiffViewer;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.event.EditorMouseListener;
+import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -20,11 +23,13 @@ import io.github.askmeagain.pullrequest.gui.MouseClickListener;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DiffWindowExtension extends DiffExtension {
 
@@ -41,8 +46,11 @@ public class DiffWindowExtension extends DiffExtension {
     doForEditor(right, request, MouseClickListener.DataContextKeySource);
   }
 
+  @SneakyThrows
   private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey) {
     applyColorScheme(editor);
+
+    editor.putUserData(fileKey, request);
 
     var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
 

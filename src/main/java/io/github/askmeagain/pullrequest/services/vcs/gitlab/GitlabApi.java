@@ -38,4 +38,11 @@ public interface GitlabApi {
       @Param("mergeRequestId") String mergeRequestId,
       @Param("token") String token
   );
+
+  @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions?private_token={token}")
+  void addMergeRequestComment(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("token") String gitlabToken
+  );
 }

@@ -35,6 +35,10 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr(mergeRequestId);
   }
 
+  public void addMergeRequestComment(String mergeRequestId, String comment){
+    mapVcsImplementation.get(getSelectedImplementation()).addMergeRequestComment(mergeRequestId, comment);
+  }
+
   public String getFileOfBranch(String branch, String filePath) {
     return mapVcsImplementation.get(getSelectedImplementation()).getFileOfBranch(branch, filePath);
   }

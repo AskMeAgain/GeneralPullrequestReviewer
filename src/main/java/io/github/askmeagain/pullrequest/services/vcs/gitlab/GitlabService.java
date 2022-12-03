@@ -73,6 +73,12 @@ public final class GitlabService implements VcsService {
     return GitlabRestClient.getInstance().getFileOfBranch(projectId, filePath, branch);
   }
 
+  @Override
+  public void addMergeRequestComment(String mergeRequestId, String comment) {
+    var projectId = getState().getGitlabProjects().get(0);
+    GitlabRestClient.getInstance().addMergeRequestComment(projectId, mergeRequestId);
+  }
+
   @SneakyThrows
   private List<GitlabDiscussionResponse> getDiscussionsOfPr(String mergeRequestId) {
     var projectId = getState().getGitlabProjects().get(0);
