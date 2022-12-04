@@ -7,9 +7,11 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
 import lombok.Getter;
 
@@ -56,7 +58,11 @@ public final class GitlabRestClient {
     return gitlabApi.getDiscussions(project, mergeRequestId, getState().getGitlabToken());
   }
 
-  public void addMergeRequestComment(String projectId, String mergeRequestId) {
-    gitlabApi.addMergeRequestComment(projectId, mergeRequestId, getState().getGitlabToken());
+  public void addMergeRequestComment(String projectId, String mergeRequestId, GitlabMergeRequestCommentRequest request) {
+    gitlabApi.addMergeRequestComment(request, projectId, mergeRequestId, getState().getGitlabToken());
+  }
+
+  public List<MergeRequestVersions> getDiffVersion(String projectId, String mergeRequestId) {
+    return gitlabApi.getDiffVersion(projectId, mergeRequestId, getState().getGitlabToken());
   }
 }

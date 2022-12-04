@@ -1,10 +1,14 @@
 package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
+import feign.Body;
+import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 
 import java.util.List;
 import java.util.Map;
@@ -39,10 +43,18 @@ public interface GitlabApi {
       @Param("token") String token
   );
 
+  @Headers("Content-Type: application/json")
   @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions?private_token={token}")
   void addMergeRequestComment(
+      GitlabMergeRequestCommentRequest body,
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId,
       @Param("token") String gitlabToken
   );
+
+  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/versions?private_token={token}")
+  List<MergeRequestVersions> getDiffVersion(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("token") String gitlabToken);
 }

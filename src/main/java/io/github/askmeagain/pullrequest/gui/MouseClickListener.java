@@ -20,6 +20,7 @@ public class MouseClickListener extends MouseAdapter {
 
   public static final Key<ReviewFile> DataContextKeySource = Key.create("source");
   public static final Key<ReviewFile> DataContextKeyTarget = Key.create("target");
+  public static final Key<Boolean> IsSource = Key.create("isSource");
 
   @Getter(lazy = true)
   private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();

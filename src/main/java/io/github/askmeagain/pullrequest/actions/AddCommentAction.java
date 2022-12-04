@@ -3,8 +3,10 @@ package io.github.askmeagain.pullrequest.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
+import io.github.askmeagain.pullrequest.gui.actions.AddCommentDialog;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -16,10 +18,25 @@ public class AddCommentAction extends AnAction {
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
+    var editor = e.getRequiredData(CommonDataKeys.EDITOR);
 
-    int i = 0;
-    //getPullrequestService().addPullrequestComment(null,null);
-    var userData = e.getData(CommonDataKeys.EDITOR).getUserData(MouseClickListener.DataContextKeyTarget);
-    var userData2 = e.getData(CommonDataKeys.EDITOR).getUserData(MouseClickListener.DataContextKeySource);
+    var isSource = e.getData(CommonDataKeys.EDITOR).getUserData(MouseClickListener.IsSource);
+
+    editor.getCaretModel().runForEachCaret(caret -> {
+
+      var end = caret.getSelectionEnd();
+
+      var line = editor.offsetToLogicalPosition(end).line;
+
+      new AddCommentDialog(e, text -> getPullrequestService().addPullrequestComment("1", CommentRequest.builder()
+          .oldFileName("README.md")
+          .newFileName("README.md")
+          .sourceComment(isSource)
+          .text(text)
+          .line(line)
+          .build()))
+          .show();
+
+    });
   }
 }

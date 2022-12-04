@@ -1,8 +1,14 @@
 package io.github.askmeagain.pullrequest.dto.gitlab.discussion;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Position {
   String base_sha;
   String start_sha;
@@ -10,7 +16,7 @@ public class Position {
   String old_path;
   String new_path;
   String position_type;
-  int old_line;
-  int new_line;
+  Integer old_line;
+  Integer new_line;
   LineRange line_range;
 }

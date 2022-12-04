@@ -1,5 +1,6 @@
 package io.github.askmeagain.pullrequest.services.vcs;
 
+import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 
@@ -14,5 +15,5 @@ public interface VcsService {
   List<ReviewComment> getCommentsOfPr(String mergeRequestId);
   String getFileOfBranch(String branch, String filePath);
 
-  void addMergeRequestComment(String mergeRequestId, String comment);
+  void addMergeRequestComment(String mergeRequestId, CommentRequest comment);
 }

@@ -44,13 +44,15 @@ public class DiffWindowExtension extends DiffExtension {
 
     doForEditor(left, request, MouseClickListener.DataContextKeyTarget);
     doForEditor(right, request, MouseClickListener.DataContextKeySource);
+
+    left.putUserData(MouseClickListener.IsSource, true);
+    right.putUserData(MouseClickListener.IsSource, false);
+
   }
 
   @SneakyThrows
   private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey) {
     applyColorScheme(editor);
-
-    editor.putUserData(fileKey, request);
 
     var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
 

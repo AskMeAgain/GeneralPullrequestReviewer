@@ -2,13 +2,15 @@ package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
+import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
-import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
 import lombok.Getter;
@@ -56,9 +58,9 @@ public final class GitlabService implements VcsService {
         .map(GitlabDiscussionResponse::getNotes)
         .flatMap(Collection::stream)
         .map(x -> {
-          var isNotSource = x.getPosition().getOld_line() != 0;
+          var isNotSource = x.getPosition().getOld_line() != null;
           return ReviewComment.builder()
-              .line(isNotSource ? x.getPosition().getOld_line(): x.getPosition().getNew_line())
+              .line(isNotSource ? x.getPosition().getOld_line() : x.getPosition().getNew_line())
               .sourceComment(!isNotSource)
               .text(x.getBody())
               .author(x.getAuthor().getName())
@@ -74,9 +76,26 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public void addMergeRequestComment(String mergeRequestId, String comment) {
+  public void addMergeRequestComment(String mergeRequestId, CommentRequest comment) {
     var projectId = getState().getGitlabProjects().get(0);
-    GitlabRestClient.getInstance().addMergeRequestComment(projectId, mergeRequestId);
+
+    var diffVersion = GitlabRestClient.getInstance().getDiffVersion(projectId, mergeRequestId).get(0);
+
+    var request = GitlabMergeRequestCommentRequest.builder()
+        .body(comment.getText())
+        .position(Position.builder()
+            .position_type("text")
+            .base_sha(diffVersion.getBase_commit_sha())
+            .head_sha(diffVersion.getHead_commit_sha())
+            .start_sha(diffVersion.getStart_commit_sha())
+            .new_path(comment.getNewFileName())
+            .old_path(comment.getOldFileName())
+            .old_line(comment.isSourceComment() ? comment.getLine() + 1 : null)
+            .new_line(comment.isSourceComment() ? null : comment.getLine() + 1)
+            .build())
+        .build();
+
+    GitlabRestClient.getInstance().addMergeRequestComment(projectId, mergeRequestId, request);
   }
 
   @SneakyThrows
@@ -89,10 +108,5 @@ public final class GitlabService implements VcsService {
   private List<GitlabMergeRequestResponse> getGitlabMergeRequests() {
     var projectId = getState().getGitlabProjects().get(0);
     return GitlabRestClient.getInstance().getMergeRequests(projectId);
-  }
-
-  @SneakyThrows
-  private static String getReadString(String path) {
-    return new String(PluginManagementService.class.getClassLoader().getResourceAsStream(path).readAllBytes());
   }
 }

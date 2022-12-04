@@ -35,7 +35,7 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr(mergeRequestId);
   }
 
-  public void addMergeRequestComment(String mergeRequestId, String comment){
+  public void addMergeRequestComment(String mergeRequestId, CommentRequest comment){
     mapVcsImplementation.get(getSelectedImplementation()).addMergeRequestComment(mergeRequestId, comment);
   }
 
