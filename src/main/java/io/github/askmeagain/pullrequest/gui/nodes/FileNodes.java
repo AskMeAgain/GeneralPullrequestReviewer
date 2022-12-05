@@ -11,8 +11,6 @@ import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -61,6 +59,9 @@ public class FileNodes {
 
     request.putUserData(MouseClickListener.DataContextKeySource, sourceReviewFile);
     request.putUserData(MouseClickListener.DataContextKeyTarget, targetReviewFile);
+
+    request.putUserData(MouseClickListener.FileName, filePath);
+    request.putUserData(MouseClickListener.MergeRequestId, mergeRequestId);
 
     DiffManager.getInstance().showDiff(project, request);
   }

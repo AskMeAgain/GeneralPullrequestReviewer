@@ -10,6 +10,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCom
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
@@ -44,6 +45,13 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
+  public void addCommentToThread(String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+    var projectId = getState().getGitlabProjects().get(0);
+
+    GitlabRestClient.getInstance().addCommentToThread(projectId, mergeRequestId, discussionId, request);
+  }
+
+  @Override
   public List<String> getFilesOfPr(String mergeRequestId) {
     var projectId = getState().getGitlabProjects().get(0);
     return GitlabRestClient.getInstance().getMergeRequestDiff(projectId, mergeRequestId).stream()
@@ -55,17 +63,19 @@ public final class GitlabService implements VcsService {
   public List<ReviewComment> getCommentsOfPr(String mergeRequestId) {
     return getDiscussionsOfPr(mergeRequestId)
         .stream()
-        .map(GitlabDiscussionResponse::getNotes)
+        .map(discussion -> discussion.getNotes().stream()
+            .map(note -> {
+              var isNotSource = note.getPosition().getOld_line() != null;
+              return ReviewComment.builder()
+                  .line(isNotSource ? note.getPosition().getOld_line() - 1 : note.getPosition().getNew_line() - 1)
+                  .sourceComment(!isNotSource)
+                  .discussionId(discussion.getId())
+                  .text(note.getBody())
+                  .author(note.getAuthor().getName())
+                  .build();
+            })
+            .collect(Collectors.toList()))
         .flatMap(Collection::stream)
-        .map(x -> {
-          var isNotSource = x.getPosition().getOld_line() != null;
-          return ReviewComment.builder()
-              .line(isNotSource ? x.getPosition().getOld_line() - 1 : x.getPosition().getNew_line() - 1)
-              .sourceComment(!isNotSource)
-              .text(x.getBody())
-              .author(x.getAuthor().getName())
-              .build();
-        })
         .collect(Collectors.toList());
   }
 

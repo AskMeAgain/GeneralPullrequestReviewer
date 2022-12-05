@@ -10,6 +10,7 @@ import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
@@ -54,7 +55,7 @@ public final class GitlabRestClient {
     return gitlabApi.getMergerequestDiff(projectId, mergeRequestId, getState().getGitlabToken());
   }
 
-  public List<GitlabDiscussionResponse> getDiscussions(String project, String mergeRequestId){
+  public List<GitlabDiscussionResponse> getDiscussions(String project, String mergeRequestId) {
     return gitlabApi.getDiscussions(project, mergeRequestId, getState().getGitlabToken());
   }
 
@@ -64,5 +65,14 @@ public final class GitlabRestClient {
 
   public List<MergeRequestVersions> getDiffVersion(String projectId, String mergeRequestId) {
     return gitlabApi.getDiffVersion(projectId, mergeRequestId, getState().getGitlabToken());
+  }
+
+  public void addCommentToThread(
+      String projectId,
+      String mergeRequestId,
+      String discussionId,
+      GitlabAddCommentToDiscussionRequest request
+  ) {
+    gitlabApi.addCommentToThread(request, projectId, mergeRequestId, discussionId, getState().getGitlabToken());
   }
 }

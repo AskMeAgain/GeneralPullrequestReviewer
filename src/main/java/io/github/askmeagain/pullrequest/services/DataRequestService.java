@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.services;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.*;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
@@ -35,8 +36,12 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr(mergeRequestId);
   }
 
-  public void addMergeRequestComment(String mergeRequestId, CommentRequest comment){
+  public void addMergeRequestComment(String mergeRequestId, CommentRequest comment) {
     mapVcsImplementation.get(getSelectedImplementation()).addMergeRequestComment(mergeRequestId, comment);
+  }
+
+  public void addCommentToThread(String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+    mapVcsImplementation.get(getSelectedImplementation()).addCommentToThread(mergeRequestId, discussionId, request);
   }
 
   public String getFileOfBranch(String branch, String filePath) {

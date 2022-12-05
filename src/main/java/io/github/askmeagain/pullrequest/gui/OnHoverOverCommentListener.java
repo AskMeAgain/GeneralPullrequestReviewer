@@ -4,14 +4,14 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.FormBuilder;
+import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.gui.dialogs.ThreadDisplay;
+import io.github.askmeagain.pullrequest.services.PluginManagementService;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,10 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private JBPopup currentActivePopup;
 
   private int currentActiveLine;
+
+
+  @Getter(lazy = true)
+  private final PluginManagementService pullrequestService = PluginManagementService.getInstance();
 
   public OnHoverOverCommentListener(List<ReviewComment> comments) {
     linesPerFoldRegion = comments.stream()
@@ -55,7 +59,13 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
       currentActiveLine = pos.line;
 
-      currentActivePopup = ThreadDisplay.create(reviewComment.toString());
+      var mergeRequestId = editor.getUserData(MouseClickListener.MergeRequestId);
+
+      var discId = reviewComment.getDiscussionId();
+      currentActivePopup = ThreadDisplay.create(reviewComment.toString(), text -> getPullrequestService()
+          .addCommentToThread(mergeRequestId, discId, GitlabAddCommentToDiscussionRequest.builder()
+              .body(text)
+              .build()));
       currentActivePopup.showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
     }
   }

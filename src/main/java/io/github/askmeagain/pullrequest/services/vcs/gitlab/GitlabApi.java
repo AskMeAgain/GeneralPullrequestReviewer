@@ -7,6 +7,7 @@ import feign.RequestLine;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 
@@ -57,4 +58,14 @@ public interface GitlabApi {
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId,
       @Param("token") String gitlabToken);
+
+  @Headers("Content-Type: application/json")
+  @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes?private_token={token}")
+  void addCommentToThread(
+      GitlabAddCommentToDiscussionRequest request,
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("discId") String discussionId,
+      @Param("token") String gitlabToken
+  );
 }

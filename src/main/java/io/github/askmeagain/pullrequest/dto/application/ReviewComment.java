@@ -13,6 +13,7 @@ public class ReviewComment {
   String text;
   boolean sourceComment;
   String author;
+  String discussionId;
 
   @Override
   public String toString() {

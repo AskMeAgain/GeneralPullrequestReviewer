@@ -7,6 +7,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.gui.nodes.FileNodes;
 import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestNode;
 import lombok.Getter;
@@ -25,8 +26,12 @@ public final class PluginManagementService {
   @Getter
   private final Tree tree = new Tree(rootNode);
 
-  public void addPullrequestComment(String pullrequest, CommentRequest comment){
+  public void addPullrequestComment(String pullrequest, CommentRequest comment) {
     getDataRequestService().addMergeRequestComment(pullrequest, comment);
+  }
+
+  public void addCommentToThread(String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+    getDataRequestService().addCommentToThread(mergeRequestId, discussionId, request);
   }
 
   public void refreshList() {

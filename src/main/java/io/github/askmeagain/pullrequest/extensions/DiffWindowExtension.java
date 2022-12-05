@@ -5,13 +5,8 @@ import com.intellij.diff.DiffExtension;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.simple.SimpleDiffViewer;
-import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -20,16 +15,13 @@ import com.intellij.ui.JBColor;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
-import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DiffWindowExtension extends DiffExtension {
 
@@ -42,12 +34,17 @@ public class DiffWindowExtension extends DiffExtension {
     var left = ((SimpleDiffViewer) viewer).getEditor1();
     var right = ((SimpleDiffViewer) viewer).getEditor2();
 
-    doForEditor(left, request, MouseClickListener.DataContextKeyTarget);
-    doForEditor(right, request, MouseClickListener.DataContextKeySource);
-
     left.putUserData(MouseClickListener.IsSource, true);
     right.putUserData(MouseClickListener.IsSource, false);
 
+    left.putUserData(MouseClickListener.MergeRequestId, request.getUserData(MouseClickListener.MergeRequestId));
+    right.putUserData(MouseClickListener.MergeRequestId, request.getUserData(MouseClickListener.MergeRequestId));
+
+    left.putUserData(MouseClickListener.FileName, request.getUserData(MouseClickListener.FileName));
+    right.putUserData(MouseClickListener.FileName, request.getUserData(MouseClickListener.FileName));
+
+    doForEditor(left, request, MouseClickListener.DataContextKeyTarget);
+    doForEditor(right, request, MouseClickListener.DataContextKeySource);
   }
 
   @SneakyThrows
