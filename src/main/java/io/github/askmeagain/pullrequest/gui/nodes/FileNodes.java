@@ -37,23 +37,20 @@ public class FileNodes {
     var sourceComments = comments.stream().filter(ReviewComment::isSourceComment).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceComment()).collect(Collectors.toList());
 
-    var commentedSourceFile = injectCommentsIntoFile(sourceFile, sourceComments);
-    var commentedTargetFile = injectCommentsIntoFile(targetFile, targetComments);
-
     var sourceReviewFile = ReviewFile.builder()
-        .fileContent(commentedSourceFile)
+        .fileContent(sourceFile)
         .fileName(sourceBranch)
         .reviewComments(sourceComments)
         .build();
 
     var targetReviewFile = ReviewFile.builder()
-        .fileContent(commentedTargetFile)
+        .fileContent(targetFile)
         .fileName(targetBranch)
         .reviewComments(targetComments)
         .build();
 
-    var content1 = DiffContentFactory.getInstance().create(commentedSourceFile);
-    var content2 = DiffContentFactory.getInstance().create(commentedTargetFile);
+    var content1 = DiffContentFactory.getInstance().create(sourceFile);
+    var content2 = DiffContentFactory.getInstance().create(targetFile);
     var request = new SimpleDiffRequest(
         prName,
         content2,
@@ -66,16 +63,6 @@ public class FileNodes {
     request.putUserData(MouseClickListener.DataContextKeyTarget, targetReviewFile);
 
     DiffManager.getInstance().showDiff(project, request);
-  }
-
-  private String injectCommentsIntoFile(String file, List<ReviewComment> commentsOfPr) {
-    var splittedFile = new ArrayList<>(List.of(file.split("\n")));
-
-    commentsOfPr.stream()
-        .sorted((l, r) -> -1 * Integer.compare(l.getLine(), r.getLine()))
-        .forEach(comment -> splittedFile.add(comment.getLine(), comment.toString()));
-
-    return String.join("\n", splittedFile);
   }
 
   @Override

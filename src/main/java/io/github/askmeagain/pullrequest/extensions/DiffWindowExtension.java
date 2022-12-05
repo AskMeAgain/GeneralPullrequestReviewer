@@ -58,41 +58,16 @@ public class DiffWindowExtension extends DiffExtension {
 
     var reviewComments = new ArrayList<>(request.getUserData(fileKey).getReviewComments());
 
-    var foldRegionList = new ArrayList<FoldRegion>();
-    var foldingModel = editor.getFoldingModel();
-
-    for (int i = 0; i < reviewComments.size(); i++) {
-      ReviewComment reviewComment = reviewComments.get(i);
-      var line = reviewComment.getLine() + i;
+    for (var reviewComment : reviewComments) {
+      var line = reviewComment.getLine();
       var startOffset = editor.getDocument().getLineStartOffset(line);
       var endOffset = editor.getDocument().getLineEndOffset(line);
       var markupModel = editor.getMarkupModel();
 
-      if (startOffset == endOffset) {
-        reviewComments.remove(i);
-        i--;
-        continue;
-      }
-
-      foldingModel.runBatchFoldingOperation(() -> {
-        var foldRegion = foldingModel.createFoldRegion(
-            startOffset,
-            endOffset,
-            StringUtils.abbreviate(reviewComment.toString(), 30),
-            FoldingGroup.newGroup(line + ""),
-            false
-        );
-        if (foldRegion != null) {
-          foldRegion.setExpanded(false);
-          foldRegion.setGutterMarkEnabledForSingleLine(true);
-          foldRegionList.add(foldRegion);
-        }
-      });
-
       markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
     }
 
-    var listener = new OnHoverOverCommentListener(reviewComments, foldRegionList, foldingModel);
+    var listener = new OnHoverOverCommentListener(reviewComments);
 
     editor.addEditorMouseMotionListener(listener);
     editor.addEditorMouseListener(listener);

@@ -4,9 +4,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
-import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
-import io.github.askmeagain.pullrequest.gui.actions.AddCommentDialog;
+import io.github.askmeagain.pullrequest.gui.dialogs.AddCommentDialog;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,7 @@ public class AddCommentAction extends AnAction {
 
       var line = editor.offsetToLogicalPosition(end).line;
 
-      new AddCommentDialog(e, text -> getPullrequestService().addPullrequestComment("1", CommentRequest.builder()
+      new AddCommentDialog(text -> getPullrequestService().addPullrequestComment("1", CommentRequest.builder()
           .oldFileName("README.md")
           .newFileName("README.md")
           .sourceComment(isSource)

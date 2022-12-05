@@ -60,7 +60,7 @@ public final class GitlabService implements VcsService {
         .map(x -> {
           var isNotSource = x.getPosition().getOld_line() != null;
           return ReviewComment.builder()
-              .line(isNotSource ? x.getPosition().getOld_line() : x.getPosition().getNew_line())
+              .line(isNotSource ? x.getPosition().getOld_line() - 1 : x.getPosition().getNew_line() - 1)
               .sourceComment(!isNotSource)
               .text(x.getBody())
               .author(x.getAuthor().getName())

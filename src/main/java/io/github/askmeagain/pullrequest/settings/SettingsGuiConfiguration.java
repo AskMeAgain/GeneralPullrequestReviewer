@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nls;
 import javax.swing.*;
 import java.util.Objects;
 
-public class SettingsGuiManager implements Configurable {
+public class SettingsGuiConfiguration implements Configurable {
 
   @Getter(lazy = true)
   private final PersistenceManagementService persistenceManagementService = PersistenceManagementService.getInstance();
