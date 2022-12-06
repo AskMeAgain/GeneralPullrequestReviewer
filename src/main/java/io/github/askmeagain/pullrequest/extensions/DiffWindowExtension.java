@@ -43,12 +43,14 @@ public class DiffWindowExtension extends DiffExtension {
     left.putUserData(MouseClickListener.FileName, request.getUserData(MouseClickListener.FileName));
     right.putUserData(MouseClickListener.FileName, request.getUserData(MouseClickListener.FileName));
 
-    doForEditor(left, request, MouseClickListener.DataContextKeyTarget);
-    doForEditor(right, request, MouseClickListener.DataContextKeySource);
+    var listener = new OnHoverOverCommentListener(request.getUserData(MouseClickListener.AllDiscussions));
+
+    doForEditor(left, request, MouseClickListener.DataContextKeyTarget, listener);
+    doForEditor(right, request, MouseClickListener.DataContextKeySource, listener);
   }
 
   @SneakyThrows
-  private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey) {
+  private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey, OnHoverOverCommentListener listener) {
     applyColorScheme(editor);
 
     var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
@@ -63,9 +65,6 @@ public class DiffWindowExtension extends DiffExtension {
 
       markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
     }
-
-    var listener = new OnHoverOverCommentListener(reviewDiscussion);
-
     editor.addEditorMouseMotionListener(listener);
     editor.addEditorMouseListener(listener);
   }

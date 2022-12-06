@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.gui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.treeStructure.Tree;
+import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.nodes.FileNodes;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
@@ -13,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class MouseClickListener extends MouseAdapter {
@@ -23,6 +25,7 @@ public class MouseClickListener extends MouseAdapter {
   public static final Key<Boolean> IsSource = Key.create("isSource");
   public static final Key<String> MergeRequestId = Key.create("mergeRequestId");
   public static final Key<String> FileName = Key.create("fileName");
+  public static final Key<List<MergeRequestDiscussion>> AllDiscussions = Key.create("allDiscussions");
 
   @Getter(lazy = true)
   private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();

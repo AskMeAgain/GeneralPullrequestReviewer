@@ -57,6 +57,8 @@ public class FileNodes {
         sourceBranch
     );
 
+    request.putUserData(MouseClickListener.AllDiscussions, comments);
+
     request.putUserData(MouseClickListener.DataContextKeySource, sourceReviewFile);
     request.putUserData(MouseClickListener.DataContextKeyTarget, targetReviewFile);
 
