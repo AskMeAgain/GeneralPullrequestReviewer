@@ -7,6 +7,9 @@ import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import lombok.Getter;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.util.List;
 
 public class PullrequestSettingsWindow {
@@ -18,7 +21,10 @@ public class PullrequestSettingsWindow {
   private final JBTextField gitlabUrl = new JBTextField();
   private final JBTextField groupId = new JBTextField();
   private final JBTextField gitlabProjects = new JBTextField();
-  private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{VcsImplementation.GITLAB, VcsImplementation.GITLAB});
+  private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{
+      VcsImplementation.GITLAB,
+      VcsImplementation.GITHUB
+  });
 
   public PullrequestSettingsWindow() {
 
@@ -29,16 +35,32 @@ public class PullrequestSettingsWindow {
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
-    var gitlabIntegration = FormBuilder.createFormBuilder()
-        .addLabeledComponent(new JBLabel("Gitlab Api token"), gitlabApiToken, 1, false)
-        .addLabeledComponent(new JBLabel("Gitlab url"), gitlabUrl, 1, false)
-        .addLabeledComponent(new JBLabel("Group id"), groupId, 1, false)
-        .addLabeledComponent(new JBLabel("Projects"), gitlabProjects, 1, false)
+    var addProjectButton = new JButton("Add Project");
+    addProjectButton.addActionListener(a -> {
+
+      if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
+        var gitlabIntegration = FormBuilder.createFormBuilder()
+            .addLabeledComponent(new JBLabel("Gitlab Api token"), gitlabApiToken, 1, false)
+            .addLabeledComponent(new JBLabel("Gitlab url"), gitlabUrl, 1, false)
+            .addLabeledComponent(new JBLabel("Group id"), groupId, 1, false)
+            .addLabeledComponent(new JBLabel("Projects"), gitlabProjects, 1, false)
+            .addComponentFillVertically(new JPanel(), 0)
+            .getPanel();
+
+        tabbedPane.add(gitlabIntegration, tabbedPane.getSelectedIndex());
+      } else {
+        System.out.println("Not implemented");
+      }
+    });
+
+    var addTab = FormBuilder.createFormBuilder()
+        .addLabeledComponent("Select vcs integration", selectedVcsImplementation)
+        .addComponent(addProjectButton)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
     tabbedPane.addTab("General", general);
-    tabbedPane.addTab("Gitlab", gitlabIntegration);
+    tabbedPane.addTab("New", addTab);
   }
 
   public JComponent getPreferredFocusedComponent() {

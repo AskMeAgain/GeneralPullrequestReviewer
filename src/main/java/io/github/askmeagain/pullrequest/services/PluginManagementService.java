@@ -29,6 +29,8 @@ public final class PluginManagementService {
 
     rootNode.removeAllChildren();
 
+    //TODO add project here
+
     getDataRequestService().getMergeRequests().forEach(pr -> {
       var prNode = new DefaultMutableTreeNode(new MergeRequestNode(pr.getName(), pr.getId(), tree, getActiveProject(), pr.getSourceBranch(), pr.getTargetBranch()));
       rootNode.add(prNode);

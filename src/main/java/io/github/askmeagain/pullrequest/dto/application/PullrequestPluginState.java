@@ -17,8 +17,8 @@ import java.util.List;
 public class PullrequestPluginState {
 
   VcsImplementation selectedVcsImplementation = VcsImplementation.GITLAB;
-  String gitlabUrl;
-  String gitlabGroupId;
+  String gitlabUrl = "";
+  String gitlabGroupId = "";
   List<String> gitlabProjects = new ArrayList<>();
 
   public String getGitlabToken() {
