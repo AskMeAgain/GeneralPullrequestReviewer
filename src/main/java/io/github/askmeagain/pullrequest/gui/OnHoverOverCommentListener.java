@@ -6,9 +6,11 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.ui.popup.JBPopup;
+import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.gui.dialogs.ThreadDisplay;
+import io.github.askmeagain.pullrequest.services.DataRequestService;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -26,10 +28,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private JBPopup currentActivePopup;
 
   private int currentActiveLine;
-
-
-  @Getter(lazy = true)
-  private final PluginManagementService pullrequestService = PluginManagementService.getInstance();
+  private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
   public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments) {
     linesPerFoldRegionTarget = comments.stream()
@@ -41,23 +40,24 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   }
 
   @Override
-  public void mouseMoved(@NotNull EditorMouseEvent e) {
-    var editor = e.getEditor();
-    var mouseEvent = e.getMouseEvent();
+  public void mouseMoved(@NotNull EditorMouseEvent editorMouseEvent) {
+    var editor = editorMouseEvent.getEditor();
+    var pos = editor.xyToLogicalPosition(new Point(editorMouseEvent.getMouseEvent().getPoint()));
+    var isSource = editor.getUserData(TransferKey.IsSource);
 
-    var point = new Point(mouseEvent.getPoint());
-    var pos = editor.xyToLogicalPosition(point);
-
-    var isNotSource = !editor.getUserData(MouseClickListener.IsSource);
-
-    if (linesPerFoldRegionTarget.containsKey(pos.line) && isNotSource) {
-      extracted(e, editor, pos, linesPerFoldRegionTarget.get(pos.line));
-    } else if(linesPerFoldRegionSource.containsKey(pos.line) && !isNotSource){
-      extracted(e, editor, pos, linesPerFoldRegionSource.get(pos.line));
+    if (linesPerFoldRegionTarget.containsKey(pos.line) && !isSource) {
+      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionTarget.get(pos.line));
+    } else if (linesPerFoldRegionSource.containsKey(pos.line) && isSource) {
+      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionSource.get(pos.line));
     }
   }
 
-  private void extracted(@NotNull EditorMouseEvent e, Editor editor, LogicalPosition pos, MergeRequestDiscussion reviewComment) {
+  private void createPopup(
+      EditorMouseEvent e,
+      Editor editor,
+      LogicalPosition pos,
+      MergeRequestDiscussion mergeRequestDiscussion
+  ) {
     if (currentActiveLine == pos.line && currentActivePopup.isVisible()) {
       return;
     }
@@ -72,13 +72,14 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
     currentActiveLine = pos.line;
 
-    var mergeRequestId = editor.getUserData(MouseClickListener.MergeRequestId);
-
-    var discId = reviewComment.getDiscussionId();
-    currentActivePopup = ThreadDisplay.create(reviewComment, text -> getPullrequestService()
-        .addCommentToThread(mergeRequestId, discId, GitlabAddCommentToDiscussionRequest.builder()
+    currentActivePopup = ThreadDisplay.create(mergeRequestDiscussion, text -> dataRequestService.addCommentToThread(
+        editor.getUserData(TransferKey.MergeRequestId),
+        mergeRequestDiscussion.getDiscussionId(),
+        GitlabAddCommentToDiscussionRequest.builder()
             .body(text)
-            .build()));
+            .build())
+    );
+
     currentActivePopup.showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
   }
 }

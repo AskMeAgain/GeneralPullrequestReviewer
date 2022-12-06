@@ -4,6 +4,7 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
+import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
@@ -57,13 +58,13 @@ public class FileNodes {
         sourceBranch
     );
 
-    request.putUserData(MouseClickListener.AllDiscussions, comments);
+    request.putUserData(TransferKey.AllDiscussions, comments);
 
-    request.putUserData(MouseClickListener.DataContextKeySource, sourceReviewFile);
-    request.putUserData(MouseClickListener.DataContextKeyTarget, targetReviewFile);
+    request.putUserData(TransferKey.DataContextKeySource, sourceReviewFile);
+    request.putUserData(TransferKey.DataContextKeyTarget, targetReviewFile);
 
-    request.putUserData(MouseClickListener.FileName, filePath);
-    request.putUserData(MouseClickListener.MergeRequestId, mergeRequestId);
+    request.putUserData(TransferKey.FileName, filePath);
+    request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
 
     DiffManager.getInstance().showDiff(project, request);
   }

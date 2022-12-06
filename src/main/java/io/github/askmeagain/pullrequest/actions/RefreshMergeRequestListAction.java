@@ -8,11 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RefreshMergeRequestListAction extends AnAction {
 
-  @Getter(lazy = true)
-  private final PluginManagementService pullrequestService = PluginManagementService.getInstance();
-
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    getPullrequestService().refreshList();
+    PluginManagementService.getInstance().refreshList();
   }
 }

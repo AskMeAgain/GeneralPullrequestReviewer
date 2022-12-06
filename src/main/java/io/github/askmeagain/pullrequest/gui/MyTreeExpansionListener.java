@@ -14,7 +14,7 @@ import javax.swing.tree.ExpandVetoException;
 public class MyTreeExpansionListener implements TreeWillExpandListener {
 
   @Override
-  public void treeWillExpand(TreeExpansionEvent treeExpansionEvent) throws ExpandVetoException {
+  public void treeWillExpand(TreeExpansionEvent treeExpansionEvent) {
     var lastNode = (DefaultMutableTreeNode) treeExpansionEvent.getPath().getLastPathComponent();
 
     if(lastNode.getUserObject() instanceof MergeRequestNode){
@@ -24,7 +24,7 @@ public class MyTreeExpansionListener implements TreeWillExpandListener {
   }
 
   @Override
-  public void treeWillCollapse(TreeExpansionEvent treeExpansionEvent) throws ExpandVetoException {
+  public void treeWillCollapse(TreeExpansionEvent treeExpansionEvent) {
 
   }
 }

@@ -12,6 +12,7 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
+import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
@@ -34,19 +35,19 @@ public class DiffWindowExtension extends DiffExtension {
     var left = ((SimpleDiffViewer) viewer).getEditor1();
     var right = ((SimpleDiffViewer) viewer).getEditor2();
 
-    left.putUserData(MouseClickListener.IsSource, true);
-    right.putUserData(MouseClickListener.IsSource, false);
+    left.putUserData(TransferKey.IsSource, true);
+    right.putUserData(TransferKey.IsSource, false);
 
-    left.putUserData(MouseClickListener.MergeRequestId, request.getUserData(MouseClickListener.MergeRequestId));
-    right.putUserData(MouseClickListener.MergeRequestId, request.getUserData(MouseClickListener.MergeRequestId));
+    left.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
+    right.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
 
-    left.putUserData(MouseClickListener.FileName, request.getUserData(MouseClickListener.FileName));
-    right.putUserData(MouseClickListener.FileName, request.getUserData(MouseClickListener.FileName));
+    left.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
+    right.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
 
-    var listener = new OnHoverOverCommentListener(request.getUserData(MouseClickListener.AllDiscussions));
+    var listener = new OnHoverOverCommentListener(request.getUserData(TransferKey.AllDiscussions));
 
-    doForEditor(left, request, MouseClickListener.DataContextKeyTarget, listener);
-    doForEditor(right, request, MouseClickListener.DataContextKeySource, listener);
+    doForEditor(left, request, TransferKey.DataContextKeyTarget, listener);
+    doForEditor(right, request, TransferKey.DataContextKeySource, listener);
   }
 
   @SneakyThrows

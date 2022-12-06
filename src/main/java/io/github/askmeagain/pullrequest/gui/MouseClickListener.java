@@ -20,16 +20,6 @@ import java.util.List;
 public class MouseClickListener extends MouseAdapter {
   private final Tree tree;
 
-  public static final Key<ReviewFile> DataContextKeySource = Key.create("source");
-  public static final Key<ReviewFile> DataContextKeyTarget = Key.create("target");
-  public static final Key<Boolean> IsSource = Key.create("isSource");
-  public static final Key<String> MergeRequestId = Key.create("mergeRequestId");
-  public static final Key<String> FileName = Key.create("fileName");
-  public static final Key<List<MergeRequestDiscussion>> AllDiscussions = Key.create("allDiscussions");
-
-  @Getter(lazy = true)
-  private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
-
   public void mouseClicked(MouseEvent me) {
     TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
     if (tp != null) {
