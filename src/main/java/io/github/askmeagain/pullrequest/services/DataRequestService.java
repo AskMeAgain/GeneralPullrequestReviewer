@@ -32,7 +32,7 @@ public final class DataRequestService {
     return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr(mergeRequestId);
   }
 
-  public List<ReviewComment> getCommentsOfPr(String mergeRequestId) {
+  public List<MergeRequestDiscussion> getCommentsOfPr(String mergeRequestId) {
     return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr(mergeRequestId);
   }
 

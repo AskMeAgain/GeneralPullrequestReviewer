@@ -13,5 +13,5 @@ public class ReviewFile {
   String fileName;
   String fileContent;
   @Singular
-  List<ReviewComment> reviewComments;
+  List<MergeRequestDiscussion> reviewDiscussions;
 }

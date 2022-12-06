@@ -2,10 +2,7 @@ package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
-import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
-import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
@@ -17,7 +14,6 @@ import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,22 +56,25 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public List<ReviewComment> getCommentsOfPr(String mergeRequestId) {
+  public List<MergeRequestDiscussion> getCommentsOfPr(String mergeRequestId) {
     return getDiscussionsOfPr(mergeRequestId)
         .stream()
-        .map(discussion -> discussion.getNotes().stream()
-            .map(note -> {
-              var isNotSource = note.getPosition().getOld_line() != null;
-              return ReviewComment.builder()
-                  .line(isNotSource ? note.getPosition().getOld_line() - 1 : note.getPosition().getNew_line() - 1)
-                  .sourceComment(!isNotSource)
-                  .discussionId(discussion.getId())
-                  .text(note.getBody())
-                  .author(note.getAuthor().getName())
-                  .build();
-            })
-            .collect(Collectors.toList()))
-        .flatMap(Collection::stream)
+        .map(discussion -> {
+          var n = discussion.getNotes().get(0);
+          var isNotSource = n.getPosition().getOld_line() != null;
+
+          return MergeRequestDiscussion.builder()
+              .discussionId(discussion.getId())
+              .isSourceDiscussion(n.getPosition().getOld_line() == null)
+              .line(isNotSource ? n.getPosition().getOld_line() - 1 : n.getPosition().getNew_line() - 1)
+              .reviewComments(discussion.getNotes().stream()
+                  .map(note -> ReviewComment.builder()
+                      .text(note.getBody())
+                      .author(note.getAuthor().getName())
+                      .build())
+                  .collect(Collectors.toList()))
+              .build();
+        })
         .collect(Collectors.toList());
   }
 

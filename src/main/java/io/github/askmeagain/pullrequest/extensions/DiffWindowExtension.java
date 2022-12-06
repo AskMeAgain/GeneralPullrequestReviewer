@@ -53,10 +53,10 @@ public class DiffWindowExtension extends DiffExtension {
 
     var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
 
-    var reviewComments = new ArrayList<>(request.getUserData(fileKey).getReviewComments());
+    var reviewDiscussion = new ArrayList<>(request.getUserData(fileKey).getReviewDiscussions());
 
-    for (var reviewComment : reviewComments) {
-      var line = reviewComment.getLine();
+    for (var discussion : reviewDiscussion) {
+      var line = discussion.getLine();
       var startOffset = editor.getDocument().getLineStartOffset(line);
       var endOffset = editor.getDocument().getLineEndOffset(line);
       var markupModel = editor.getMarkupModel();
@@ -64,7 +64,7 @@ public class DiffWindowExtension extends DiffExtension {
       markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
     }
 
-    var listener = new OnHoverOverCommentListener(reviewComments);
+    var listener = new OnHoverOverCommentListener(reviewDiscussion);
 
     editor.addEditorMouseMotionListener(listener);
     editor.addEditorMouseListener(listener);

@@ -8,10 +8,7 @@ import lombok.Value;
 @Builder
 public class ReviewComment {
 
-  Integer line;
-
   String text;
-  boolean sourceComment;
   String author;
   String discussionId;
 

@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.ui.popup.JBPopup;
 import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
+import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.gui.dialogs.ThreadDisplay;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  private final Map<Integer, ReviewComment> linesPerFoldRegion;
+  private final Map<Integer, MergeRequestDiscussion> linesPerFoldRegion;
   private JBPopup currentActivePopup;
 
   private int currentActiveLine;
@@ -29,9 +30,9 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   @Getter(lazy = true)
   private final PluginManagementService pullrequestService = PluginManagementService.getInstance();
 
-  public OnHoverOverCommentListener(List<ReviewComment> comments) {
+  public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments) {
     linesPerFoldRegion = comments.stream()
-        .collect(Collectors.toMap(ReviewComment::getLine, Function.identity()));
+        .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
   }
 
   @Override
@@ -62,7 +63,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
       var mergeRequestId = editor.getUserData(MouseClickListener.MergeRequestId);
 
       var discId = reviewComment.getDiscussionId();
-      currentActivePopup = ThreadDisplay.create(reviewComment.toString(), text -> getPullrequestService()
+      currentActivePopup = ThreadDisplay.create(reviewComment, text -> getPullrequestService()
           .addCommentToThread(mergeRequestId, discId, GitlabAddCommentToDiscussionRequest.builder()
               .body(text)
               .build()));

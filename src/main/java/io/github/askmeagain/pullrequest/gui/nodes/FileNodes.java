@@ -4,7 +4,7 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
-import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
+import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
@@ -32,19 +32,19 @@ public class FileNodes {
 
     var comments = getPluginManagementService().getDataRequestService().getCommentsOfPr(mergeRequestId);
 
-    var sourceComments = comments.stream().filter(ReviewComment::isSourceComment).collect(Collectors.toList());
-    var targetComments = comments.stream().filter(x -> !x.isSourceComment()).collect(Collectors.toList());
+    var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
+    var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
 
     var sourceReviewFile = ReviewFile.builder()
         .fileContent(sourceFile)
         .fileName(sourceBranch)
-        .reviewComments(sourceComments)
+        .reviewDiscussions(sourceComments)
         .build();
 
     var targetReviewFile = ReviewFile.builder()
         .fileContent(targetFile)
         .fileName(targetBranch)
-        .reviewComments(targetComments)
+        .reviewDiscussions(targetComments)
         .build();
 
     var content1 = DiffContentFactory.getInstance().create(sourceFile);

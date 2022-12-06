@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
+import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,18 +13,25 @@ import java.util.function.Consumer;
 
 public class ThreadDisplay {
 
-  public static JBPopup create(String text, Consumer<String> onSend) {
-    var textArea = new JTextArea(5, 10);
+  public static JBPopup create(MergeRequestDiscussion discussion, Consumer<String> onSend) {
+    var textArea = new JTextArea(50, 50);
     var sendButton = new JButton("Send");
 
     var textAreaWrapper = new JBScrollPane(textArea);
     textAreaWrapper.setPreferredSize(new Dimension(300, 300));
+    textArea.setSize(new Dimension(300, 300));
     textArea.setPreferredSize(new Dimension(300, 300));
+    textArea.setMaximumSize(new Dimension(300, 300));
+    textArea.setMinimumSize(new Dimension(300, 300));
 
-    var component = FormBuilder.createFormBuilder()
-        .addComponent(new JBLabel(text, JLabel.LEFT))
-        .addSeparator()
-        .addComponent(textAreaWrapper)
+    var builder = FormBuilder.createFormBuilder();
+
+    for (var comment : discussion.getReviewComments()) {
+      builder = builder.addComponent(new JBLabel(comment.toString(), JLabel.LEFT))
+          .addSeparator();
+    }
+
+    var component = builder.addComponent(textAreaWrapper)
         .addComponentFillVertically(new JPanel(), 10)
         .addComponent(sendButton)
         .getPanel();
