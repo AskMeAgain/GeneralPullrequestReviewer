@@ -13,7 +13,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionRe
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
-import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
+import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.Getter;
 
 import java.util.Base64;
@@ -29,7 +29,7 @@ public final class GitlabRestClient {
   }
 
   @Getter(lazy = true)
-  private final PullrequestPluginState state = PersistenceManagementService.getInstance().getState();
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   public GitlabRestClient() {
     gitlabApi = Feign.builder()

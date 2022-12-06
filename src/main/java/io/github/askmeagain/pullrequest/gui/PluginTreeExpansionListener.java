@@ -1,17 +1,14 @@
 package io.github.askmeagain.pullrequest.gui;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestNode;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.ExpandVetoException;
 
 @RequiredArgsConstructor
-public class MyTreeExpansionListener implements TreeWillExpandListener {
+public class PluginTreeExpansionListener implements TreeWillExpandListener {
 
   @Override
   public void treeWillExpand(TreeExpansionEvent treeExpansionEvent) {

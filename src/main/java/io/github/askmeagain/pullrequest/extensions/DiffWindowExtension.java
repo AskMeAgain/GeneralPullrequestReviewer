@@ -27,27 +27,25 @@ import java.util.ArrayList;
 public class DiffWindowExtension extends DiffExtension {
 
   private static final TextAttributes EDITOR_ATTRIBUTES = new TextAttributes(JBColor.red, null, null, null, Font.BOLD);
-  @Getter(lazy = true)
-  private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
 
   @Override
   public void onViewerCreated(FrameDiffTool.@NotNull DiffViewer viewer, @NotNull DiffContext context, @NotNull DiffRequest request) {
-    var left = ((SimpleDiffViewer) viewer).getEditor1();
-    var right = ((SimpleDiffViewer) viewer).getEditor2();
+    var sourceEditor = ((SimpleDiffViewer) viewer).getEditor1();
+    var targetEditor = ((SimpleDiffViewer) viewer).getEditor2();
 
-    left.putUserData(TransferKey.IsSource, true);
-    right.putUserData(TransferKey.IsSource, false);
+    sourceEditor.putUserData(TransferKey.IsSource, true);
+    targetEditor.putUserData(TransferKey.IsSource, false);
 
-    left.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
-    right.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
+    sourceEditor.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
+    targetEditor.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
 
-    left.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
-    right.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
+    sourceEditor.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
+    targetEditor.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
 
     var listener = new OnHoverOverCommentListener(request.getUserData(TransferKey.AllDiscussions));
 
-    doForEditor(left, request, TransferKey.DataContextKeyTarget, listener);
-    doForEditor(right, request, TransferKey.DataContextKeySource, listener);
+    doForEditor(sourceEditor, request, TransferKey.DataContextKeyTarget, listener);
+    doForEditor(targetEditor, request, TransferKey.DataContextKeySource, listener);
   }
 
   @SneakyThrows

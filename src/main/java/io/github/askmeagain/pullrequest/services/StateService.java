@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Service
 @State(name = "PullrequestPlugin", storages = @Storage("pullrequest-plugin.xml"))
-public final class PersistenceManagementService implements PersistentStateComponent<PullrequestPluginState> {
+public final class StateService implements PersistentStateComponent<PullrequestPluginState> {
 
   private PullrequestPluginState pullrequestPluginState = new PullrequestPluginState();
 
@@ -24,7 +24,7 @@ public final class PersistenceManagementService implements PersistentStateCompon
     pullrequestPluginState = state;
   }
 
-  public static PersistenceManagementService getInstance() {
-    return ApplicationManager.getApplication().getService(PersistenceManagementService.class);
+  public static StateService getInstance() {
+    return ApplicationManager.getApplication().getService(StateService.class);
   }
 }

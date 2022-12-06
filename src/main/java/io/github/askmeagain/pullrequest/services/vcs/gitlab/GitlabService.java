@@ -9,8 +9,8 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionRe
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
-import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public final class GitlabService implements VcsService {
 
   @Getter(lazy = true)
-  private final PullrequestPluginState state = PersistenceManagementService.getInstance().getState();
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   public static GitlabService getInstance() {
     return ApplicationManager.getApplication().getService(GitlabService.class);

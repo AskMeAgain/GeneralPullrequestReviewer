@@ -1,7 +1,7 @@
 package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.openapi.options.Configurable;
-import io.github.askmeagain.pullrequest.services.PersistenceManagementService;
+import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 
@@ -11,7 +11,7 @@ import java.util.Objects;
 public class SettingsGuiConfiguration implements Configurable {
 
   @Getter(lazy = true)
-  private final PersistenceManagementService persistenceManagementService = PersistenceManagementService.getInstance();
+  private final StateService stateService = StateService.getInstance();
   private PullrequestSettingsWindow settingsComponent;
 
   @Override
@@ -27,7 +27,7 @@ public class SettingsGuiConfiguration implements Configurable {
 
   @Override
   public JComponent createComponent() {
-    var state = getPersistenceManagementService().getState();
+    var state = getStateService().getState();
 
     settingsComponent = new PullrequestSettingsWindow();
 
@@ -42,7 +42,7 @@ public class SettingsGuiConfiguration implements Configurable {
 
   @Override
   public boolean isModified() {
-    var state = getPersistenceManagementService().getState();
+    var state = getStateService().getState();
 
     var urlChanged = !Objects.equals(state.getGitlabUrl(), settingsComponent.getGitlabUrl());
     var gitlabTokenChanged = !Objects.equals(state.getGitlabToken(), settingsComponent.getGitlabApiToken());
@@ -55,7 +55,7 @@ public class SettingsGuiConfiguration implements Configurable {
 
   @Override
   public void apply() {
-    var state = getPersistenceManagementService().getState();
+    var state = getStateService().getState();
     state.setGitlabUrl(settingsComponent.getGitlabUrl());
     state.setGitlabToken(settingsComponent.getGitlabApiToken());
     state.setSelectedVcsImplementation(settingsComponent.getVcsImplementation());

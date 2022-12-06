@@ -19,7 +19,7 @@ public final class DataRequestService {
   );
 
   @Getter(lazy = true)
-  private final PullrequestPluginState state = PersistenceManagementService.getInstance().getState();
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   @Getter(lazy = true)
   private final VcsImplementation selectedImplementation = getState().getSelectedVcsImplementation();

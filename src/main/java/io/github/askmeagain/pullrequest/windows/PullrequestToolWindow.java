@@ -10,7 +10,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.gui.MouseClickListener;
-import io.github.askmeagain.pullrequest.gui.MyTreeExpansionListener;
+import io.github.askmeagain.pullrequest.gui.PluginTreeExpansionListener;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     tree.setRootVisible(false);
 
     tree.addMouseListener(new MouseClickListener(tree));
-    tree.addTreeWillExpandListener(new MyTreeExpansionListener());
+    tree.addTreeWillExpandListener(new PluginTreeExpansionListener());
 
     return createListPanel(buttonToolBar, tree);
   }
