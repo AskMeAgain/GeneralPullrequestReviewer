@@ -14,6 +14,8 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,15 +44,16 @@ public final class GitlabService implements VcsService {
 
   @Override
   public void addCommentToThread(String connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projects");
 
     new GitlabRestClient(getState().getMap().get(connectionName)).addCommentToThread(projectId, mergeRequestId, discussionId, request);
   }
 
   @Override
   public List<String> getFilesOfPr(String connectionName, String mergeRequestId) {
-    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
-    return new GitlabRestClient(getState().getMap().get(connectionName)).getMergeRequestDiff(projectId, mergeRequestId).stream()
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projects");
+    return new GitlabRestClient(getState().getMap().get(connectionName))
+        .getMergeRequestDiff(projectId, mergeRequestId).stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)
         .collect(Collectors.toList());
   }
@@ -80,13 +83,13 @@ public final class GitlabService implements VcsService {
 
   @Override
   public String getFileOfBranch(String connectionName, String branch, String filePath) {
-    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projects");
     return new GitlabRestClient(getState().getMap().get(connectionName)).getFileOfBranch(projectId, filePath, branch);
   }
 
   @Override
   public void addMergeRequestComment(String connectionName, String mergeRequestId, CommentRequest comment) {
-    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projects");
 
     var diffVersion = new GitlabRestClient(getState().getMap().get(connectionName)).getDiffVersion(projectId, mergeRequestId).get(0);
 
@@ -109,13 +112,20 @@ public final class GitlabService implements VcsService {
 
   @SneakyThrows
   private List<GitlabDiscussionResponse> getDiscussionsOfPr(String connectionName, String mergeRequestId) {
-    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projects");
     return new GitlabRestClient(getState().getMap().get(connectionName)).getDiscussions(projectId, mergeRequestId);
   }
 
   @SneakyThrows
   private List<GitlabMergeRequestResponse> getGitlabMergeRequests(String connectionName) {
-    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
-    return new GitlabRestClient(getState().getMap().get(connectionName)).getMergeRequests(projectId);
+    return Arrays.stream(getState()
+            .getMap()
+            .get(connectionName)
+            .getConfigs()
+            .get("projects")
+            .split(","))
+        .map(x -> new GitlabRestClient(getState().getMap().get(connectionName)).getMergeRequests(x))
+        .flatMap(Collection::stream)
+        .collect(Collectors.toList());
   }
 }

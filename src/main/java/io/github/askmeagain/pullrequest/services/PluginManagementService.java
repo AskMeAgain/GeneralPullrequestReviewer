@@ -7,8 +7,10 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.gui.nodes.ConnectionNode;
 import io.github.askmeagain.pullrequest.gui.nodes.FileNodes;
 import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestNode;
+import io.github.askmeagain.pullrequest.gui.nodes.ProjectNode;
 import lombok.Getter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,26 +32,30 @@ public final class PluginManagementService {
 
     rootNode.removeAllChildren();
 
-    state.getMap()
-        .forEach((name, connection) -> dataRequestService.getMergeRequests(name)
-            .forEach(pr -> {
-              var prNode = new DefaultMutableTreeNode(
-                  new MergeRequestNode(
-                      pr.getName(),
-                      pr.getId(),
-                      tree,
-                      getActiveProject(),
-                      pr.getSourceBranch(),
-                      pr.getTargetBranch(),
-                      name
-                  )
-              );
-              rootNode.add(prNode);
-              //hacky node
-              var userObject = new FileNodes(getActiveProject(), null, null, null, null, null);
-              prNode.add(new DefaultMutableTreeNode(userObject));
-            })
-        );
+    for (var connection : state.getConnectionConfigs()) {
+      var connectionNode = new DefaultMutableTreeNode(new ConnectionNode(connection));
+      rootNode.add(connectionNode);
+
+      for (var project : connection.getConfigs().get("projects").split(",")) {
+        var projectNode = new DefaultMutableTreeNode(new ProjectNode(project));
+        connectionNode.add(projectNode);
+
+        for (var mergeRequest : dataRequestService.getMergeRequests(connection.getName())) {
+          var mergeRequestNode = new DefaultMutableTreeNode(new MergeRequestNode(
+              mergeRequest.getName(),
+              mergeRequest.getId(),
+              tree,
+              getActiveProject(),
+              mergeRequest.getSourceBranch(),
+              mergeRequest.getTargetBranch(),
+              connection.getName()
+          ));
+          projectNode.add(mergeRequestNode);
+          var userObject = new FileNodes(getActiveProject(), null, null, null, null, null);
+          mergeRequestNode.add(new DefaultMutableTreeNode(userObject));
+        }
+      }
+    }
 
     var model = (DefaultTreeModel) tree.getModel();
     model.reload();
