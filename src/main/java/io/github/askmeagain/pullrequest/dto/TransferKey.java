@@ -12,5 +12,6 @@ public class TransferKey {
   public static final Key<Boolean> IsSource = Key.create("isSource");
   public static final Key<String> MergeRequestId = Key.create("mergeRequestId");
   public static final Key<String> FileName = Key.create("fileName");
+  public static final Key<String> ConnectionName = Key.create("ConnectionName");
   public static final Key<List<MergeRequestDiscussion>> AllDiscussions = Key.create("allDiscussions");
 }

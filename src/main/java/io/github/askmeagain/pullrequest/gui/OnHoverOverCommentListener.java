@@ -30,13 +30,16 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private int currentActiveLine;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
-  public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments) {
+  private final String connectionName;
+
+  public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, String connectionName) {
     linesPerFoldRegionTarget = comments.stream()
         .filter(MergeRequestDiscussion::isSourceDiscussion)
         .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
     linesPerFoldRegionSource = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
         .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
+    this.connectionName = connectionName;
   }
 
   @Override
@@ -73,6 +76,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     currentActiveLine = pos.line;
 
     currentActivePopup = ThreadDisplay.create(mergeRequestDiscussion, text -> dataRequestService.addCommentToThread(
+        connectionName,
         editor.getUserData(TransferKey.MergeRequestId),
         mergeRequestDiscussion.getDiscussionId(),
         GitlabAddCommentToDiscussionRequest.builder()

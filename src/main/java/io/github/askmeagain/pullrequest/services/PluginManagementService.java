@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
+import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.gui.nodes.FileNodes;
 import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestNode;
 import lombok.Getter;
@@ -17,8 +18,8 @@ import java.awt.*;
 @Service
 public final class PluginManagementService {
 
-  @Getter(lazy = true)
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("root");
   @Getter
@@ -29,14 +30,26 @@ public final class PluginManagementService {
 
     rootNode.removeAllChildren();
 
-    //TODO add project here
-
-    getDataRequestService().getMergeRequests().forEach(pr -> {
-      var prNode = new DefaultMutableTreeNode(new MergeRequestNode(pr.getName(), pr.getId(), tree, getActiveProject(), pr.getSourceBranch(), pr.getTargetBranch()));
-      rootNode.add(prNode);
-      //hacky node
-      prNode.add(new DefaultMutableTreeNode(new FileNodes("dummyfile.txt", getActiveProject(), null, null, null, null)));
-    });
+    state.getMap()
+        .forEach((name, connection) -> dataRequestService.getMergeRequests(name)
+            .forEach(pr -> {
+              var prNode = new DefaultMutableTreeNode(
+                  new MergeRequestNode(
+                      pr.getName(),
+                      pr.getId(),
+                      tree,
+                      getActiveProject(),
+                      pr.getSourceBranch(),
+                      pr.getTargetBranch(),
+                      name
+                  )
+              );
+              rootNode.add(prNode);
+              //hacky node
+              var userObject = new FileNodes(getActiveProject(), null, null, null, null, null);
+              prNode.add(new DefaultMutableTreeNode(userObject));
+            })
+        );
 
     var model = (DefaultTreeModel) tree.getModel();
     model.reload();

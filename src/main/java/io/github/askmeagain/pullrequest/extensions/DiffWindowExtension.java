@@ -42,7 +42,10 @@ public class DiffWindowExtension extends DiffExtension {
     sourceEditor.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
     targetEditor.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
 
-    var listener = new OnHoverOverCommentListener(request.getUserData(TransferKey.AllDiscussions));
+    var listener = new OnHoverOverCommentListener(
+        request.getUserData(TransferKey.AllDiscussions),
+        request.getUserData(TransferKey.ConnectionName)
+    );
 
     doForEditor(sourceEditor, request, TransferKey.DataContextKeyTarget, listener);
     doForEditor(targetEditor, request, TransferKey.DataContextKeySource, listener);

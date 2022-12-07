@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface VcsService {
 
-  List<MergeRequest> getMergeRequests();
+  List<MergeRequest> getMergeRequests(String connectionName);
 
-  void addCommentToThread(String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request);
+  void addCommentToThread(String connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request);
 
-  List<String> getFilesOfPr(String mergeRequestId);
+  List<String> getFilesOfPr(String connectionName, String mergeRequestId);
 
-  List<MergeRequestDiscussion> getCommentsOfPr(String mergeRequestId);
+  List<MergeRequestDiscussion> getCommentsOfPr(String connectionName, String mergeRequestId);
 
-  String getFileOfBranch(String branch, String filePath);
+  String getFileOfBranch(String connectionName, String branch, String filePath);
 
-  void addMergeRequestComment(String mergeRequestId, CommentRequest comment);
+  void addMergeRequestComment(String connectionName, String mergeRequestId, CommentRequest comment);
 }

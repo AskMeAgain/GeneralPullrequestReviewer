@@ -1,53 +1,39 @@
 package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.components.*;
+import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import lombok.Getter;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PullrequestSettingsWindow {
 
-  @Getter
   private final JBTabbedPane tabbedPane;
 
-  private final JBPasswordField gitlabApiToken = new JBPasswordField();
-  private final JBTextField gitlabUrl = new JBTextField();
-  private final JBTextField groupId = new JBTextField();
-  private final JBTextField gitlabProjects = new JBTextField();
   private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{
-      VcsImplementation.GITLAB,
-      VcsImplementation.GITHUB
+      VcsImplementation.GITLAB
   });
 
-  public PullrequestSettingsWindow() {
+  @Getter
+  private final List<ConnectionConfig> connectionConfigs;
 
+  public PullrequestSettingsWindow(Map<String, ConnectionConfig> abc) {
+    this.connectionConfigs = new ArrayList<>(abc.values());
     tabbedPane = new JBTabbedPane();
-
-    var general = FormBuilder.createFormBuilder()
-        .addLabeledComponent("Select vcs integration", selectedVcsImplementation)
-        .addComponentFillVertically(new JPanel(), 0)
-        .getPanel();
 
     var addProjectButton = new JButton("Add Project");
     addProjectButton.addActionListener(a -> {
-
       if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
-        var gitlabIntegration = FormBuilder.createFormBuilder()
-            .addLabeledComponent(new JBLabel("Gitlab Api token"), gitlabApiToken, 1, false)
-            .addLabeledComponent(new JBLabel("Gitlab url"), gitlabUrl, 1, false)
-            .addLabeledComponent(new JBLabel("Group id"), groupId, 1, false)
-            .addLabeledComponent(new JBLabel("Projects"), gitlabProjects, 1, false)
-            .addComponentFillVertically(new JPanel(), 0)
-            .getPanel();
-
-        tabbedPane.add(gitlabIntegration, tabbedPane.getSelectedIndex());
+        var gitlabConnectionPanel = new GitlabConnectionPanel(new ConnectionConfig("New Gitlab Connection"));
+        var component = gitlabConnectionPanel.create();
+        this.connectionConfigs.add(gitlabConnectionPanel.getConfig());
+        tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
       } else {
         System.out.println("Not implemented");
       }
@@ -59,52 +45,25 @@ public class PullrequestSettingsWindow {
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
-    tabbedPane.addTab("General", general);
-    tabbedPane.addTab("New", addTab);
+    for (int i = 0; i < connectionConfigs.size(); i++) {
+      var connection = connectionConfigs.get(i);
+      var impl = resolveComponent(connection);
+      var component = impl.create();
+      connectionConfigs.set(i, impl.getConfig());
+      tabbedPane.addTab(connection.getName(), component);
+    }
+
+    tabbedPane.addTab("Add Connection", addTab);
+  }
+
+  private PanelImpl resolveComponent(ConnectionConfig connectionConfig) {
+    if (connectionConfig.getVcsImplementation() == VcsImplementation.GITLAB) {
+      return new GitlabConnectionPanel(connectionConfig);
+    }
+    throw new RuntimeException("whatever");
   }
 
   public JComponent getPreferredFocusedComponent() {
-    return gitlabApiToken;
+    return tabbedPane;
   }
-
-  public String getGitlabApiToken() {
-    return new String(gitlabApiToken.getPassword());
-  }
-
-  public void setGitlabApiToken(String token) {
-    gitlabApiToken.setText(token);
-  }
-
-  public String getGitlabUrl() {
-    return gitlabUrl.getText();
-  }
-
-  public void setGitlabUrl(String url) {
-    gitlabUrl.setText(url);
-  }
-
-  public String getGitlabGroup() {
-    return groupId.getText();
-  }
-
-  public void setGitlabGroup(String groupId) {
-    this.groupId.setText(groupId);
-  }
-
-  public List<String> getGitlabProjects() {
-    return List.of(gitlabProjects.getText().split(","));
-  }
-
-  public void setGitlabProjects(List<String> projectIds) {
-    gitlabProjects.setText(String.join(",", projectIds));
-  }
-
-  public VcsImplementation getVcsImplementation() {
-    return (VcsImplementation) selectedVcsImplementation.getSelectedItem();
-  }
-
-  public void setVcsImplementation(VcsImplementation selectedItem) {
-    selectedVcsImplementation.setSelectedItem(selectedItem);
-  }
-
 }

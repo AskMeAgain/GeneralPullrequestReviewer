@@ -19,6 +19,7 @@ public class AddCommentAction extends AnAction {
     var editor = e.getRequiredData(CommonDataKeys.EDITOR);
     editor.getCaretModel()
         .runForEachCaret(caret -> new AddCommentDialog(text -> dataRequestService.addMergeRequestComment(
+            editor.getUserData(TransferKey.ConnectionName),
             editor.getUserData(TransferKey.MergeRequestId),
             CommentRequest.builder()
                 .text(text)

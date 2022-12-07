@@ -14,57 +14,57 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddComme
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.services.StateService;
+import io.github.askmeagain.pullrequest.settings.ConnectionConfig;
 import lombok.Getter;
 
 import java.util.Base64;
 import java.util.List;
 
-@Service
-public final class GitlabRestClient {
+
+public class GitlabRestClient {
 
   private final GitlabApi gitlabApi;
+  private final ConnectionConfig connectionConfig;
 
-  public static GitlabRestClient getInstance() {
-    return ApplicationManager.getApplication().getService(GitlabRestClient.class);
-  }
-
-  @Getter(lazy = true)
-  private final PullrequestPluginState state = StateService.getInstance().getState();
-
-  public GitlabRestClient() {
+  public GitlabRestClient(ConnectionConfig config) {
+    this.connectionConfig = config;
     gitlabApi = Feign.builder()
         .client(new OkHttpClient())
         .encoder(new JacksonEncoder())
         .decoder(new JacksonDecoder())
-        .target(GitlabApi.class, getState().getGitlabUrl());
+        .target(GitlabApi.class, connectionConfig.getConfigs().get("gitlabUrl"));
   }
 
   public List<GitlabMergeRequestResponse> getMergeRequests(String projectId) {
-    return gitlabApi.getMergeRequests(projectId, getState().getGitlabToken());
+    return gitlabApi.getMergeRequests(projectId, getToken());
+  }
+
+  private String getToken() {
+    return connectionConfig.getConfigs().get("token");
   }
 
   public String getFileOfBranch(String projectId, String filePath, String branch) {
     var encodedFilePath = filePath.replace(".", "%2E");
 
-    var base64 = gitlabApi.getFileOfBranch(projectId, encodedFilePath, getState().getGitlabToken(), branch).get("content");
+    var base64 = gitlabApi.getFileOfBranch(projectId, encodedFilePath, getToken(), branch).get("content");
 
     return new String(Base64.getDecoder().decode(base64));
   }
 
   public List<GitlabMergeRequestFileDiff> getMergeRequestDiff(String projectId, String mergeRequestId) {
-    return gitlabApi.getMergerequestDiff(projectId, mergeRequestId, getState().getGitlabToken());
+    return gitlabApi.getMergerequestDiff(projectId, mergeRequestId, getToken());
   }
 
   public List<GitlabDiscussionResponse> getDiscussions(String project, String mergeRequestId) {
-    return gitlabApi.getDiscussions(project, mergeRequestId, getState().getGitlabToken());
+    return gitlabApi.getDiscussions(project, mergeRequestId, getToken());
   }
 
   public void addMergeRequestComment(String projectId, String mergeRequestId, GitlabMergeRequestCommentRequest request) {
-    gitlabApi.addMergeRequestComment(request, projectId, mergeRequestId, getState().getGitlabToken());
+    gitlabApi.addMergeRequestComment(request, projectId, mergeRequestId, getToken());
   }
 
   public List<MergeRequestVersions> getDiffVersion(String projectId, String mergeRequestId) {
-    return gitlabApi.getDiffVersion(projectId, mergeRequestId, getState().getGitlabToken());
+    return gitlabApi.getDiffVersion(projectId, mergeRequestId, getToken());
   }
 
   public void addCommentToThread(
@@ -73,6 +73,6 @@ public final class GitlabRestClient {
       String discussionId,
       GitlabAddCommentToDiscussionRequest request
   ) {
-    gitlabApi.addCommentToThread(request, projectId, mergeRequestId, discussionId, getState().getGitlabToken());
+    gitlabApi.addCommentToThread(request, projectId, mergeRequestId, discussionId, getToken());
   }
 }

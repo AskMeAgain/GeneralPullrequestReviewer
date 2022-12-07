@@ -28,8 +28,8 @@ public final class GitlabService implements VcsService {
   }
 
   @SneakyThrows
-  public List<MergeRequest> getMergeRequests() {
-    return getGitlabMergeRequests()
+  public List<MergeRequest> getMergeRequests(String connectionName) {
+    return getGitlabMergeRequests(connectionName)
         .stream()
         .map(pr -> MergeRequest.builder()
             .id(pr.getIid() + "")
@@ -41,23 +41,23 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public void addCommentToThread(String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    var projectId = getState().getGitlabProjects().get(0);
+  public void addCommentToThread(String connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
 
-    GitlabRestClient.getInstance().addCommentToThread(projectId, mergeRequestId, discussionId, request);
+    new GitlabRestClient(getState().getMap().get(connectionName)).addCommentToThread(projectId, mergeRequestId, discussionId, request);
   }
 
   @Override
-  public List<String> getFilesOfPr(String mergeRequestId) {
-    var projectId = getState().getGitlabProjects().get(0);
-    return GitlabRestClient.getInstance().getMergeRequestDiff(projectId, mergeRequestId).stream()
+  public List<String> getFilesOfPr(String connectionName, String mergeRequestId) {
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    return new GitlabRestClient(getState().getMap().get(connectionName)).getMergeRequestDiff(projectId, mergeRequestId).stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<MergeRequestDiscussion> getCommentsOfPr(String mergeRequestId) {
-    return getDiscussionsOfPr(mergeRequestId)
+  public List<MergeRequestDiscussion> getCommentsOfPr(String connectionName, String mergeRequestId) {
+    return getDiscussionsOfPr(connectionName, mergeRequestId)
         .stream()
         .map(discussion -> {
           var n = discussion.getNotes().get(0);
@@ -79,16 +79,16 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public String getFileOfBranch(String branch, String filePath) {
-    var projectId = getState().getGitlabProjects().get(0);
-    return GitlabRestClient.getInstance().getFileOfBranch(projectId, filePath, branch);
+  public String getFileOfBranch(String connectionName, String branch, String filePath) {
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    return new GitlabRestClient(getState().getMap().get(connectionName)).getFileOfBranch(projectId, filePath, branch);
   }
 
   @Override
-  public void addMergeRequestComment(String mergeRequestId, CommentRequest comment) {
-    var projectId = getState().getGitlabProjects().get(0);
+  public void addMergeRequestComment(String connectionName, String mergeRequestId, CommentRequest comment) {
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
 
-    var diffVersion = GitlabRestClient.getInstance().getDiffVersion(projectId, mergeRequestId).get(0);
+    var diffVersion = new GitlabRestClient(getState().getMap().get(connectionName)).getDiffVersion(projectId, mergeRequestId).get(0);
 
     var request = GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
@@ -104,18 +104,18 @@ public final class GitlabService implements VcsService {
             .build())
         .build();
 
-    GitlabRestClient.getInstance().addMergeRequestComment(projectId, mergeRequestId, request);
+    new GitlabRestClient(getState().getMap().get(connectionName)).addMergeRequestComment(projectId, mergeRequestId, request);
   }
 
   @SneakyThrows
-  private List<GitlabDiscussionResponse> getDiscussionsOfPr(String mergeRequestId) {
-    var projectId = getState().getGitlabProjects().get(0);
-    return GitlabRestClient.getInstance().getDiscussions(projectId, mergeRequestId);
+  private List<GitlabDiscussionResponse> getDiscussionsOfPr(String connectionName, String mergeRequestId) {
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    return new GitlabRestClient(getState().getMap().get(connectionName)).getDiscussions(projectId, mergeRequestId);
   }
 
   @SneakyThrows
-  private List<GitlabMergeRequestResponse> getGitlabMergeRequests() {
-    var projectId = getState().getGitlabProjects().get(0);
-    return GitlabRestClient.getInstance().getMergeRequests(projectId);
+  private List<GitlabMergeRequestResponse> getGitlabMergeRequests(String connectionName) {
+    var projectId = getState().getMap().get(connectionName).getConfigs().get("projectId");
+    return new GitlabRestClient(getState().getMap().get(connectionName)).getMergeRequests(projectId);
   }
 }

@@ -18,37 +18,37 @@ public final class DataRequestService {
       VcsImplementation.GITLAB, GitlabService.getInstance()
   );
 
-  @Getter(lazy = true)
   private final PullrequestPluginState state = StateService.getInstance().getState();
 
-  @Getter(lazy = true)
-  private final VcsImplementation selectedImplementation = getState().getSelectedVcsImplementation();
-
-  public List<MergeRequest> getMergeRequests() {
-    return mapVcsImplementation.get(getSelectedImplementation()).getMergeRequests();
+  public List<MergeRequest> getMergeRequests(String connectionName) {
+    return mapVcsImplementation.get(getVcsImplementation(connectionName)).getMergeRequests(connectionName);
   }
 
-  public List<String> getFilesOfPr(String mergeRequestId) {
-    return mapVcsImplementation.get(getSelectedImplementation()).getFilesOfPr(mergeRequestId);
+  public List<String> getFilesOfPr(String connectionName, String mergeRequestId) {
+    return mapVcsImplementation.get(getVcsImplementation(connectionName)).getFilesOfPr(connectionName, mergeRequestId);
   }
 
-  public List<MergeRequestDiscussion> getCommentsOfPr(String mergeRequestId) {
-    return mapVcsImplementation.get(getSelectedImplementation()).getCommentsOfPr(mergeRequestId);
+  public List<MergeRequestDiscussion> getCommentsOfPr(String connectionName, String mergeRequestId) {
+    return mapVcsImplementation.get(getVcsImplementation(connectionName)).getCommentsOfPr(connectionName, mergeRequestId);
   }
 
-  public void addMergeRequestComment(String mergeRequestId, CommentRequest comment) {
-    mapVcsImplementation.get(getSelectedImplementation()).addMergeRequestComment(mergeRequestId, comment);
+  public void addMergeRequestComment(String connectionName, String mergeRequestId, CommentRequest comment) {
+    mapVcsImplementation.get(getVcsImplementation(connectionName)).addMergeRequestComment(connectionName, mergeRequestId, comment);
   }
 
-  public void addCommentToThread(String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    mapVcsImplementation.get(getSelectedImplementation()).addCommentToThread(mergeRequestId, discussionId, request);
+  public void addCommentToThread(String connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+    mapVcsImplementation.get(getVcsImplementation(connectionName)).addCommentToThread(connectionName, mergeRequestId, discussionId, request);
   }
 
-  public String getFileOfBranch(String branch, String filePath) {
-    return mapVcsImplementation.get(getSelectedImplementation()).getFileOfBranch(branch, filePath);
+  public String getFileOfBranch(String connectionName, String branch, String filePath) {
+    return mapVcsImplementation.get(getVcsImplementation(connectionName)).getFileOfBranch(connectionName, branch, filePath);
   }
 
   public static DataRequestService getInstance() {
     return ApplicationManager.getApplication().getService(DataRequestService.class);
+  }
+
+  private VcsImplementation getVcsImplementation(String connectionName) {
+    return state.getMap().get(connectionName).getVcsImplementation();
   }
 }

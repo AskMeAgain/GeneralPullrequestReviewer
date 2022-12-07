@@ -1,12 +1,16 @@
 package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.util.Producer;
 import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SettingsGuiConfiguration implements Configurable {
 
@@ -29,38 +33,27 @@ public class SettingsGuiConfiguration implements Configurable {
   public JComponent createComponent() {
     var state = getStateService().getState();
 
-    settingsComponent = new PullrequestSettingsWindow();
+    settingsComponent = new PullrequestSettingsWindow(state.getMap());
 
-    settingsComponent.setGitlabApiToken(state.getGitlabToken());
-    settingsComponent.setGitlabGroup(state.getGitlabGroupId());
-    settingsComponent.setGitlabUrl(state.getGitlabUrl());
-    settingsComponent.setGitlabProjects(state.getGitlabProjects());
-    settingsComponent.setVcsImplementation(state.getSelectedVcsImplementation());
-
-    return settingsComponent.getTabbedPane();
+    return settingsComponent.getPreferredFocusedComponent();
   }
 
   @Override
   public boolean isModified() {
-    var state = getStateService().getState();
-
-    var urlChanged = !Objects.equals(state.getGitlabUrl(), settingsComponent.getGitlabUrl());
-    var gitlabTokenChanged = !Objects.equals(state.getGitlabToken(), settingsComponent.getGitlabApiToken());
-    var selectedVcsIntegrationChanged = !Objects.equals(state.getSelectedVcsImplementation(), settingsComponent.getVcsImplementation());
-    var groupChanged = !Objects.equals(state.getGitlabGroupId(), settingsComponent.getGitlabGroup());
-    var gitlabProjectsChanged = !Objects.equals(state.getGitlabProjects(), settingsComponent.getGitlabProjects());
-
-    return urlChanged || gitlabTokenChanged || selectedVcsIntegrationChanged || groupChanged || gitlabProjectsChanged;
+    //TODO
+    return true;
   }
 
   @Override
   public void apply() {
     var state = getStateService().getState();
-    state.setGitlabUrl(settingsComponent.getGitlabUrl());
-    state.setGitlabToken(settingsComponent.getGitlabApiToken());
-    state.setSelectedVcsImplementation(settingsComponent.getVcsImplementation());
-    state.setGitlabGroupId(settingsComponent.getGitlabGroup());
-    state.setGitlabProjects(settingsComponent.getGitlabProjects());
+
+    var map = settingsComponent.getConnectionConfigs()
+        .stream()
+        .peek(connectionConfig -> connectionConfig.getRefresh().run())
+        .collect(Collectors.toList());
+
+    state.setConnectionConfigs(map);
   }
 
   @Override
