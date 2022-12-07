@@ -13,6 +13,7 @@ import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.TreePath;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,6 +28,8 @@ public class GitlabFileNode extends BaseTreeNode {
   private final Tree tree;
 
   private final GitlabService gitlabService = GitlabService.getInstance();
+
+  private boolean doExpand = true;
 
   @Override
   public void onClick() {
@@ -71,12 +74,27 @@ public class GitlabFileNode extends BaseTreeNode {
 
     DiffManager.getInstance().showDiff(project, request);
 
+    loadComments(comments);
+  }
+
+  @Override
+  public void beforeExpanded() {
+    if (doExpand) {
+      var comments = gitlabService.getCommentsOfPr(connectionName, mergeRequestId);
+      loadComments(comments);
+    }
+  }
+
+  private void loadComments(List<MergeRequestDiscussion> comments) {
+    removeAllChildren();
     comments.stream()
         .map(GitlabDiscussionNode::new)
         .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
 
+    doExpand = false;
     tree.expandPath(new TreePath(this.getPath()));
+    doExpand = true;
   }
 
   @Override
