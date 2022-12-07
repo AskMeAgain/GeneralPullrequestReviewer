@@ -46,6 +46,7 @@ public class ThreadDisplay {
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText());
       popup.cancel();
+      sendButton.setEnabled(false);
     });
 
     return popup;
