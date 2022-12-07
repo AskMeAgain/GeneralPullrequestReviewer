@@ -25,11 +25,12 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
 
   @Override
   public String toString() {
-    return "MergeRequest: " + display;
+    return String.format("%s: %s", mergeRequestId, display);
   }
 
   @Override
   public void onCreation() {
+    //so this is expandable
     this.add(new DefaultMutableTreeNode("hidden"));
   }
 

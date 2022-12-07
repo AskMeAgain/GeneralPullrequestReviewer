@@ -81,7 +81,7 @@ public class GitlabFileNode extends BaseTreeNode {
 
   @Override
   public String toString() {
-    return "File: " + filePath;
+    return filePath;
   }
 }
 

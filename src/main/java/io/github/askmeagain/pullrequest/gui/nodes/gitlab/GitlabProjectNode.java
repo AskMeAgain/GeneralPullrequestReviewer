@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GitlabProjectNode extends BaseTreeNode {
-  private final String project;
+  private final String projectId;
   private final ConnectionConfig connectionConfig;
 
   private String projectName;
@@ -18,7 +18,7 @@ public class GitlabProjectNode extends BaseTreeNode {
 
   @Override
   public String toString() {
-    return "Project: " + projectName;
+    return String.format("%s (%s)", projectName, projectId);
   }
 
   @Override
@@ -31,7 +31,7 @@ public class GitlabProjectNode extends BaseTreeNode {
   public void onCreation() {
     var activeProject = getActiveProject();
 
-    projectName = gitlabService.getProject(connectionConfig.getName(), project).getName();
+    projectName = gitlabService.getProject(connectionConfig.getName(), projectId).getName();
 
     for (var mergeRequest : gitlabService.getMergeRequests(connectionConfig.getName())) {
       var mergeRequestNode = new GitlabMergeRequestNode(
