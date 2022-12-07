@@ -3,8 +3,10 @@ package io.github.askmeagain.pullrequest.gui.nodes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.ui.treeStructure.Tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 
 public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviour {
@@ -20,7 +22,7 @@ public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviou
   }
 
   @Override
-  public void onExpanded() {
+  public void beforeExpanded() {
 
   }
 
@@ -39,5 +41,4 @@ public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviou
     }
     throw new RuntimeException("Could not find active project");
   }
-
 }

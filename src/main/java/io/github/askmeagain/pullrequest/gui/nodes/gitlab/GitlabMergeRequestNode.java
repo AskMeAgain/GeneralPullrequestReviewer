@@ -30,20 +30,16 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
 
   @Override
   public void onCreation() {
-    //so this is expandable
-    this.add(new DefaultMutableTreeNode("hidden"));
+    add(new DefaultMutableTreeNode("hidden"));
   }
 
   @Override
-  public void onExpanded() {
-    this.removeAllChildren();
+  public void beforeExpanded() {
+    removeAllChildren();
 
     gitlabService.getFilesOfPr(connectionName, mergeRequestId)
         .stream()
         .map(file -> new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connectionName, tree))
         .forEach(this::add);
-
-    var model = (DefaultTreeModel) tree.getModel();
-    model.reload();
   }
 }

@@ -6,7 +6,7 @@ public interface NodeBehaviour {
 
   void onCreation();
 
-  void onExpanded();
+  void beforeExpanded();
 
   void onClick();
 }

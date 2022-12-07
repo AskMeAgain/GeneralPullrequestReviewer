@@ -16,7 +16,7 @@ public class PluginTreeExpansionListener implements TreeWillExpandListener {
 
     if (lastNode instanceof NodeBehaviour) {
       var node = (NodeBehaviour) lastNode;
-      node.onExpanded();
+      node.beforeExpanded();
     }
   }
 

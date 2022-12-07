@@ -19,14 +19,21 @@ public final class ManagementService {
   @Getter
   private final Tree tree = new Tree(rootNode);
 
+  public ManagementService() {
+    init();
+  }
+
   public void refreshList() {
     rootNode.removeAllChildren();
+    init();
+  }
 
-    for (var connection : state.getConnectionConfigs()) {
-      var connectionNode = new GitlabConnectionNode(connection, tree);
-      connectionNode.onCreation();
-      rootNode.add(connectionNode);
-    }
+  private void init() {
+    state.getConnectionConfigs()
+        .stream()
+        .map(connection -> new GitlabConnectionNode(connection, tree))
+        .peek(GitlabConnectionNode::onCreation)
+        .forEach(rootNode::add);
 
     var model = (DefaultTreeModel) tree.getModel();
     model.reload();

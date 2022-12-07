@@ -6,15 +6,17 @@ import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 @RequiredArgsConstructor
 public class GitlabProjectNode extends BaseTreeNode {
   private final String projectId;
   private final ConnectionConfig connectionConfig;
 
-  private String projectName;
 
-  private final GitlabService gitlabService = GitlabService.getInstance();
   private final Tree tree;
+  private final String projectName;
+  private final GitlabService gitlabService = GitlabService.getInstance();
 
   @Override
   public String toString() {
@@ -29,22 +31,27 @@ public class GitlabProjectNode extends BaseTreeNode {
 
   @Override
   public void onCreation() {
+    add(new DefaultMutableTreeNode("hidden"));
+  }
+
+  @Override
+  public void beforeExpanded() {
+    removeAllChildren();
+
     var activeProject = getActiveProject();
 
-    projectName = gitlabService.getProject(connectionConfig.getName(), projectId).getName();
-
-    for (var mergeRequest : gitlabService.getMergeRequests(connectionConfig.getName())) {
-      var mergeRequestNode = new GitlabMergeRequestNode(
-          mergeRequest.getName(),
-          mergeRequest.getId(),
-          tree,
-          activeProject,
-          mergeRequest.getSourceBranch(),
-          mergeRequest.getTargetBranch(),
-          connectionConfig.getName()
-      );
-      mergeRequestNode.onCreation();
-      this.add(mergeRequestNode);
-    }
+    gitlabService.getMergeRequests(connectionConfig.getName())
+        .stream()
+        .map(mergeRequest -> new GitlabMergeRequestNode(
+            mergeRequest.getName(),
+            mergeRequest.getId(),
+            tree,
+            activeProject,
+            mergeRequest.getSourceBranch(),
+            mergeRequest.getTargetBranch(),
+            connectionConfig.getName()
+        ))
+        .peek(GitlabMergeRequestNode::onCreation)
+        .forEach(this::add);
   }
 }

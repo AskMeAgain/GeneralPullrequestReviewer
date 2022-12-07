@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 @RequiredArgsConstructor
-public class DiscussionNode extends BaseTreeNode {
+public class GitlabDiscussionNode extends BaseTreeNode {
 
   private final MergeRequestDiscussion gitlabDiscussion;
 

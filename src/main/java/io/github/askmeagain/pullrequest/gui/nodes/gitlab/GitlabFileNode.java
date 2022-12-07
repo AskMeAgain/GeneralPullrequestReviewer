@@ -72,8 +72,8 @@ public class GitlabFileNode extends BaseTreeNode {
     DiffManager.getInstance().showDiff(project, request);
 
     comments.stream()
-        .map(DiscussionNode::new)
-        .peek(DiscussionNode::onCreation)
+        .map(GitlabDiscussionNode::new)
+        .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
 
     tree.expandPath(new TreePath(this.getPath()));
