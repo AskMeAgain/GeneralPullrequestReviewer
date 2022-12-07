@@ -8,12 +8,14 @@ import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import lombok.Getter;
 
 import java.util.Map;
 
 @Service
 public final class DataRequestService {
 
+  @Getter
   private final Map<VcsImplementation, VcsService> mapVcsImplementation = Map.of(
       VcsImplementation.GITLAB, GitlabService.getInstance()
   );
@@ -21,11 +23,6 @@ public final class DataRequestService {
   private final PullrequestPluginState state = StateService.getInstance().getState();
 
   public void addMergeRequestComment(String connectionName, String mergeRequestId, CommentRequest comment) {
-    mapVcsImplementation.get(getVcsImplementation(connectionName)).addMergeRequestComment(connectionName, mergeRequestId, comment);
-  }
-
-  public void addCommentToThread(String connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    mapVcsImplementation.get(getVcsImplementation(connectionName)).addCommentToThread(connectionName, mergeRequestId, discussionId, request);
   }
 
   public static DataRequestService getInstance() {

@@ -5,6 +5,7 @@ import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.treeStructure.Tree;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
@@ -24,7 +25,7 @@ public class GitlabFileNode extends BaseTreeNode {
   private final String targetBranch;
   private final String filePath;
   private final String mergeRequestId;
-  private final String connectionName;
+  private final ConnectionConfig connection;
   private final Tree tree;
 
   private final GitlabService gitlabService = GitlabService.getInstance();
@@ -33,10 +34,10 @@ public class GitlabFileNode extends BaseTreeNode {
 
   @Override
   public void onClick() {
-    var sourceFile = gitlabService.getFileOfBranch(connectionName, sourceBranch, filePath);
-    var targetFile = gitlabService.getFileOfBranch(connectionName, targetBranch, filePath);
+    var sourceFile = gitlabService.getFileOfBranch(connection, sourceBranch, filePath);
+    var targetFile = gitlabService.getFileOfBranch(connection, targetBranch, filePath);
 
-    var comments = gitlabService.getCommentsOfPr(connectionName, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
@@ -69,7 +70,7 @@ public class GitlabFileNode extends BaseTreeNode {
     request.putUserData(TransferKey.DataContextKeyTarget, targetReviewFile);
 
     request.putUserData(TransferKey.FileName, filePath);
-    request.putUserData(TransferKey.ConnectionName, connectionName);
+    request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
 
     DiffManager.getInstance().showDiff(project, request);
@@ -80,7 +81,7 @@ public class GitlabFileNode extends BaseTreeNode {
   @Override
   public void beforeExpanded() {
     if (doExpand) {
-      var comments = gitlabService.getCommentsOfPr(connectionName, mergeRequestId);
+      var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
       loadComments(comments);
     }
   }

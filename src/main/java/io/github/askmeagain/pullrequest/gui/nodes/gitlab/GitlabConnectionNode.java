@@ -44,7 +44,7 @@ public class GitlabConnectionNode extends BaseTreeNode {
             project,
             connectionConfig,
             tree,
-            gitlabService.getProject(connectionConfig.getName(), project).getName()
+            gitlabService.getProject(connectionConfig, project).getName()
         ))
         .peek(GitlabProjectNode::onCreation)
         .forEach(this::add);

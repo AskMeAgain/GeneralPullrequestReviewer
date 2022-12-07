@@ -6,11 +6,13 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.ui.popup.JBPopup;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -28,16 +30,16 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private int currentActiveLine;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
-  private final String connectionName;
+  private final ConnectionConfig connection;
 
-  public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, String connectionName) {
+  public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
     linesPerFoldRegionTarget = comments.stream()
         .filter(MergeRequestDiscussion::isSourceDiscussion)
         .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
     linesPerFoldRegionSource = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
         .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
-    this.connectionName = connectionName;
+    this.connection = connection;
   }
 
   @Override
@@ -73,13 +75,15 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
     currentActiveLine = pos.line;
 
-    currentActivePopup = DiscussionPopup.create(mergeRequestDiscussion, text -> dataRequestService.addCommentToThread(
-        connectionName,
-        editor.getUserData(TransferKey.MergeRequestId),
-        mergeRequestDiscussion.getDiscussionId(),
-        GitlabAddCommentToDiscussionRequest.builder()
-            .body(text)
-            .build())
+    var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
+
+    currentActivePopup = DiscussionPopup.create(
+        mergeRequestDiscussion,
+        text -> vcsService.addCommentToThread(connection, editor.getUserData(TransferKey.MergeRequestId),
+            mergeRequestDiscussion.getDiscussionId(),
+            GitlabAddCommentToDiscussionRequest.builder()
+                .body(text)
+                .build())
     );
 
     currentActivePopup.showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());

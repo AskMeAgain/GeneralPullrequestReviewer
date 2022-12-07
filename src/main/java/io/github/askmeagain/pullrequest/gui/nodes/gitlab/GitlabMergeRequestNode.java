@@ -2,6 +2,7 @@ package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.treeStructure.Tree;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
@@ -19,7 +20,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
   private final Project project;
   private final String sourceBranch;
   private final String targetBranch;
-  private final String connectionName;
+  private final ConnectionConfig connection;
 
   private final GitlabService gitlabService = GitlabService.getInstance();
 
@@ -37,9 +38,9 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
   public void beforeExpanded() {
     removeAllChildren();
 
-    gitlabService.getFilesOfPr(connectionName, mergeRequestId)
+    gitlabService.getFilesOfPr(connection, mergeRequestId)
         .stream()
-        .map(file -> new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connectionName, tree))
+        .map(file -> new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connection, tree))
         .forEach(this::add);
   }
 }

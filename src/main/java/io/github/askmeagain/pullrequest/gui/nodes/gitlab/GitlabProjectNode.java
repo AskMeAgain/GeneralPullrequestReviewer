@@ -40,7 +40,7 @@ public class GitlabProjectNode extends BaseTreeNode {
 
     var activeProject = getActiveProject();
 
-    gitlabService.getMergeRequests(connectionConfig.getName())
+    gitlabService.getMergeRequests(connectionConfig)
         .stream()
         .map(mergeRequest -> new GitlabMergeRequestNode(
             mergeRequest.getName(),
@@ -49,7 +49,7 @@ public class GitlabProjectNode extends BaseTreeNode {
             activeProject,
             mergeRequest.getSourceBranch(),
             mergeRequest.getTargetBranch(),
-            connectionConfig.getName()
+            connectionConfig
         ))
         .peek(GitlabMergeRequestNode::onCreation)
         .forEach(this::add);

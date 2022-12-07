@@ -65,6 +65,4 @@ public class SettingsGuiConfiguration implements Configurable {
   public void disposeUIResources() {
     settingsComponent = null;
   }
-
-
 }
