@@ -13,7 +13,14 @@ public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviou
 
   @Override
   public void refresh() {
-
+    System.out.println("Refreshing " + this.getClass().getSimpleName());
+    for (int i = 0; i < getChildCount(); i++) {
+      var child = getChildAt(i);
+      if (child instanceof NodeBehaviour) {
+        var casted = (NodeBehaviour) child;
+        casted.refresh();
+      }
+    }
   }
 
   @Override

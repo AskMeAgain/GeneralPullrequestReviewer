@@ -86,6 +86,11 @@ public class GitlabFileNode extends BaseTreeNode {
     }
   }
 
+  @Override
+  public void refresh() {
+    super.refresh();
+  }
+
   private void loadComments(List<MergeRequestDiscussion> comments) {
     removeAllChildren();
     comments.stream()

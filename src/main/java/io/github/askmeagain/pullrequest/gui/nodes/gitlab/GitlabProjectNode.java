@@ -7,6 +7,8 @@ import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class GitlabProjectNode extends BaseTreeNode {
@@ -25,8 +27,7 @@ public class GitlabProjectNode extends BaseTreeNode {
 
   @Override
   public void refresh() {
-    this.removeAllChildren();
-    onCreation();
+    super.refresh();
   }
 
   @Override
@@ -38,15 +39,14 @@ public class GitlabProjectNode extends BaseTreeNode {
   public void beforeExpanded() {
     removeAllChildren();
 
-    var activeProject = getActiveProject();
+    var mergeRequestNodes = gitlabService.getMergeRequests(connectionConfig);
 
-    gitlabService.getMergeRequests(connectionConfig)
-        .stream()
+    mergeRequestNodes.stream()
         .map(mergeRequest -> new GitlabMergeRequestNode(
             mergeRequest.getName(),
             mergeRequest.getId(),
             tree,
-            activeProject,
+            getActiveProject(),
             mergeRequest.getSourceBranch(),
             mergeRequest.getTargetBranch(),
             connectionConfig

@@ -18,6 +18,11 @@ public class GitlabDiscussionNode extends BaseTreeNode {
   }
 
   @Override
+  public void refresh() {
+    super.refresh();
+  }
+
+  @Override
   public void onCreation() {
     gitlabDiscussion.getReviewComments()
         .stream()

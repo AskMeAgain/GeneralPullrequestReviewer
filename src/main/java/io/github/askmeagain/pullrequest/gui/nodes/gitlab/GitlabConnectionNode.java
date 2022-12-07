@@ -24,8 +24,8 @@ public class GitlabConnectionNode extends BaseTreeNode {
 
   @Override
   public void refresh() {
-    removeAllChildren();
-    onCreation();
+    super.refresh();
+    System.out.println("something different");
   }
 
   @Override

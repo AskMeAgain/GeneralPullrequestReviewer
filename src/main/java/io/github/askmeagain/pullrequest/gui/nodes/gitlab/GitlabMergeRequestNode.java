@@ -35,6 +35,11 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
   }
 
   @Override
+  public void refresh() {
+    super.refresh();
+  }
+
+  @Override
   public void beforeExpanded() {
     removeAllChildren();
 
