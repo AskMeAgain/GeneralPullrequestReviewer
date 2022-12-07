@@ -13,7 +13,6 @@ public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviou
 
   @Override
   public void refresh() {
-    System.out.println("Refreshing " + this.getClass().getSimpleName());
     for (int i = 0; i < getChildCount(); i++) {
       var child = getChildAt(i);
       if (child instanceof NodeBehaviour) {
@@ -36,16 +35,5 @@ public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviou
   @Override
   public void onClick() {
 
-  }
-
-  protected Project getActiveProject() {
-    Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    for (Project project : projects) {
-      Window window = WindowManager.getInstance().suggestParentWindow(project);
-      if (window != null && window.isActive()) {
-        return project;
-      }
-    }
-    throw new RuntimeException("Could not find active project");
   }
 }

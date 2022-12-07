@@ -4,6 +4,8 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
@@ -14,13 +16,13 @@ import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class GitlabFileNode extends BaseTreeNode {
 
-  private final Project project;
   private final String sourceBranch;
   private final String targetBranch;
   private final String filePath;
@@ -73,7 +75,9 @@ public class GitlabFileNode extends BaseTreeNode {
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
 
-    DiffManager.getInstance().showDiff(project, request);
+    var projectId = getActiveProject();
+
+    DiffManager.getInstance().showDiff(projectId, request);
 
     loadComments(comments);
   }
@@ -106,6 +110,17 @@ public class GitlabFileNode extends BaseTreeNode {
   @Override
   public String toString() {
     return filePath;
+  }
+
+  private Project getActiveProject() {
+    Project[] projects = ProjectManager.getInstance().getOpenProjects();
+    for (Project project : projects) {
+      Window window = WindowManager.getInstance().suggestParentWindow(project);
+      if (window != null && window.isActive()) {
+        return project;
+      }
+    }
+    throw new RuntimeException("Could not find active project");
   }
 }
 
