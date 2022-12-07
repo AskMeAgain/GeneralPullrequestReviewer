@@ -12,7 +12,7 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
-import io.github.askmeagain.pullrequest.dto.TransferKey;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
 import lombok.SneakyThrows;

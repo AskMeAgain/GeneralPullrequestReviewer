@@ -6,10 +6,10 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.ui.popup.JBPopup;
-import io.github.askmeagain.pullrequest.dto.TransferKey;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
-import io.github.askmeagain.pullrequest.gui.dialogs.ThreadDisplay;
+import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,7 +73,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
     currentActiveLine = pos.line;
 
-    currentActivePopup = ThreadDisplay.create(mergeRequestDiscussion, text -> dataRequestService.addCommentToThread(
+    currentActivePopup = DiscussionPopup.create(mergeRequestDiscussion, text -> dataRequestService.addCommentToThread(
         connectionName,
         editor.getUserData(TransferKey.MergeRequestId),
         mergeRequestDiscussion.getDiscussionId(),

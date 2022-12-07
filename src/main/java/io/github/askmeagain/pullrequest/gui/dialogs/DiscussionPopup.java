@@ -2,7 +2,6 @@ package io.github.askmeagain.pullrequest.gui.dialogs;
 
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
@@ -11,32 +10,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class ThreadDisplay {
+public class DiscussionPopup {
 
   public static JBPopup create(MergeRequestDiscussion discussion, Consumer<String> onSend) {
-    var textArea = new JTextArea(50, 50);
+    var textArea = new JTextArea();
     var sendButton = new JButton("Send");
 
     var textAreaWrapper = new JBScrollPane(textArea);
-    textAreaWrapper.setPreferredSize(new Dimension(300, 300));
-    textArea.setSize(new Dimension(300, 300));
-    textArea.setPreferredSize(new Dimension(300, 300));
-    textArea.setMaximumSize(new Dimension(300, 300));
-    textArea.setMinimumSize(new Dimension(300, 300));
+    textAreaWrapper.setSize(new Dimension(395, 200));
+    textAreaWrapper.setPreferredSize(new Dimension(395, 200));
+    textAreaWrapper.setMaximumSize(new Dimension(395, 200));
+    textAreaWrapper.setMinimumSize(new Dimension(395, 200));
+    textArea.setSize(new Dimension(395, 200));
+    textArea.setPreferredSize(new Dimension(395, 200));
+    textArea.setMaximumSize(new Dimension(395, 200));
+    textArea.setMinimumSize(new Dimension(395, 200));
 
     var builder = FormBuilder.createFormBuilder();
 
     for (var comment : discussion.getReviewComments()) {
-      builder = builder.addComponent(new JBLabel(comment.toString(), JLabel.LEFT))
-          .addSeparator();
+      var fakeLabel = new JTextField(comment.toString());
+      fakeLabel.setEditable(false);
+      fakeLabel.setBorder(null);
+      fakeLabel.setBackground(null);
+      fakeLabel.setSize(400,50);
+      builder = builder.addComponent(fakeLabel).addSeparator();
     }
 
     var component = builder.addComponent(textAreaWrapper)
-        .addComponentFillVertically(new JPanel(), 10)
         .addComponent(sendButton)
+        .addComponentFillVertically(new JPanel(), 10)
         .getPanel();
 
-    component.setPreferredSize(new Dimension(300, 200));
+    component.setPreferredSize(new Dimension(400, 200 + discussion.getReviewComments().size() * 50));
 
     var popup = JBPopupFactory.getInstance()
         .createComponentPopupBuilder(component, textArea)

@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 public class AddCommentDialog extends DialogWrapper {
 
   private JTextArea textArea;
-  private Consumer<String> run;
+  private final Consumer<String> run;
 
   public AddCommentDialog(Consumer<String> run) {
     super(true);

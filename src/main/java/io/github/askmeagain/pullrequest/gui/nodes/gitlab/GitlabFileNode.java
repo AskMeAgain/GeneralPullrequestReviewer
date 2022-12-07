@@ -5,7 +5,7 @@ import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.dto.TransferKey;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
