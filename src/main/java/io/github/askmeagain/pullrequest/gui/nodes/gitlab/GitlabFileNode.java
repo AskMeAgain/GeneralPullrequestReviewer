@@ -4,13 +4,16 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class GitlabFileNode extends DefaultMutableTreeNode implements NodeBehavi
   private final String filePath;
   private final String mergeRequestId;
   private final String connectionName;
+  private final Tree tree;
 
 
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
@@ -68,6 +72,13 @@ public class GitlabFileNode extends DefaultMutableTreeNode implements NodeBehavi
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
 
     DiffManager.getInstance().showDiff(project, request);
+
+    for (var comment : comments) {
+      var discussionNode = new DiscussionNode(comment);
+      discussionNode.onCreation();
+      this.add(discussionNode);
+      tree.expandPath(new TreePath(this.getPath()));
+    }
   }
 
   @Override

@@ -36,7 +36,7 @@ public class GitlabMergeRequestNode extends DefaultMutableTreeNode implements No
 
   @Override
   public void onCreation() {
-    var userObject = new GitlabFileNode(getActiveProject(), null, null, null, null, null);
+    var userObject = new GitlabFileNode(getActiveProject(), null, null, null, null, null, null);
     this.add(new DefaultMutableTreeNode(userObject));
   }
 
@@ -46,7 +46,7 @@ public class GitlabMergeRequestNode extends DefaultMutableTreeNode implements No
     //get files now
     dataRequestService.getFilesOfPr(connectionName, mergeRequestId)
         .forEach(file -> {
-          var newChild = new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connectionName);
+          var newChild = new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connectionName, tree);
           this.add(newChild);
         });
     var model = (DefaultTreeModel) tree.getModel();
