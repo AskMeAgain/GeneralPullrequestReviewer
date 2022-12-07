@@ -1,12 +1,9 @@
 package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.Service;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
-import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
@@ -14,9 +11,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddComme
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
-import io.github.askmeagain.pullrequest.services.StateService;
-import io.github.askmeagain.pullrequest.settings.ConnectionConfig;
-import lombok.Getter;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 
 import java.util.Base64;
 import java.util.List;

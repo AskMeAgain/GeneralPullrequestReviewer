@@ -1,41 +1,25 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
+import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class DiscussionNode extends DefaultMutableTreeNode implements NodeBehaviour{
+@RequiredArgsConstructor
+public class DiscussionNode extends BaseTreeNode {
 
   private final MergeRequestDiscussion gitlabDiscussion;
 
   @Override
-  public String toString(){
-    return gitlabDiscussion.getDiscussionId();
-  }
-
-  public DiscussionNode(MergeRequestDiscussion gitlabDiscussion) {
-    this.gitlabDiscussion = gitlabDiscussion;
-  }
-
-  @Override
-  public void refresh() {
-
+  public String toString() {
+    return "Discussion: " + gitlabDiscussion.getDiscussionId();
   }
 
   @Override
   public void onCreation() {
-    for(var comment: gitlabDiscussion.getReviewComments()){
-      this.add(new DefaultMutableTreeNode(comment.getText()));
+    for (var comment : gitlabDiscussion.getReviewComments()) {
+      this.add(new DefaultMutableTreeNode(comment.toString()));
     }
-  }
-
-  @Override
-  public void onExpanded() {
-
-  }
-
-  @Override
-  public void onClick() {
-
   }
 }

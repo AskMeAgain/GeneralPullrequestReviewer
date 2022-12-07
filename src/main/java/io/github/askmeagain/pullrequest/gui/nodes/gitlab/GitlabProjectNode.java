@@ -1,18 +1,13 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
+import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
-import io.github.askmeagain.pullrequest.settings.ConnectionConfig;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
-
 @RequiredArgsConstructor
-public class GitlabProjectNode extends DefaultMutableTreeNode implements NodeBehaviour {
+public class GitlabProjectNode extends BaseTreeNode {
   private final String project;
   private final ConnectionConfig connectionConfig;
 
@@ -24,7 +19,7 @@ public class GitlabProjectNode extends DefaultMutableTreeNode implements NodeBeh
 
   @Override
   public String toString() {
-    return projectName;
+    return "Project: " + projectName;
   }
 
   @Override
@@ -52,26 +47,5 @@ public class GitlabProjectNode extends DefaultMutableTreeNode implements NodeBeh
       mergeRequestNode.onCreation();
       this.add(mergeRequestNode);
     }
-  }
-
-  @Override
-  public void onExpanded() {
-
-  }
-
-  @Override
-  public void onClick() {
-
-  }
-
-  private Project getActiveProject() {
-    Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    for (Project project : projects) {
-      Window window = WindowManager.getInstance().suggestParentWindow(project);
-      if (window != null && window.isActive()) {
-        return project;
-      }
-    }
-    throw new RuntimeException("Could not find active project");
   }
 }

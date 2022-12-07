@@ -1,18 +1,12 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.services.DataRequestService;
-import io.github.askmeagain.pullrequest.settings.ConnectionConfig;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
+import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
-
 @RequiredArgsConstructor
-public class GitlabConnectionNode extends DefaultMutableTreeNode implements NodeBehaviour {
+public class GitlabConnectionNode extends BaseTreeNode {
 
   private final ConnectionConfig connectionConfig;
 
@@ -36,15 +30,5 @@ public class GitlabConnectionNode extends DefaultMutableTreeNode implements Node
       projectNode.onCreation();
       this.add(projectNode);
     }
-  }
-
-  @Override
-  public void onExpanded() {
-
-  }
-
-  @Override
-  public void onClick() {
-
   }
 }

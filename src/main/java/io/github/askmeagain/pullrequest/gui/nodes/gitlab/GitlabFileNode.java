@@ -8,16 +8,15 @@ import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
+import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ArrayUtils;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GitlabFileNode extends DefaultMutableTreeNode implements NodeBehaviour {
+public class GitlabFileNode extends BaseTreeNode {
 
   private final Project project;
   private final String sourceBranch;
@@ -83,22 +82,7 @@ public class GitlabFileNode extends DefaultMutableTreeNode implements NodeBehavi
 
   @Override
   public String toString() {
-    return filePath;
-  }
-
-  @Override
-  public void refresh() {
-
-  }
-
-  @Override
-  public void onCreation() {
-
-  }
-
-  @Override
-  public void onExpanded() {
-
+    return "File: " + filePath;
   }
 }
 

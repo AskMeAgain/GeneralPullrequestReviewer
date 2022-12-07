@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui;
+package io.github.askmeagain.pullrequest.listener;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;

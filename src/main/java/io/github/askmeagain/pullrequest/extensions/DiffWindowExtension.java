@@ -14,10 +14,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
 import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
-import io.github.askmeagain.pullrequest.gui.OnHoverOverCommentListener;
-import io.github.askmeagain.pullrequest.gui.MouseClickListener;
-import io.github.askmeagain.pullrequest.services.PluginManagementService;
-import lombok.Getter;
+import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 

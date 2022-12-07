@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.gui.nodes;
 
 public interface NodeBehaviour {
 

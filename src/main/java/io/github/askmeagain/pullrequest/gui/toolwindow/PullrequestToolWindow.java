@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.windows;
+package io.github.askmeagain.pullrequest.gui.toolwindow;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -9,8 +9,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.gui.MouseClickListener;
-import io.github.askmeagain.pullrequest.gui.PluginTreeExpansionListener;
+import io.github.askmeagain.pullrequest.listener.MouseClickListener;
+import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
 import io.github.askmeagain.pullrequest.services.PluginManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

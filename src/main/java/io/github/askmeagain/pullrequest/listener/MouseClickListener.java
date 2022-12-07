@@ -1,7 +1,7 @@
-package io.github.askmeagain.pullrequest.gui;
+package io.github.askmeagain.pullrequest.listener;
 
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.NodeBehaviour;
+import io.github.askmeagain.pullrequest.gui.nodes.NodeBehaviour;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;

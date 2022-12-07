@@ -4,13 +4,14 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPasswordField;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 
 @RequiredArgsConstructor
-public class GitlabConnectionPanel implements PanelImpl {
+public class GitlabIntegrationPanelFactory implements IntegrationFactory {
 
   private final JBPasswordField gitlabApiToken = new JBPasswordField();
   private final JBTextField name = new JBTextField();

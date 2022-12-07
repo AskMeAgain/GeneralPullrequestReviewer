@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.settings;
+package io.github.askmeagain.pullrequest.dto.application;
 
 import com.intellij.util.Producer;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;

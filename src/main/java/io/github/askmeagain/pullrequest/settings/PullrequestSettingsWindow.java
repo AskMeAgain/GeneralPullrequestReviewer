@@ -3,12 +3,12 @@ package io.github.askmeagain.pullrequest.settings;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.FormBuilder;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import lombok.Getter;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +30,7 @@ public class PullrequestSettingsWindow {
     var addProjectButton = new JButton("Add Project");
     addProjectButton.addActionListener(a -> {
       if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
-        var gitlabConnectionPanel = new GitlabConnectionPanel(new ConnectionConfig("New Gitlab Connection"));
+        var gitlabConnectionPanel = new GitlabIntegrationPanelFactory(new ConnectionConfig("New Gitlab Connection"));
         var component = gitlabConnectionPanel.create();
         this.connectionConfigs.add(gitlabConnectionPanel.getConfig());
         tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
@@ -56,9 +56,9 @@ public class PullrequestSettingsWindow {
     tabbedPane.addTab("Add Connection", addTab);
   }
 
-  private PanelImpl resolveComponent(ConnectionConfig connectionConfig) {
+  private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig) {
     if (connectionConfig.getVcsImplementation() == VcsImplementation.GITLAB) {
-      return new GitlabConnectionPanel(connectionConfig);
+      return new GitlabIntegrationPanelFactory(connectionConfig);
     }
     throw new RuntimeException("whatever");
   }
