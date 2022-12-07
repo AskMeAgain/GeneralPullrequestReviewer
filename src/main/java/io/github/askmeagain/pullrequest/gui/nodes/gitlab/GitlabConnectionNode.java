@@ -5,6 +5,8 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 public class GitlabConnectionNode extends BaseTreeNode {
 
@@ -25,10 +27,11 @@ public class GitlabConnectionNode extends BaseTreeNode {
 
   @Override
   public void onCreation() {
-    for (var project : connectionConfig.getConfigs().get("projects").split(",")) {
-      var projectNode = new GitlabProjectNode(project, connectionConfig, tree);
-      projectNode.onCreation();
-      this.add(projectNode);
-    }
+    Arrays.stream(connectionConfig.getConfigs()
+            .get("projects")
+            .split(","))
+        .map(project -> new GitlabProjectNode(project, connectionConfig, tree))
+        .peek(GitlabProjectNode::onCreation)
+        .forEach(this::add);
   }
 }

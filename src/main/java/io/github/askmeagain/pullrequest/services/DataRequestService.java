@@ -20,10 +20,6 @@ public final class DataRequestService {
 
   private final PullrequestPluginState state = StateService.getInstance().getState();
 
-  public List<MergeRequest> getMergeRequests(String connectionName) {
-    return mapVcsImplementation.get(getVcsImplementation(connectionName)).getMergeRequests(connectionName);
-  }
-
   public List<String> getFilesOfPr(String connectionName, String mergeRequestId) {
     return mapVcsImplementation.get(getVcsImplementation(connectionName)).getFilesOfPr(connectionName, mergeRequestId);
   }

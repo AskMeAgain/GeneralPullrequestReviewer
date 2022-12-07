@@ -9,7 +9,7 @@ import io.github.askmeagain.pullrequest.dto.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.services.DataRequestService;
+import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.TreePath;
@@ -26,15 +26,14 @@ public class GitlabFileNode extends BaseTreeNode {
   private final String connectionName;
   private final Tree tree;
 
-
-  private final DataRequestService dataRequestService = DataRequestService.getInstance();
+  private final GitlabService gitlabService = GitlabService.getInstance();
 
   @Override
   public void onClick() {
-    var sourceFile = dataRequestService.getFileOfBranch(connectionName, sourceBranch, filePath);
-    var targetFile = dataRequestService.getFileOfBranch(connectionName, targetBranch, filePath);
+    var sourceFile = gitlabService.getFileOfBranch(connectionName, sourceBranch, filePath);
+    var targetFile = gitlabService.getFileOfBranch(connectionName, targetBranch, filePath);
 
-    var comments = dataRequestService.getCommentsOfPr(connectionName, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(connectionName, mergeRequestId);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
@@ -72,12 +71,12 @@ public class GitlabFileNode extends BaseTreeNode {
 
     DiffManager.getInstance().showDiff(project, request);
 
-    for (var comment : comments) {
-      var discussionNode = new DiscussionNode(comment);
-      discussionNode.onCreation();
-      this.add(discussionNode);
-      tree.expandPath(new TreePath(this.getPath()));
-    }
+    comments.stream()
+        .map(DiscussionNode::new)
+        .peek(DiscussionNode::onCreation)
+        .forEach(this::add);
+
+    tree.expandPath(new TreePath(this.getPath()));
   }
 
   @Override

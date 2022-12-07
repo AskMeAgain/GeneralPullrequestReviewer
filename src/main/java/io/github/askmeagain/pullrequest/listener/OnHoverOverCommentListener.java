@@ -11,8 +11,6 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.gui.dialogs.ThreadDisplay;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
-import io.github.askmeagain.pullrequest.services.PluginManagementService;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

@@ -11,7 +11,7 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.listener.MouseClickListener;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
-import io.github.askmeagain.pullrequest.services.PluginManagementService;
+import io.github.askmeagain.pullrequest.services.ManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ import java.awt.*;
 public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
 
   @Getter(lazy = true)
-  private final PluginManagementService pluginManagementService = PluginManagementService.getInstance();
+  private final ManagementService managementService = ManagementService.getInstance();
 
   @Override
   public void createToolWindowContent(@NotNull Project project, ToolWindow toolWindow) {
@@ -52,7 +52,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
   private JComponent createPanel(JPanel parent) {
     var buttonToolBar = createButtonToolBar(parent);
 
-    var tree = getPluginManagementService().getTree();
+    var tree = getManagementService().getTree();
     tree.setRootVisible(false);
 
     tree.addMouseListener(new MouseClickListener(tree));

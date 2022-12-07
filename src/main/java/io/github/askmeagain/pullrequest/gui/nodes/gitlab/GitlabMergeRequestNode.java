@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
+import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -20,7 +21,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
   private final String targetBranch;
   private final String connectionName;
 
-  private final DataRequestService dataRequestService = DataRequestService.getInstance();
+  private final GitlabService gitlabService = GitlabService.getInstance();
 
   @Override
   public String toString() {
@@ -29,19 +30,18 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
 
   @Override
   public void onCreation() {
-    var userObject = new GitlabFileNode(getActiveProject(), null, null, null, null, null, null);
-    this.add(new DefaultMutableTreeNode(userObject));
+    this.add(new DefaultMutableTreeNode("hidden"));
   }
 
   @Override
   public void onExpanded() {
     this.removeAllChildren();
-    //get files now
-    dataRequestService.getFilesOfPr(connectionName, mergeRequestId)
-        .forEach(file -> {
-          var newChild = new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connectionName, tree);
-          this.add(newChild);
-        });
+
+    gitlabService.getFilesOfPr(connectionName, mergeRequestId)
+        .stream()
+        .map(file -> new GitlabFileNode(project, sourceBranch, targetBranch, file, mergeRequestId, connectionName, tree))
+        .forEach(this::add);
+
     var model = (DefaultTreeModel) tree.getModel();
     model.reload();
   }

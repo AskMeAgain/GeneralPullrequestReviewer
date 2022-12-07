@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 @Service
-public final class PluginManagementService {
+public final class ManagementService {
 
   private final PullrequestPluginState state = StateService.getInstance().getState();
 
@@ -20,8 +20,6 @@ public final class PluginManagementService {
   private final Tree tree = new Tree(rootNode);
 
   public void refreshList() {
-    System.out.println("Refresh list!");
-
     rootNode.removeAllChildren();
 
     for (var connection : state.getConnectionConfigs()) {
@@ -34,8 +32,8 @@ public final class PluginManagementService {
     model.reload();
   }
 
-  public static PluginManagementService getInstance() {
-    return ApplicationManager.getApplication().getService(PluginManagementService.class);
+  public static ManagementService getInstance() {
+    return ApplicationManager.getApplication().getService(ManagementService.class);
   }
 
 }

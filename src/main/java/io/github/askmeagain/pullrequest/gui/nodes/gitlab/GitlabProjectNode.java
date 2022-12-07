@@ -16,7 +16,6 @@ public class GitlabProjectNode extends BaseTreeNode {
   private final GitlabService gitlabService = GitlabService.getInstance();
   private final Tree tree;
 
-
   @Override
   public String toString() {
     return "Project: " + projectName;
