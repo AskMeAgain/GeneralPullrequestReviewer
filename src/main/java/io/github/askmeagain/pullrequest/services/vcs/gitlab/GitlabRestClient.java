@@ -12,6 +12,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileD
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.settings.ConnectionConfig;
@@ -74,5 +75,9 @@ public class GitlabRestClient {
       GitlabAddCommentToDiscussionRequest request
   ) {
     gitlabApi.addCommentToThread(request, projectId, mergeRequestId, discussionId, getToken());
+  }
+
+  public GitlabProjectResponse getProject(String projectId) {
+    return gitlabApi.getProject(projectId, getToken());
   }
 }

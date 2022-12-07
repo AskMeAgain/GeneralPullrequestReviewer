@@ -18,10 +18,8 @@ public class GitlabConnectionNode extends DefaultMutableTreeNode implements Node
 
   private final Tree tree;
 
-  private final DataRequestService dataRequestService = DataRequestService.getInstance();
-
   @Override
-  public String toString(){
+  public String toString() {
     return connectionConfig.getName();
   }
 
@@ -33,41 +31,15 @@ public class GitlabConnectionNode extends DefaultMutableTreeNode implements Node
 
   @Override
   public void onCreation() {
-    var activeProject = getActiveProject();
-      for (var project : connectionConfig.getConfigs().get("projects").split(",")) {
-        var projectNode = new DefaultMutableTreeNode(new ProjectNode(project));
-        this.add(projectNode);
-
-        for (var mergeRequest : dataRequestService.getMergeRequests(connectionConfig.getName())) {
-          var mergeRequestNode = new DefaultMutableTreeNode(new MergeRequestNode(
-              mergeRequest.getName(),
-              mergeRequest.getId(),
-              tree,
-              activeProject,
-              mergeRequest.getSourceBranch(),
-              mergeRequest.getTargetBranch(),
-              connectionConfig.getName()
-          ));
-          projectNode.add(mergeRequestNode);
-          var userObject = new FileNodes(activeProject, null, null, null, null, null);
-          mergeRequestNode.add(new DefaultMutableTreeNode(userObject));
-        }
-      }
+    for (var project : connectionConfig.getConfigs().get("projects").split(",")) {
+      var projectNode = new GitlabProjectNode(project, connectionConfig, tree);
+      projectNode.onCreation();
+      this.add(projectNode);
+    }
   }
 
   @Override
   public void onExpanded() {
 
-  }
-
-  private Project getActiveProject() {
-    Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    for (Project project : projects) {
-      Window window = WindowManager.getInstance().suggestParentWindow(project);
-      if (window != null && window.isActive()) {
-        return project;
-      }
-    }
-    throw new RuntimeException("Could not find active project");
   }
 }

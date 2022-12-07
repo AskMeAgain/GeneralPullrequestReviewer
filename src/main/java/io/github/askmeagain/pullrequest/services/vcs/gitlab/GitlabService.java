@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionRe
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
@@ -108,6 +109,10 @@ public final class GitlabService implements VcsService {
         .build();
 
     new GitlabRestClient(getState().getMap().get(connectionName)).addMergeRequestComment(projectId, mergeRequestId, request);
+  }
+
+  public GitlabProjectResponse getProject(String connectionName, String projectId) {
+    return new GitlabRestClient(getState().getMap().get(connectionName)).getProject(projectId);
   }
 
   @SneakyThrows

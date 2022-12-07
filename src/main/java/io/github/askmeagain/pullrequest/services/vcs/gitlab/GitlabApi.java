@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileD
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 
 import java.util.List;
@@ -57,7 +58,14 @@ public interface GitlabApi {
   List<MergeRequestVersions> getDiffVersion(
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId,
-      @Param("token") String gitlabToken);
+      @Param("token") String gitlabToken
+  );
+
+  @RequestLine("GET /projects/{projectId}?private_token={token}")
+  GitlabProjectResponse getProject(
+      @Param("projectId") String projectId,
+      @Param("token") String gitlabToken
+  );
 
   @Headers("Content-Type: application/json")
   @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes?private_token={token}")
