@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes;
+package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

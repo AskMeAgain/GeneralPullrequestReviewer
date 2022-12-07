@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes;
+package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;

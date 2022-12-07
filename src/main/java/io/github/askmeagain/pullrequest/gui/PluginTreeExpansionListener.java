@@ -1,6 +1,6 @@
 package io.github.askmeagain.pullrequest.gui;
 
-import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestNode;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.MergeRequestNode;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.event.TreeExpansionEvent;
