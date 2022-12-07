@@ -10,10 +10,11 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
 import lombok.RequiredArgsConstructor;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class FileNodes {
+public class GitlabFileNode extends DefaultMutableTreeNode implements NodeBehaviour {
 
   private final Project project;
   private final String sourceBranch;
@@ -25,7 +26,8 @@ public class FileNodes {
 
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
-  public void openFile() {
+  @Override
+  public void onClick() {
     var sourceFile = dataRequestService.getFileOfBranch(connectionName, sourceBranch, filePath);
     var targetFile = dataRequestService.getFileOfBranch(connectionName, targetBranch, filePath);
 
@@ -72,4 +74,20 @@ public class FileNodes {
   public String toString() {
     return filePath;
   }
+
+  @Override
+  public void refresh() {
+
+  }
+
+  @Override
+  public void onCreation() {
+
+  }
+
+  @Override
+  public void onExpanded() {
+
+  }
 }
+

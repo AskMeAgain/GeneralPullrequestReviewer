@@ -42,4 +42,9 @@ public class GitlabConnectionNode extends DefaultMutableTreeNode implements Node
   public void onExpanded() {
 
   }
+
+  @Override
+  public void onClick() {
+
+  }
 }

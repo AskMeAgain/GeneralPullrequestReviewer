@@ -1,6 +1,7 @@
 package io.github.askmeagain.pullrequest.gui;
 
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.MergeRequestNode;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabMergeRequestNode;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.NodeBehaviour;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.event.TreeExpansionEvent;
@@ -14,14 +15,14 @@ public class PluginTreeExpansionListener implements TreeWillExpandListener {
   public void treeWillExpand(TreeExpansionEvent treeExpansionEvent) {
     var lastNode = (DefaultMutableTreeNode) treeExpansionEvent.getPath().getLastPathComponent();
 
-    if(lastNode.getUserObject() instanceof MergeRequestNode){
-      var mergeRequestNode = (MergeRequestNode) lastNode.getUserObject();
-      mergeRequestNode.beforeOpening(lastNode);
+    if (lastNode instanceof NodeBehaviour) {
+      var node = (NodeBehaviour) lastNode;
+      node.onExpanded();
     }
   }
 
   @Override
   public void treeWillCollapse(TreeExpansionEvent treeExpansionEvent) {
-
+    //do nothing
   }
 }

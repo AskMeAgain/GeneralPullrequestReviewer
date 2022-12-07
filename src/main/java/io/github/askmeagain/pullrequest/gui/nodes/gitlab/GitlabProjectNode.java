@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.services.DataRequestService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import io.github.askmeagain.pullrequest.settings.ConnectionConfig;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class GitlabProjectNode extends DefaultMutableTreeNode implements NodeBeh
     projectName = gitlabService.getProject(connectionConfig.getName(), project).getName();
 
     for (var mergeRequest : gitlabService.getMergeRequests(connectionConfig.getName())) {
-      var mergeRequestNode = new DefaultMutableTreeNode(new MergeRequestNode(
+      var mergeRequestNode = new GitlabMergeRequestNode(
           mergeRequest.getName(),
           mergeRequest.getId(),
           tree,
@@ -49,15 +48,19 @@ public class GitlabProjectNode extends DefaultMutableTreeNode implements NodeBeh
           mergeRequest.getSourceBranch(),
           mergeRequest.getTargetBranch(),
           connectionConfig.getName()
-      ));
+      );
+      mergeRequestNode.onCreation();
       this.add(mergeRequestNode);
-      var userObject = new FileNodes(activeProject, null, null, null, null, null);
-      mergeRequestNode.add(new DefaultMutableTreeNode(userObject));
     }
   }
 
   @Override
   public void onExpanded() {
+
+  }
+
+  @Override
+  public void onClick() {
 
   }
 

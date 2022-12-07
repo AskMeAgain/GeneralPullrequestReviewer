@@ -1,7 +1,7 @@
 package io.github.askmeagain.pullrequest.gui;
 
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.FileNodes;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.NodeBehaviour;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -17,9 +17,9 @@ public class MouseClickListener extends MouseAdapter {
     TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
     if (tp != null) {
       var lastPathComponent = (DefaultMutableTreeNode) tp.getLastPathComponent();
-      if (lastPathComponent.getUserObject() instanceof FileNodes) {
-        var runnable = (FileNodes) lastPathComponent.getUserObject();
-        runnable.openFile();
+      if (lastPathComponent instanceof NodeBehaviour) {
+        var runnable = (NodeBehaviour) lastPathComponent;
+        runnable.onClick();
       }
     }
   }
