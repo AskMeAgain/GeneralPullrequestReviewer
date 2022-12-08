@@ -1,35 +1,33 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.gui.nodes.test;
 
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabFileNode;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import io.github.askmeagain.pullrequest.services.vcs.test.TestService;
 import lombok.Getter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
-public class GitlabMergeRequestNode extends BaseTreeNode {
+public class TestMergeRequestNode extends BaseTreeNode {
 
   private final String display;
   @Getter
   private final String mergeRequestId;
-  private final Tree tree;
   private final String sourceBranch;
   private final String targetBranch;
-  private final ConnectionConfig connection;
 
-  public GitlabMergeRequestNode(MergeRequest mergeRequest, Tree tree, ConnectionConfig connectionConfig) {
+  public TestMergeRequestNode(MergeRequest mergeRequest) {
     display = mergeRequest.getName();
     mergeRequestId = mergeRequest.getId();
-    this.tree = tree;
-    this.connection = connectionConfig;
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
   }
 
-  private final GitlabService gitlabService = GitlabService.getInstance();
+  private final TestService testService = TestService.getInstance();
 
   @Override
   public String toString() {
@@ -38,16 +36,11 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
 
   @Override
   public void onCreation() {
-    add(new DefaultMutableTreeNode("hidden"));
-  }
-
-  @Override
-  public void beforeExpanded() {
-    removeAllChildren();
-
-    gitlabService.getFilesOfPr(connection, mergeRequestId)
+    testService.getFilesOfPr(null, mergeRequestId)
         .stream()
-        .map(file -> new GitlabFileNode(sourceBranch, targetBranch, file, mergeRequestId, connection, tree))
+        .map(file -> new TestFileNode(sourceBranch, targetBranch, file, mergeRequestId))
         .forEach(this::add);
   }
+
+
 }

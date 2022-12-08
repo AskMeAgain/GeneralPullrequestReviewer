@@ -25,6 +25,8 @@
                     factoryClass="io.github.askmeagain.pullrequest.gui.toolwindow.PullrequestToolWindow"/>
         <diff.DiffExtension order="first"
                             implementation="io.github.askmeagain.pullrequest.extensions.DiffWindowExtension"/>
+        <fileEditorProvider order="first"
+                            implementation="io.github.askmeagain.pullrequest.gui.diffviewer.DiffEditorProvider"/>
     </extensions>
 
     <actions>

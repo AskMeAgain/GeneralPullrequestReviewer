@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.gui.nodes.test;
 
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
@@ -8,18 +8,18 @@ import lombok.RequiredArgsConstructor;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 @RequiredArgsConstructor
-public class GitlabDiscussionNode extends BaseTreeNode {
+public class TestDiscussionNode extends BaseTreeNode {
 
-  private final MergeRequestDiscussion gitlabDiscussion;
+  private final MergeRequestDiscussion discussion;
 
   @Override
   public String toString() {
-    return "Discussion: " + gitlabDiscussion.getDiscussionId();
+    return "Discussion: " + discussion.getDiscussionId();
   }
 
   @Override
   public void onCreation() {
-    gitlabDiscussion.getReviewComments()
+    discussion.getReviewComments()
         .stream()
         .map(ReviewComment::toString)
         .map(DefaultMutableTreeNode::new)

@@ -36,4 +36,15 @@ public class BaseTreeNode extends DefaultMutableTreeNode implements NodeBehaviou
   public void onClick() {
 
   }
+
+  protected Project getActiveProject() {
+    Project[] projects = ProjectManager.getInstance().getOpenProjects();
+    for (Project project : projects) {
+      Window window = WindowManager.getInstance().suggestParentWindow(project);
+      if (window != null && window.isActive()) {
+        return project;
+      }
+    }
+    throw new RuntimeException("Could not find active project");
+  }
 }

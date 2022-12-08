@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.gui.nodes.test;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
@@ -8,12 +8,13 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabDiscussionNode;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import io.github.askmeagain.pullrequest.services.vcs.test.TestService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.TreePath;
@@ -22,25 +23,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GitlabFileNode extends BaseTreeNode {
+public class TestFileNode extends BaseTreeNode {
 
   private final String sourceBranch;
   private final String targetBranch;
   private final String filePath;
   private final String mergeRequestId;
-  private final ConnectionConfig connection;
-  private final Tree tree;
-
-  private final GitlabService gitlabService = GitlabService.getInstance();
-
-  private final PluginTreeExpansionListener listener = PluginTreeExpansionListener.getInstance();
+  private final TestService testService = TestService.getInstance();
 
   @Override
   public void onClick() {
-    var sourceFile = gitlabService.getFileOfBranch(connection, sourceBranch, filePath);
-    var targetFile = gitlabService.getFileOfBranch(connection, targetBranch, filePath);
+    var sourceFile = testService.getFileOfBranch(null, sourceBranch, filePath);
+    var targetFile = testService.getFileOfBranch(null, targetBranch, filePath);
 
-    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
+    var comments = testService.getCommentsOfPr(null, mergeRequestId);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
@@ -73,37 +69,12 @@ public class GitlabFileNode extends BaseTreeNode {
     request.putUserData(TransferKey.DataContextKeyTarget, targetReviewFile);
 
     request.putUserData(TransferKey.FileName, filePath);
-    request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
 
     var projectId = getActiveProject();
 
     DiffManager.getInstance().showDiff(projectId, request);
 
-    loadComments(comments);
-  }
-
-  @Override
-  public void beforeExpanded() {
-    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
-    loadComments(comments);
-  }
-
-  @Override
-  public void refresh() {
-    super.refresh();
-    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
-    loadComments(comments);
-  }
-
-  private void loadComments(List<MergeRequestDiscussion> comments) {
-    removeAllChildren();
-    comments.stream()
-        .map(GitlabDiscussionNode::new)
-        .peek(GitlabDiscussionNode::onCreation)
-        .forEach(this::add);
-
-    listener.doWithoutTriggers(() -> tree.expandPath(new TreePath(this.getPath())));
   }
 
   @Override

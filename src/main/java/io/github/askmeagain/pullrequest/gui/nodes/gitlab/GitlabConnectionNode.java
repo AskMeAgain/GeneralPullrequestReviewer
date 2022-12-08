@@ -23,12 +23,6 @@ public class GitlabConnectionNode extends BaseTreeNode {
   }
 
   @Override
-  public void refresh() {
-    super.refresh();
-    System.out.println("something different");
-  }
-
-  @Override
   public void onCreation() {
     add(new DefaultMutableTreeNode("hidden"));
   }

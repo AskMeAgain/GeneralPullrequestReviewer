@@ -17,7 +17,7 @@ public class PullrequestSettingsWindow {
   private final JBTabbedPane tabbedPane;
 
   private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{
-      VcsImplementation.GITLAB
+      VcsImplementation.GITLAB, VcsImplementation.TEST
   });
 
   @Getter
