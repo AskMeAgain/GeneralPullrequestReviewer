@@ -1,6 +1,7 @@
 package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.ColorPanel;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
@@ -14,10 +15,11 @@ import java.util.Map;
 
 public class PullrequestSettingsWindow {
 
-  private final JBTabbedPane tabbedPane;
+  private final JPanel panel;
 
   private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{
-      VcsImplementation.GITLAB, VcsImplementation.TEST
+      VcsImplementation.GITLAB,
+      VcsImplementation.TEST
   });
 
   @Getter
@@ -25,7 +27,7 @@ public class PullrequestSettingsWindow {
 
   public PullrequestSettingsWindow(Map<String, ConnectionConfig> abc) {
     this.connectionConfigs = new ArrayList<>(abc.values());
-    tabbedPane = new JBTabbedPane();
+    var tabbedPane = new JBTabbedPane();
 
     var addProjectButton = new JButton("Add Project");
     addProjectButton.addActionListener(a -> {
@@ -54,6 +56,13 @@ public class PullrequestSettingsWindow {
     }
 
     tabbedPane.addTab("Add Connection", addTab);
+
+    panel = FormBuilder.createFormBuilder()
+        .addComponent(tabbedPane)
+        .addSeparator()
+        .addComponent(colorPickers())
+        .addComponentFillVertically(new JPanel(), 10)
+        .getPanel();
   }
 
   private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig) {
@@ -63,7 +72,15 @@ public class PullrequestSettingsWindow {
     throw new RuntimeException("whatever");
   }
 
+  private JPanel colorPickers() {
+    return FormBuilder.createFormBuilder()
+        .addLabeledComponent("MergeRequests", new ColorPanel())
+        .addLabeledComponent("Files", new ColorPanel())
+        .addComponentFillVertically(new JPanel(), 10)
+        .getPanel();
+  }
+
   public JComponent getPreferredFocusedComponent() {
-    return tabbedPane;
+    return panel;
   }
 }
