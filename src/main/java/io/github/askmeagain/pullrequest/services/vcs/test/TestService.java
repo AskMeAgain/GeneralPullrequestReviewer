@@ -2,15 +2,16 @@ package io.github.askmeagain.pullrequest.services.vcs.test;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
-import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
-import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
+import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import lombok.SneakyThrows;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class TestService implements VcsService {
@@ -21,7 +22,20 @@ public final class TestService implements VcsService {
 
   @Override
   public List<MergeRequest> getMergeRequests(ConnectionConfig connectionName) {
-    return null;
+    return List.of(MergeRequest.builder()
+            .targetBranch("target")
+            .sourceBranch("master")
+            .id("1")
+            .name("The first test PR")
+            .files(List.of(
+                ReviewFile.builder()
+                    .fileName("File1.txt")
+                    .fileContent("abcasd")
+                    .
+                    .build()
+
+            ))
+        .build());
   }
 
   @Override
