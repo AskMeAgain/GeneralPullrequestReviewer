@@ -13,10 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
-public class PluginTreeExpansionListener implements TreeWillExpandListener {
+public final class PluginTreeExpansionListener implements TreeWillExpandListener {
 
   @Getter
-  private final AtomicBoolean activateTriggers = new AtomicBoolean();
+  private final AtomicBoolean activateTriggers = new AtomicBoolean(true);
 
   public void doWithoutTriggers(Runnable runnable){
     activateTriggers.set(false);

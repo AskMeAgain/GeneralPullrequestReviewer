@@ -22,19 +22,17 @@ public final class TestService implements VcsService {
 
   @Override
   public List<MergeRequest> getMergeRequests(ConnectionConfig connectionName) {
+    //TODO
     return List.of(MergeRequest.builder()
-            .targetBranch("target")
-            .sourceBranch("master")
-            .id("1")
-            .name("The first test PR")
-            .files(List.of(
-                ReviewFile.builder()
-                    .fileName("File1.txt")
-                    .fileContent("abcasd")
-                    .
-                    .build()
-
-            ))
+        .targetBranch("target")
+        .sourceBranch("master")
+        .id("1")
+        .name("The first test PR")
+        .files(List.of(
+            ReviewFile.builder()
+                .fileName("File1.txt")
+                .fileContent("abcasd")
+                .build()))
         .build());
   }
 
