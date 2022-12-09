@@ -14,7 +14,6 @@ public class GitlabConnectionNode extends BaseTreeNode {
 
   private final ConnectionConfig connectionConfig;
 
-  private final Tree tree;
   private final GitlabService gitlabService = GitlabService.getInstance();
 
   @Override
@@ -37,7 +36,6 @@ public class GitlabConnectionNode extends BaseTreeNode {
         .map(project -> new GitlabProjectNode(
             project,
             connectionConfig,
-            tree,
             gitlabService.getProject(connectionConfig, project).getName()
         ))
         .peek(GitlabProjectNode::onCreation)

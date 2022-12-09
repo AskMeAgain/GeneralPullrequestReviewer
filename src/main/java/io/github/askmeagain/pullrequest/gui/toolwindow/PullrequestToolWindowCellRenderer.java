@@ -1,23 +1,19 @@
 package io.github.askmeagain.pullrequest.gui.toolwindow;
 
-import com.intellij.openapi.fileChooser.tree.FileNode;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabFileNode;
+import io.github.askmeagain.pullrequest.gui.nodes.FileNodeMarker;
+import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.StateService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.openapi.fileChooser.FileElement.isFileHidden;
-import static com.intellij.openapi.util.IconLoader.getTransparentIcon;
-
 public class PullrequestToolWindowCellRenderer extends ColoredTreeCellRenderer {
 
-  private static final Color GRAYED = SimpleTextAttributes.GRAYED_ATTRIBUTES.getFgColor();
+  private static final Color GRAYED = SimpleTextAttributes.REGULAR_ATTRIBUTES.getFgColor();
 
   private final PullrequestPluginState state = StateService.getInstance().getState();
 
@@ -31,27 +27,16 @@ public class PullrequestToolWindowCellRenderer extends ColoredTreeCellRenderer {
       int row,
       boolean focused
   ) {
-    int style = SimpleTextAttributes.STYLE_PLAIN;
-    Color color = null;
-    String name = null;
-    String comment = null;
-    boolean valid = true;
-    if (value instanceof GitlabFileNode) {
+    var color = GRAYED;
+
+    if (value instanceof FileNodeMarker) {
       color = Color.decode(state.getFileColor());
-    } else if (value instanceof VirtualFile) {
-      VirtualFile file = (VirtualFile) value;
-      name = file.getName();
-      valid = file.isValid();
-    } else if (value != null) {
-      name = value.toString(); //NON-NLS
-      color = GRAYED;
+    } else if (value instanceof MergeRequestMarker) {
+      color = Color.decode(state.getMergeRequestColor());
     }
 
-    if (!valid) style |= SimpleTextAttributes.STYLE_STRIKEOUT;
     setIcon(null);
-    SimpleTextAttributes attributes = new SimpleTextAttributes(style, color);
-    if (name != null) append(name, attributes);
-    if (comment != null) append(comment, attributes);
+    var attributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
+    append(value.toString(), attributes);
   }
-
 }

@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
 public class GitlabProjectNode extends BaseTreeNode {
   private final String projectId;
   private final ConnectionConfig connectionConfig;
-
-
-  private final Tree tree;
   private final String projectName;
   private final GitlabService gitlabService = GitlabService.getInstance();
 
@@ -53,7 +50,7 @@ public class GitlabProjectNode extends BaseTreeNode {
     //new merge requests
     for (var mergeRequest : mergeRequests) {
       if (!childMap.containsKey(mergeRequest.getId())) {
-        var newNode = new GitlabMergeRequestNode(mergeRequest, tree, connectionConfig);
+        var newNode = new GitlabMergeRequestNode(mergeRequest, connectionConfig);
         add(newNode);
       }
     }
@@ -72,7 +69,7 @@ public class GitlabProjectNode extends BaseTreeNode {
 
     gitlabService.getMergeRequests(connectionConfig)
         .stream()
-        .map(mergeRequest -> new GitlabMergeRequestNode(mergeRequest, tree, connectionConfig))
+        .map(mergeRequest -> new GitlabMergeRequestNode(mergeRequest, connectionConfig))
         .peek(GitlabMergeRequestNode::onCreation)
         .forEach(this::add);
   }

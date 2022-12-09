@@ -12,6 +12,7 @@ import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.gui.nodes.FileNodeMarker;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GitlabFileNode extends BaseTreeNode {
+public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
   private final String sourceBranch;
   private final String targetBranch;
   private final String filePath;
   private final String mergeRequestId;
   private final ConnectionConfig connection;
-  private final Tree tree;
 
   private final GitlabService gitlabService = GitlabService.getInstance();
 
@@ -103,7 +103,8 @@ public class GitlabFileNode extends BaseTreeNode {
         .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
 
-    listener.doWithoutTriggers(() -> tree.expandPath(new TreePath(this.getPath())));
+    //TODO
+    //listener.doWithoutTriggers(() -> tree.expandPath(new TreePath(this.getPath())));
   }
 
   @Override

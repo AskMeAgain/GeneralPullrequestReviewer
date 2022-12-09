@@ -4,26 +4,25 @@ import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
-public class GitlabMergeRequestNode extends BaseTreeNode {
+public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
 
   private final String display;
   @Getter
   private final String mergeRequestId;
-  private final Tree tree;
   private final String sourceBranch;
   private final String targetBranch;
   private final ConnectionConfig connection;
 
-  public GitlabMergeRequestNode(MergeRequest mergeRequest, Tree tree, ConnectionConfig connectionConfig) {
+  public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig) {
     display = mergeRequest.getName();
     mergeRequestId = mergeRequest.getId();
-    this.tree = tree;
     this.connection = connectionConfig;
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
@@ -47,7 +46,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode {
 
     gitlabService.getFilesOfPr(connection, mergeRequestId)
         .stream()
-        .map(file -> new GitlabFileNode(sourceBranch, targetBranch, file, mergeRequestId, connection, tree))
+        .map(file -> new GitlabFileNode(sourceBranch, targetBranch, file, mergeRequestId, connection))
         .forEach(this::add);
   }
 }

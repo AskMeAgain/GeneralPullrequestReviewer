@@ -20,23 +20,8 @@ public final class ManagementService {
   @Getter
   private final Tree tree = new Tree(rootNode);
 
-  public ManagementService() {
-    init();
-  }
-
   public void refreshList() {
     rootNode.refresh();
-  }
-
-  private void init() {
-    state.getConnectionConfigs()
-        .stream()
-        .map(connection -> new GitlabConnectionNode(connection, tree))
-        .peek(GitlabConnectionNode::onCreation)
-        .forEach(rootNode::add);
-
-    var model = (DefaultTreeModel) tree.getModel();
-    model.reload();
   }
 
   public static ManagementService getInstance() {
