@@ -1,14 +1,19 @@
 package io.github.askmeagain.pullrequest.settings.integrations;
 
+import com.intellij.ui.TabbedPane;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPasswordField;
+import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
+import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
+import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class GitlabIntegrationPanelFactory implements IntegrationFactory {
@@ -18,9 +23,13 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField gitlabUrl = new JBTextField();
   private final JBTextField gitlabProjects = new JBTextField();
   private final JButton delete = new JButton("Delete Integration");
-  private final ConnectionConfig connectionConfig;
+  private final int index;
+  private final JBTabbedPane tabbedPane;
+  private final List<ConnectionConfig> list;
 
   public JPanel create() {
+
+    var connectionConfig = list.get(index);
 
     name.setText(connectionConfig.getName());
     gitlabUrl.setText(connectionConfig.getConfigs().get("gitlabUrl"));
@@ -28,7 +37,8 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     gitlabApiToken.setText(connectionConfig.getConfigs().get("token"));
 
     delete.addActionListener(l -> {
-      //TODO
+      list.remove(index);
+      tabbedPane.remove(index);
     });
 
     return FormBuilder.createFormBuilder()
@@ -42,6 +52,8 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   }
 
   public ConnectionConfig getConfig() {
+    var connectionConfig = list.get(index);
+
     connectionConfig.setRefresh(() -> {
       connectionConfig.setVcsImplementation(VcsImplementation.GITLAB);
       connectionConfig.setName(name.getText());

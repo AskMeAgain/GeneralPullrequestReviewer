@@ -40,7 +40,11 @@ public class PullrequestSettingsWindow {
     var addProjectButton = new JButton("Add Project");
     addProjectButton.addActionListener(a -> {
       if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
-        var gitlabConnectionPanel = new GitlabIntegrationPanelFactory(new ConnectionConfig("New Gitlab Connection"));
+        var gitlabConnectionPanel = new GitlabIntegrationPanelFactory(
+            tabbedPane.getSelectedIndex(),
+            tabbedPane,
+            connectionConfigs
+        );
         var component = gitlabConnectionPanel.create();
         this.connectionConfigs.add(gitlabConnectionPanel.getConfig());
         tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
@@ -57,7 +61,7 @@ public class PullrequestSettingsWindow {
 
     for (int i = 0; i < connectionConfigs.size(); i++) {
       var connection = connectionConfigs.get(i);
-      var impl = resolveComponent(connection);
+      var impl = resolveComponent(connection, i, tabbedPane);
       var component = impl.create();
       connectionConfigs.set(i, impl.getConfig());
       tabbedPane.addTab(connection.getName(), component);
@@ -73,9 +77,9 @@ public class PullrequestSettingsWindow {
         .getPanel();
   }
 
-  private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig) {
+  private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig, int index, JBTabbedPane tabbedPane) {
     if (connectionConfig.getVcsImplementation() == VcsImplementation.GITLAB) {
-      return new GitlabIntegrationPanelFactory(connectionConfig);
+      return new GitlabIntegrationPanelFactory(index, tabbedPane, connectionConfigs);
     }
     throw new RuntimeException("whatever");
   }
