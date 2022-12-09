@@ -3,8 +3,8 @@ package io.github.askmeagain.pullrequest.gui.toolwindow;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.gui.nodes.FileNodeMarker;
-import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestMarker;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.StateService;
 import org.jetbrains.annotations.NotNull;
 

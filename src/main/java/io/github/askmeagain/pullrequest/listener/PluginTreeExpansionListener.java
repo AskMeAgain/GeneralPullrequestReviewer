@@ -2,7 +2,7 @@ package io.github.askmeagain.pullrequest.listener;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
-import io.github.askmeagain.pullrequest.gui.nodes.NodeBehaviour;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.NodeBehaviour;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

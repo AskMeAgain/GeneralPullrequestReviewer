@@ -28,6 +28,8 @@ public class PullrequestSettingsWindow {
   private final ColorPanel mergeRequestColor = new ColorPanel();
   @Getter
   private final ColorPanel fileColor = new ColorPanel();
+  @Getter
+  private final ColorPanel mergeRequestHintsInDiffView = new ColorPanel();
 
   public PullrequestSettingsWindow(Map<String, ConnectionConfig> configMap) {
     this.connectionConfigs = new ArrayList<>(configMap.values());
@@ -80,6 +82,7 @@ public class PullrequestSettingsWindow {
     return FormBuilder.createFormBuilder()
         .addLabeledComponent("MergeRequests", mergeRequestColor)
         .addLabeledComponent("Files", fileColor)
+        .addLabeledComponent("MergeRequest comment hints", mergeRequestHintsInDiffView)
         .addComponentFillVertically(new JPanel(), 10)
         .getPanel();
   }

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static io.github.askmeagain.pullrequest.services.PluginUtils.toHexColor;
@@ -18,10 +19,12 @@ public class PullrequestPluginState {
 
   public Map<String, ConnectionConfig> getMap(){
     return connectionConfigs.stream()
-        .collect(Collectors.toMap(x -> x.getName(), x -> x));
+        .collect(Collectors.toMap(ConnectionConfig::getName, Function.identity()));
   }
 
   String mergeRequestColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
+  String discussionTextColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
+  String mergeRequestCommentHint = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
   String fileColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
 
 //  public String getGitlabToken() {

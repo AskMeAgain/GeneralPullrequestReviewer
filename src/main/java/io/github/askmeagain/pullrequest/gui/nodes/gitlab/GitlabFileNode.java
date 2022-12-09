@@ -3,22 +3,16 @@ package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.wm.WindowManager;
-import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.FileNodeMarker;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.tree.TreePath;
-import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 

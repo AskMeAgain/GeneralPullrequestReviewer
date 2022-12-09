@@ -12,9 +12,11 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
+import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
+import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 public class DiffWindowExtension extends DiffExtension {
 
   private static final TextAttributes EDITOR_ATTRIBUTES = new TextAttributes(JBColor.red, null, null, null, Font.BOLD);
+
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   @Override
   public void onViewerCreated(FrameDiffTool.@NotNull DiffViewer viewer, @NotNull DiffContext context, @NotNull DiffRequest request) {
@@ -55,7 +59,7 @@ public class DiffWindowExtension extends DiffExtension {
   private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey, OnHoverOverCommentListener listener) {
     applyColorScheme(editor);
 
-    var textAttributes = new TextAttributes(null, JBColor.green, null, null, Font.PLAIN);
+    var textAttributes = new TextAttributes(null, Color.decode(state.getDiscussionTextColor()), null, null, Font.PLAIN);
 
     var reviewDiscussion = new ArrayList<>(request.getUserData(fileKey).getReviewDiscussions());
 

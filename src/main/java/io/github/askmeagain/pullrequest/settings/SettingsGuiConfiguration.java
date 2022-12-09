@@ -40,6 +40,7 @@ public class SettingsGuiConfiguration implements Configurable {
 
     settingsComponent.getFileColor().setSelectedColor(Color.decode(state.getFileColor()));
     settingsComponent.getMergeRequestColor().setSelectedColor(Color.decode(state.getMergeRequestColor()));
+    settingsComponent.getMergeRequestHintsInDiffView().setSelectedColor(Color.decode(state.getMergeRequestCommentHint()));
 
     return settingsComponent.getPreferredFocusedComponent();
   }
@@ -61,6 +62,7 @@ public class SettingsGuiConfiguration implements Configurable {
 
     state.setFileColor(toHexColor(settingsComponent.getFileColor().getSelectedColor()));
     state.setMergeRequestColor(toHexColor(settingsComponent.getMergeRequestColor().getSelectedColor()));
+    state.setMergeRequestCommentHint(toHexColor(settingsComponent.getMergeRequestHintsInDiffView().getSelectedColor()));
 
     state.setConnectionConfigs(map);
   }

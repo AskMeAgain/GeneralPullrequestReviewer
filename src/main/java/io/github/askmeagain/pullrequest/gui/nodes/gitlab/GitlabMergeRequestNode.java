@@ -1,10 +1,9 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
-import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.MergeRequestMarker;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 
