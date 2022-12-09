@@ -24,9 +24,13 @@ public class PullrequestSettingsWindow {
 
   @Getter
   private final List<ConnectionConfig> connectionConfigs;
+  @Getter
+  private final ColorPanel mergeRequestColor = new ColorPanel();
+  @Getter
+  private final ColorPanel fileColor = new ColorPanel();
 
-  public PullrequestSettingsWindow(Map<String, ConnectionConfig> abc) {
-    this.connectionConfigs = new ArrayList<>(abc.values());
+  public PullrequestSettingsWindow(Map<String, ConnectionConfig> configMap) {
+    this.connectionConfigs = new ArrayList<>(configMap.values());
     var tabbedPane = new JBTabbedPane();
 
     var addProjectButton = new JButton("Add Project");
@@ -74,8 +78,8 @@ public class PullrequestSettingsWindow {
 
   private JPanel colorPickers() {
     return FormBuilder.createFormBuilder()
-        .addLabeledComponent("MergeRequests", new ColorPanel())
-        .addLabeledComponent("Files", new ColorPanel())
+        .addLabeledComponent("MergeRequests", mergeRequestColor)
+        .addLabeledComponent("Files", fileColor)
         .addComponentFillVertically(new JPanel(), 10)
         .getPanel();
   }

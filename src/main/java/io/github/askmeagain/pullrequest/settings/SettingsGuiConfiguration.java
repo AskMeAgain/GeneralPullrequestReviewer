@@ -7,10 +7,13 @@ import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static io.github.askmeagain.pullrequest.services.PluginUtils.toHexColor;
 
 public class SettingsGuiConfiguration implements Configurable {
 
@@ -35,6 +38,9 @@ public class SettingsGuiConfiguration implements Configurable {
 
     settingsComponent = new PullrequestSettingsWindow(state.getMap());
 
+    settingsComponent.getFileColor().setSelectedColor(Color.decode(state.getFileColor()));
+    settingsComponent.getMergeRequestColor().setSelectedColor(Color.decode(state.getMergeRequestColor()));
+
     return settingsComponent.getPreferredFocusedComponent();
   }
 
@@ -52,6 +58,9 @@ public class SettingsGuiConfiguration implements Configurable {
         .stream()
         .peek(connectionConfig -> connectionConfig.getRefresh().run())
         .collect(Collectors.toList());
+
+    state.setFileColor(toHexColor(settingsComponent.getFileColor().getSelectedColor()));
+    state.setMergeRequestColor(toHexColor(settingsComponent.getMergeRequestColor().getSelectedColor()));
 
     state.setConnectionConfigs(map);
   }

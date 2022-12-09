@@ -9,7 +9,7 @@ import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import org.jetbrains.annotations.NotNull;
 
 @Service
-@State(name = "PullrequestPlugin", storages = @Storage("pullrequest-plugin-4.xml"))
+@State(name = "PullrequestPlugin", storages = @Storage("pullrequest-plugin-6.xml"))
 public final class StateService implements PersistentStateComponent<PullrequestPluginState> {
 
   private PullrequestPluginState pullrequestPluginState = new PullrequestPluginState();

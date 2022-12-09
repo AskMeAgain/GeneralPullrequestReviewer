@@ -4,6 +4,9 @@ import com.intellij.openapi.fileChooser.tree.FileNode;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
+import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabFileNode;
+import io.github.askmeagain.pullrequest.services.StateService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -15,7 +18,8 @@ import static com.intellij.openapi.util.IconLoader.getTransparentIcon;
 public class PullrequestToolWindowCellRenderer extends ColoredTreeCellRenderer {
 
   private static final Color GRAYED = SimpleTextAttributes.GRAYED_ATTRIBUTES.getFgColor();
-  private static final Color HIDDEN = SimpleTextAttributes.DARK_TEXT.getFgColor();
+
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   @Override
   public void customizeCellRenderer(
@@ -29,30 +33,22 @@ public class PullrequestToolWindowCellRenderer extends ColoredTreeCellRenderer {
   ) {
     int style = SimpleTextAttributes.STYLE_PLAIN;
     Color color = null;
-    Icon icon = null;
     String name = null;
     String comment = null;
-    boolean hidden = false;
     boolean valid = true;
-    if (value instanceof FileNode) {
-      FileNode node = (FileNode) value;
-      icon = node.getIcon();
-      name = node.getName();
-      comment = node.getComment();
-      hidden = node.isHidden();
-      valid = node.isValid();
+    if (value instanceof GitlabFileNode) {
+      color = Color.decode(state.getFileColor());
     } else if (value instanceof VirtualFile) {
       VirtualFile file = (VirtualFile) value;
       name = file.getName();
-      hidden = isFileHidden(file);
       valid = file.isValid();
     } else if (value != null) {
       name = value.toString(); //NON-NLS
       color = GRAYED;
     }
+
     if (!valid) style |= SimpleTextAttributes.STYLE_STRIKEOUT;
-    if (hidden) color = HIDDEN;
-    setIcon(!hidden || icon == null ? icon : getTransparentIcon(icon));
+    setIcon(null);
     SimpleTextAttributes attributes = new SimpleTextAttributes(style, color);
     if (name != null) append(name, attributes);
     if (comment != null) append(comment, attributes);
