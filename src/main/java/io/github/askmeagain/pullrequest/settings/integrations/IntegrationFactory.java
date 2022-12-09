@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.settings;
+package io.github.askmeagain.pullrequest.settings.integrations;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 

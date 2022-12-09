@@ -6,6 +6,8 @@ import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
+import io.github.askmeagain.pullrequest.settings.integrations.GitlabIntegrationPanelFactory;
+import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import lombok.Getter;
 
 import javax.swing.*;

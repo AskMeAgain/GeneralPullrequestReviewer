@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.settings;
+package io.github.askmeagain.pullrequest.settings.integrations;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPasswordField;
@@ -17,6 +17,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField name = new JBTextField();
   private final JBTextField gitlabUrl = new JBTextField();
   private final JBTextField gitlabProjects = new JBTextField();
+  private final JButton delete = new JButton("Delete Integration");
   private final ConnectionConfig connectionConfig;
 
   public JPanel create() {
@@ -26,11 +27,16 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     gitlabProjects.setText(connectionConfig.getConfigs().get("projects"));
     gitlabApiToken.setText(connectionConfig.getConfigs().get("token"));
 
+    delete.addActionListener(l -> {
+      //TODO
+    });
+
     return FormBuilder.createFormBuilder()
-        .addLabeledComponent(new JBLabel("Name"), name, 1, false)
-        .addLabeledComponent(new JBLabel("Gitlab Api token"), gitlabApiToken, 1, false)
-        .addLabeledComponent(new JBLabel("Gitlab url"), gitlabUrl, 1, false)
-        .addLabeledComponent(new JBLabel("Projects"), gitlabProjects, 1, false)
+        .addLabeledComponent("Name", name, 1, false)
+        .addLabeledComponent("Gitlab Api token", gitlabApiToken, 1, false)
+        .addLabeledComponent("Gitlab url", gitlabUrl, 1, false)
+        .addLabeledComponent("Projects", gitlabProjects, 1, false)
+        .addComponent(delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
   }
