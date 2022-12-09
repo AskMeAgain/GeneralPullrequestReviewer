@@ -46,6 +46,9 @@ public class DiffWindowExtension extends DiffExtension {
     sourceEditor.putUserData(TransferKey.Connection, request.getUserData(TransferKey.Connection));
     targetEditor.putUserData(TransferKey.Connection, request.getUserData(TransferKey.Connection));
 
+    sourceEditor.putUserData(TransferKey.ProjectId, request.getUserData(TransferKey.ProjectId));
+    targetEditor.putUserData(TransferKey.ProjectId, request.getUserData(TransferKey.ProjectId));
+
     var listener = new OnHoverOverCommentListener(
         request.getUserData(TransferKey.AllDiscussions),
         request.getUserData(TransferKey.Connection)

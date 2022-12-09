@@ -26,7 +26,7 @@ public class GitlabProjectNode extends BaseTreeNode {
 
   @Override
   public void refresh() {
-    var mergeRequests = gitlabService.getMergeRequests(connectionConfig);
+    var mergeRequests = gitlabService.getMergeRequests(projectId, connectionConfig);
     var mergeRequestsMap = mergeRequests.stream()
         .collect(Collectors.toMap(MergeRequest::getId, Function.identity()));
 
@@ -50,7 +50,7 @@ public class GitlabProjectNode extends BaseTreeNode {
     //new merge requests
     for (var mergeRequest : mergeRequests) {
       if (!childMap.containsKey(mergeRequest.getId())) {
-        var newNode = new GitlabMergeRequestNode(mergeRequest, connectionConfig);
+        var newNode = new GitlabMergeRequestNode(mergeRequest, connectionConfig, projectId);
         add(newNode);
       }
     }
@@ -67,9 +67,9 @@ public class GitlabProjectNode extends BaseTreeNode {
   public void beforeExpanded() {
     removeAllChildren();
 
-    gitlabService.getMergeRequests(connectionConfig)
+    gitlabService.getMergeRequests(projectId, connectionConfig)
         .stream()
-        .map(mergeRequest -> new GitlabMergeRequestNode(mergeRequest, connectionConfig))
+        .map(mergeRequest -> new GitlabMergeRequestNode(mergeRequest, connectionConfig, projectId))
         .peek(GitlabMergeRequestNode::onCreation)
         .forEach(this::add);
   }

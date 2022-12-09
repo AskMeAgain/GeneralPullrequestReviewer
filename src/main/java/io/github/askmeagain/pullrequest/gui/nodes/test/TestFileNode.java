@@ -33,10 +33,10 @@ public class TestFileNode extends BaseTreeNode {
 
   @Override
   public void onClick() {
-    var sourceFile = testService.getFileOfBranch(null, sourceBranch, filePath);
-    var targetFile = testService.getFileOfBranch(null, targetBranch, filePath);
+    var sourceFile = testService.getFileOfBranch(null, null, sourceBranch, filePath);
+    var targetFile = testService.getFileOfBranch(null, null, targetBranch, filePath);
 
-    var comments = testService.getCommentsOfPr(null, mergeRequestId);
+    var comments = testService.getCommentsOfPr(null, null, mergeRequestId);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());

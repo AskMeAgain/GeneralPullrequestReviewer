@@ -16,20 +16,22 @@ public class AddCommentAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     var editor = e.getRequiredData(CommonDataKeys.EDITOR);
+    var projectId = editor.getUserData(TransferKey.ProjectId);
     var connection = editor.getUserData(TransferKey.Connection);
     editor.getCaretModel()
         .runForEachCaret(caret -> new AddCommentDialog(text -> dataRequestService.getMapVcsImplementation()
             .get(connection.getVcsImplementation())
             .addMergeRequestComment(
-            connection,
-            editor.getUserData(TransferKey.MergeRequestId),
-            CommentRequest.builder()
-                .text(text)
-                .oldFileName(editor.getUserData(TransferKey.FileName))
-                .newFileName(editor.getUserData(TransferKey.FileName))
-                .sourceComment(editor.getUserData(TransferKey.IsSource))
-                .line(editor.offsetToLogicalPosition(caret.getSelectionEnd()).line)
-                .build()))
+                projectId,
+                connection,
+                editor.getUserData(TransferKey.MergeRequestId),
+                CommentRequest.builder()
+                    .text(text)
+                    .oldFileName(editor.getUserData(TransferKey.FileName))
+                    .newFileName(editor.getUserData(TransferKey.FileName))
+                    .sourceComment(editor.getUserData(TransferKey.IsSource))
+                    .line(editor.offsetToLogicalPosition(caret.getSelectionEnd()).line)
+                    .build()))
             .show());
   }
 }

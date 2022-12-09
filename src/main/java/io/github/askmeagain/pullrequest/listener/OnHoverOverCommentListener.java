@@ -79,7 +79,10 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
     currentActivePopup = DiscussionPopup.create(
         mergeRequestDiscussion,
-        text -> vcsService.addCommentToThread(connection, editor.getUserData(TransferKey.MergeRequestId),
+        text -> vcsService.addCommentToThread(
+            editor.getUserData(TransferKey.ProjectId),
+            connection,
+            editor.getUserData(TransferKey.MergeRequestId),
             mergeRequestDiscussion.getDiscussionId(),
             GitlabAddCommentToDiscussionRequest.builder()
                 .body(text)

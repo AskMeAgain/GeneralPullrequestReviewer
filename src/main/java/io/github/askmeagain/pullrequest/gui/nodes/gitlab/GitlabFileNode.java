@@ -24,17 +24,17 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String filePath;
   private final String mergeRequestId;
   private final ConnectionConfig connection;
-
   private final GitlabService gitlabService = GitlabService.getInstance();
 
   private final PluginTreeExpansionListener listener = PluginTreeExpansionListener.getInstance();
+  private final String projectId;
 
   @Override
   public void onClick() {
-    var sourceFile = gitlabService.getFileOfBranch(connection, sourceBranch, filePath);
-    var targetFile = gitlabService.getFileOfBranch(connection, targetBranch, filePath);
+    var sourceFile = gitlabService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
+    var targetFile = gitlabService.getFileOfBranch(projectId, connection, targetBranch, filePath);
 
-    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
@@ -67,6 +67,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.DataContextKeyTarget, targetReviewFile);
 
     request.putUserData(TransferKey.FileName, filePath);
+    request.putUserData(TransferKey.ProjectId, projectId);
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
 
@@ -79,14 +80,14 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
   @Override
   public void beforeExpanded() {
-    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId);
     loadComments(comments);
   }
 
   @Override
   public void refresh() {
     super.refresh();
-    var comments = gitlabService.getCommentsOfPr(connection, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId);
     loadComments(comments);
   }
 

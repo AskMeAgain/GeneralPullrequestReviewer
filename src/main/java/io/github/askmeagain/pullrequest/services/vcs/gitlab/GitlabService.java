@@ -15,6 +15,7 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
+import javax.xml.transform.sax.SAXTransformerFactory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -31,8 +32,8 @@ public final class GitlabService implements VcsService {
   }
 
   @SneakyThrows
-  public List<MergeRequest> getMergeRequests(ConnectionConfig connection) {
-    return getGitlabMergeRequests(connection)
+  public List<MergeRequest> getMergeRequests(String projectId, ConnectionConfig connection) {
+    return getGitlabMergeRequests(projectId, connection)
         .stream()
         .map(pr -> MergeRequest.builder()
             .id(pr.getIid() + "")
@@ -44,15 +45,12 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public void addCommentToThread(ConnectionConfig connection, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    var projectId = connection.getConfigs().get("projects");
-
+  public void addCommentToThread(String projectId, ConnectionConfig connection, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
     new GitlabRestClient(connection).addCommentToThread(projectId, mergeRequestId, discussionId, request);
   }
 
   @Override
-  public List<String> getFilesOfPr(ConnectionConfig connection, String mergeRequestId) {
-    var projectId = connection.getConfigs().get("projects");
+  public List<String> getFilesOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     return new GitlabRestClient(connection)
         .getMergeRequestDiff(projectId, mergeRequestId).stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)
@@ -60,8 +58,8 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public List<MergeRequestDiscussion> getCommentsOfPr(ConnectionConfig connection, String mergeRequestId) {
-    return getDiscussionsOfPr(connection, mergeRequestId)
+  public List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    return getDiscussionsOfPr(projectId, connection, mergeRequestId)
         .stream()
         .map(discussion -> {
           var n = discussion.getNotes().get(0);
@@ -83,15 +81,12 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public String getFileOfBranch(ConnectionConfig connection, String branch, String filePath) {
-    var projectId = connection.getConfigs().get("projects");
+  public String getFileOfBranch(String projectId, ConnectionConfig connection, String branch, String filePath) {
     return new GitlabRestClient(connection).getFileOfBranch(projectId, filePath, branch);
   }
 
   @Override
-  public void addMergeRequestComment(ConnectionConfig connection, String mergeRequestId, CommentRequest comment) {
-    var projectId = connection.getConfigs().get("projects");
-
+  public void addMergeRequestComment(String projectId, ConnectionConfig connection, String mergeRequestId, CommentRequest comment) {
     var diffVersion = new GitlabRestClient(connection).getDiffVersion(projectId, mergeRequestId).get(0);
 
     var request = GitlabMergeRequestCommentRequest.builder()
@@ -116,18 +111,12 @@ public final class GitlabService implements VcsService {
   }
 
   @SneakyThrows
-  private List<GitlabDiscussionResponse> getDiscussionsOfPr(ConnectionConfig connection, String mergeRequestId) {
-    var projectId = connection.getConfigs().get("projects");
+  private List<GitlabDiscussionResponse> getDiscussionsOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     return new GitlabRestClient(connection).getDiscussions(projectId, mergeRequestId);
   }
 
   @SneakyThrows
-  private List<GitlabMergeRequestResponse> getGitlabMergeRequests(ConnectionConfig connection) {
-    return Arrays.stream(connection.getConfigs()
-            .get("projects")
-            .split(","))
-        .map(x -> new GitlabRestClient(connection).getMergeRequests(x))
-        .flatMap(Collection::stream)
-        .collect(Collectors.toList());
+  private List<GitlabMergeRequestResponse> getGitlabMergeRequests(String projectId, ConnectionConfig connection) {
+    return new GitlabRestClient(connection).getMergeRequests(projectId);
   }
 }

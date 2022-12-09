@@ -37,6 +37,10 @@
                     icon="AllIcons.Actions.Refresh"
                     text="RefreshMergeRequestList"
             />
+            <action class="io.github.askmeagain.pullrequest.actions.CheckoutMergeRequestAction"
+                    icon="AllIcons.Actions.CheckOut"
+                    text="CheckoutMergeRequestAction"
+            />
         </group>
         <action class="io.github.askmeagain.pullrequest.actions.AddCommentAction"
                 icon="AllIcons.Actions.AddFile"

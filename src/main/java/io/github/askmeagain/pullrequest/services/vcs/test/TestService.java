@@ -5,13 +5,8 @@ import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
-import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
-import lombok.SneakyThrows;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public final class TestService implements VcsService {
@@ -21,7 +16,7 @@ public final class TestService implements VcsService {
   }
 
   @Override
-  public List<MergeRequest> getMergeRequests(ConnectionConfig connectionName) {
+  public List<MergeRequest> getMergeRequests(String projectId, ConnectionConfig connectionName) {
     //TODO
     return List.of(MergeRequest.builder()
         .targetBranch("target")
@@ -37,27 +32,27 @@ public final class TestService implements VcsService {
   }
 
   @Override
-  public void addCommentToThread(ConnectionConfig connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+  public void addCommentToThread(String projectId, ConnectionConfig connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
 
   }
 
   @Override
-  public List<String> getFilesOfPr(ConnectionConfig connectionName, String mergeRequestId) {
+  public List<String> getFilesOfPr(String projectId,ConnectionConfig connectionName, String mergeRequestId) {
     return null;
   }
 
   @Override
-  public List<MergeRequestDiscussion> getCommentsOfPr(ConnectionConfig connectionName, String mergeRequestId) {
+  public List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId) {
     return null;
   }
 
   @Override
-  public String getFileOfBranch(ConnectionConfig connectionName, String branch, String filePath) {
+  public String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
     return null;
   }
 
   @Override
-  public void addMergeRequestComment(ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment) {
+  public void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment) {
 
   }
 }

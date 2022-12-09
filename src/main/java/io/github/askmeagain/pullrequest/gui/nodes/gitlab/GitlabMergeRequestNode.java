@@ -18,10 +18,12 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   private final String sourceBranch;
   private final String targetBranch;
   private final ConnectionConfig connection;
+  private final String projectId;
 
-  public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig) {
+  public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig, String projectId) {
     display = mergeRequest.getName();
     mergeRequestId = mergeRequest.getId();
+    this.projectId = projectId;
     this.connection = connectionConfig;
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
@@ -43,9 +45,9 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   public void beforeExpanded() {
     removeAllChildren();
 
-    gitlabService.getFilesOfPr(connection, mergeRequestId)
+    gitlabService.getFilesOfPr(projectId, connection, mergeRequestId)
         .stream()
-        .map(file -> new GitlabFileNode(sourceBranch, targetBranch, file, mergeRequestId, connection))
+        .map(file -> new GitlabFileNode(sourceBranch, targetBranch, file, mergeRequestId, connection, projectId))
         .forEach(this::add);
   }
 }

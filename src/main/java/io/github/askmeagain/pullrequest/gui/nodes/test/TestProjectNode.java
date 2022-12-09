@@ -16,7 +16,7 @@ public class TestProjectNode extends BaseTreeNode {
 
   @Override
   public void onCreation() {
-    testService.getMergeRequests(null)
+    testService.getMergeRequests(null, null)
         .stream()
         .map(TestMergeRequestNode::new)
         .forEach(this::add);
