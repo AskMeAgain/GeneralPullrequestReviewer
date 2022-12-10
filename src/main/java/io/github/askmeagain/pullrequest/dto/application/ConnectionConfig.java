@@ -25,14 +25,6 @@ public class ConnectionConfig {
     this.name = name;
   }
 
-  private Runnable refresh;
-
-  @com.intellij.util.xmlb.annotations.Transient
-  public Runnable getRefresh() {
-    return this.refresh;
-  }
-
-
   @com.intellij.util.xmlb.annotations.Transient
   public String getPassword() {
     var credentialAttributes = createCredentialAttributes();

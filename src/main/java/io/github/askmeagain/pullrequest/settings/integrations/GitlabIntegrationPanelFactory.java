@@ -13,6 +13,7 @@ import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,23 +24,17 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField gitlabUrl = new JBTextField();
   private final JBTextField gitlabProjects = new JBTextField();
   private final JButton delete = new JButton("Delete Integration");
-  private final int index;
-  private final JBTabbedPane tabbedPane;
-  private final List<ConnectionConfig> list;
+  private final ConnectionConfig connectionConfig;
+
+  private final ActionListener onDelete;
 
   public JPanel create() {
-
-    var connectionConfig = list.get(index);
-
     name.setText(connectionConfig.getName());
     gitlabUrl.setText(connectionConfig.getConfigs().get("gitlabUrl"));
     gitlabProjects.setText(connectionConfig.getConfigs().get("projects"));
     gitlabApiToken.setText(connectionConfig.getPassword());
 
-    delete.addActionListener(l -> {
-      list.remove(index);
-      tabbedPane.remove(index);
-    });
+    delete.addActionListener(onDelete);
 
     return FormBuilder.createFormBuilder()
         .addLabeledComponent("Name", name, 1, false)
@@ -52,18 +47,14 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   }
 
   public ConnectionConfig getConfig() {
-    var connectionConfig = list.get(index);
 
-    connectionConfig.setRefresh(() -> {
-      connectionConfig.setVcsImplementation(VcsImplementation.GITLAB);
-      connectionConfig.setName(name.getText());
-      connectionConfig.setPassword(String.valueOf(gitlabApiToken.getPassword()));
-      connectionConfig.getConfigs().put("gitlabUrl", gitlabUrl.getText());
-      connectionConfig.getConfigs().put("projects", gitlabProjects.getText());
-    });
+    var config = new ConnectionConfig();
+    config.setPassword(String.valueOf(gitlabApiToken.getPassword()));
+    config.setName(name.getText());
+    config.setVcsImplementation(VcsImplementation.GITLAB);
+    config.getConfigs().put("gitlabUrl", gitlabUrl.getText());
+    config.getConfigs().put("projects", gitlabProjects.getText());
 
-    connectionConfig.getRefresh().run();
-
-    return connectionConfig;
+    return config;
   }
 }

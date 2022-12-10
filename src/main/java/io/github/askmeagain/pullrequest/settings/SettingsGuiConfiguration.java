@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.settings;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.util.Producer;
 import io.github.askmeagain.pullrequest.services.StateService;
+import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
 
@@ -59,24 +60,23 @@ public class SettingsGuiConfiguration implements Configurable {
       return true;
     }
 
-    //TODO
-//    for (int i = 0; i < state.getConnectionConfigs().size(); i++) {
-//      var s = state.getConnectionConfigs().get(i);
-//      var s2 = settingsComponent.getConnectionConfigs().get(i);
-//      if (!Objects.equals(s, s2)) {
-//        return true;
-//      }
-//    }
-    return true;
+    for (int i = 0; i < state.getConnectionConfigs().size(); i++) {
+      var s = state.getConnectionConfigs().get(i);
+      var s2 = settingsComponent.getIntegrationPanels().get(i).getConfig();
+      if (!Objects.equals(s, s2)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
   public void apply() {
     var state = getStateService().getState();
 
-    var map = settingsComponent.getConnectionConfigs()
+    var map = settingsComponent.getIntegrationPanels()
         .stream()
-        .peek(connectionConfig -> connectionConfig.getRefresh().run())
+        .map(IntegrationFactory::getConfig)
         .collect(Collectors.toList());
 
     state.setFileColor(toHexColor(settingsComponent.getFileColor().getSelectedColor()));

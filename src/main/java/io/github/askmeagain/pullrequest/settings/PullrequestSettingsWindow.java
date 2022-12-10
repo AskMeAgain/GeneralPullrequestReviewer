@@ -25,7 +25,7 @@ public class PullrequestSettingsWindow {
   });
 
   @Getter
-  private final List<ConnectionConfig> connectionConfigs;
+  private final List<IntegrationFactory> integrationPanels = new ArrayList<>();
   @Getter
   private final ColorPanel mergeRequestColor = new ColorPanel();
   @Getter
@@ -34,19 +34,21 @@ public class PullrequestSettingsWindow {
   private final ColorPanel mergeRequestHintsInDiffView = new ColorPanel();
 
   public PullrequestSettingsWindow(Map<String, ConnectionConfig> configMap) {
-    this.connectionConfigs = new ArrayList<>(configMap.values());
     var tabbedPane = new JBTabbedPane();
+    var connectionConfigs = new ArrayList<>(configMap.values());
 
     var addProjectButton = new JButton("Add Project");
     addProjectButton.addActionListener(a -> {
       if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
         var gitlabConnectionPanel = new GitlabIntegrationPanelFactory(
-            tabbedPane.getSelectedIndex(),
-            tabbedPane,
-            connectionConfigs
+            new ConnectionConfig(),
+            l -> {
+              tabbedPane.remove(tabbedPane.getSelectedIndex());
+              integrationPanels.remove(tabbedPane.getSelectedIndex());
+            }
         );
         var component = gitlabConnectionPanel.create();
-        this.connectionConfigs.add(gitlabConnectionPanel.getConfig());
+        integrationPanels.add(gitlabConnectionPanel);
         tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
       } else {
         System.out.println("Not implemented");
@@ -62,8 +64,8 @@ public class PullrequestSettingsWindow {
     for (int i = 0; i < connectionConfigs.size(); i++) {
       var connection = connectionConfigs.get(i);
       var impl = resolveComponent(connection, i, tabbedPane);
+      integrationPanels.add(impl);
       var component = impl.create();
-      connectionConfigs.set(i, impl.getConfig());
       tabbedPane.addTab(connection.getName(), component);
     }
 
@@ -79,7 +81,10 @@ public class PullrequestSettingsWindow {
 
   private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig, int index, JBTabbedPane tabbedPane) {
     if (connectionConfig.getVcsImplementation() == VcsImplementation.GITLAB) {
-      return new GitlabIntegrationPanelFactory(index, tabbedPane, connectionConfigs);
+      return new GitlabIntegrationPanelFactory(connectionConfig, l -> {
+        tabbedPane.remove(index);
+        integrationPanels.remove(index);
+      });
     }
     throw new RuntimeException("whatever");
   }
