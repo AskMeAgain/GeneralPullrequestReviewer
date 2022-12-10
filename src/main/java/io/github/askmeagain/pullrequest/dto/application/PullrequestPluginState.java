@@ -26,18 +26,4 @@ public class PullrequestPluginState {
   String discussionTextColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
   String mergeRequestCommentHint = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
   String fileColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
-
-//  public String getGitlabToken() {
-//    var credentialAttributes = createCredentialAttributes();
-//    return PasswordSafe.getInstance().getPassword(credentialAttributes);
-//  }
-//
-//  public void setGitlabToken(String token) {
-//    var credentials = new Credentials("-", token);
-//    PasswordSafe.getInstance().set(createCredentialAttributes(), credentials);
-//  }
-//
-//  private CredentialAttributes createCredentialAttributes() {
-//    return new CredentialAttributes(CredentialAttributesKt.generateServiceName("PullrequestPlugin", "gitlabToken"));
-//  }
 }

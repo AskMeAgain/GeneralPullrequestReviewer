@@ -34,7 +34,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     name.setText(connectionConfig.getName());
     gitlabUrl.setText(connectionConfig.getConfigs().get("gitlabUrl"));
     gitlabProjects.setText(connectionConfig.getConfigs().get("projects"));
-    gitlabApiToken.setText(connectionConfig.getConfigs().get("token"));
+    gitlabApiToken.setText(connectionConfig.getPassword());
 
     delete.addActionListener(l -> {
       list.remove(index);
@@ -57,7 +57,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     connectionConfig.setRefresh(() -> {
       connectionConfig.setVcsImplementation(VcsImplementation.GITLAB);
       connectionConfig.setName(name.getText());
-      connectionConfig.getConfigs().put("token", new String(gitlabApiToken.getPassword()));
+      connectionConfig.setPassword(String.valueOf(gitlabApiToken.getPassword()));
       connectionConfig.getConfigs().put("gitlabUrl", gitlabUrl.getText());
       connectionConfig.getConfigs().put("projects", gitlabProjects.getText());
     });

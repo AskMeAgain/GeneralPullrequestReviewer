@@ -36,7 +36,7 @@ public class GitlabRestClient {
   }
 
   private String getToken() {
-    return connectionConfig.getConfigs().get("token");
+    return connectionConfig.getPassword();
   }
 
   public String getFileOfBranch(String projectId, String filePath, String branch) {
