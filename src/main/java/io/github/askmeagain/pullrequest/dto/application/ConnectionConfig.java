@@ -21,22 +21,4 @@ public class ConnectionConfig {
   String name;
   Map<String, String> configs = new HashMap<>();
 
-  public ConnectionConfig(String name) {
-    this.name = name;
-  }
-
-  @com.intellij.util.xmlb.annotations.Transient
-  public String getPassword() {
-    var credentialAttributes = createCredentialAttributes();
-    return PasswordSafe.getInstance().getPassword(credentialAttributes);
-  }
-
-  public void setPassword(String password) {
-    var credentials = new Credentials("-", password);
-    PasswordSafe.getInstance().set(createCredentialAttributes(), credentials);
-  }
-
-  private CredentialAttributes createCredentialAttributes() {
-    return new CredentialAttributes(CredentialAttributesKt.generateServiceName("PullrequestPlugin", name + "-password"));
-  }
 }

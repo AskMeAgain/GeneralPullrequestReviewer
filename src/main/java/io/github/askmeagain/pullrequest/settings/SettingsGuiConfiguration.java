@@ -1,7 +1,7 @@
 package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.util.Producer;
+import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import lombok.Getter;
@@ -9,8 +9,6 @@ import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -21,6 +19,8 @@ public class SettingsGuiConfiguration implements Configurable {
   @Getter(lazy = true)
   private final StateService stateService = StateService.getInstance();
   private PullrequestSettingsWindow settingsComponent;
+
+  private final PasswordService passwordService = PasswordService.getInstance();
 
   @Override
   @Nls(capitalization = Nls.Capitalization.Title)
@@ -60,13 +60,25 @@ public class SettingsGuiConfiguration implements Configurable {
       return true;
     }
 
+    if (state.getConnectionConfigs().size() != settingsComponent.getIntegrationPanels().size()) {
+      return true;
+    }
+
     for (int i = 0; i < state.getConnectionConfigs().size(); i++) {
       var s = state.getConnectionConfigs().get(i);
       var s2 = settingsComponent.getIntegrationPanels().get(i).getConfig();
       if (!Objects.equals(s, s2)) {
         return true;
       }
+
+      var p1 = passwordService.getPassword(s.getName());
+      var p2 = settingsComponent.getIntegrationPanels().get(i).getPassword();
+
+      if (!Objects.equals(p1, p2)) {
+        return true;
+      }
     }
+
     return false;
   }
 
@@ -76,6 +88,7 @@ public class SettingsGuiConfiguration implements Configurable {
 
     var map = settingsComponent.getIntegrationPanels()
         .stream()
+        .peek(x -> passwordService.setPassword(x.getConfig().getName(), x.getPassword()))
         .map(IntegrationFactory::getConfig)
         .collect(Collectors.toList());
 

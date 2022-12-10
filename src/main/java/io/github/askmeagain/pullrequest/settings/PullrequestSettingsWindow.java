@@ -50,6 +50,7 @@ public class PullrequestSettingsWindow {
         var component = gitlabConnectionPanel.create();
         integrationPanels.add(gitlabConnectionPanel);
         tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
+        tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
       } else {
         System.out.println("Not implemented");
       }

@@ -9,6 +9,7 @@ import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
+import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +29,13 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
 
   private final ActionListener onDelete;
 
+  private final PasswordService passwordService = PasswordService.getInstance();
+
   public JPanel create() {
     name.setText(connectionConfig.getName());
     gitlabUrl.setText(connectionConfig.getConfigs().get("gitlabUrl"));
     gitlabProjects.setText(connectionConfig.getConfigs().get("projects"));
-    gitlabApiToken.setText(connectionConfig.getPassword());
+    gitlabApiToken.setText(passwordService.getPassword(connectionConfig.getName()));
 
     delete.addActionListener(onDelete);
 
@@ -46,10 +49,12 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
         .getPanel();
   }
 
-  public ConnectionConfig getConfig() {
+  public String getPassword(){
+    return String.valueOf(gitlabApiToken.getPassword());
+  }
 
+  public ConnectionConfig getConfig() {
     var config = new ConnectionConfig();
-    config.setPassword(String.valueOf(gitlabApiToken.getPassword()));
     config.setName(name.getText());
     config.setVcsImplementation(VcsImplementation.GITLAB);
     config.getConfigs().put("gitlabUrl", gitlabUrl.getText());

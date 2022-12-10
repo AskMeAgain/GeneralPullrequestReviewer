@@ -12,6 +12,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeReque
 import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
+import io.github.askmeagain.pullrequest.services.PasswordService;
 
 import java.util.Base64;
 import java.util.List;
@@ -21,6 +22,8 @@ public class GitlabRestClient {
 
   private final GitlabApi gitlabApi;
   private final ConnectionConfig connectionConfig;
+
+  private final PasswordService passwordService = PasswordService.getInstance();
 
   public GitlabRestClient(ConnectionConfig config) {
     this.connectionConfig = config;
@@ -36,7 +39,7 @@ public class GitlabRestClient {
   }
 
   private String getToken() {
-    return connectionConfig.getPassword();
+    return passwordService.getPassword(connectionConfig.getName());
   }
 
   public String getFileOfBranch(String projectId, String filePath, String branch) {

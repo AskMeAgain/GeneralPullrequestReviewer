@@ -8,4 +8,6 @@ public interface IntegrationFactory {
 
   JPanel create();
   ConnectionConfig getConfig();
+
+  String getPassword();
 }
