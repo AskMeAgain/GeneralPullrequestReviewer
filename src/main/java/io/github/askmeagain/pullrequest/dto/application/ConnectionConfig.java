@@ -10,6 +10,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class ConnectionConfig {
 
   VcsImplementation vcsImplementation;

@@ -47,8 +47,27 @@ public class SettingsGuiConfiguration implements Configurable {
 
   @Override
   public boolean isModified() {
-    //TODO
-    return true;
+    var state = getStateService().getState();
+
+    var colorChanged1 = !Objects.equals(Color.decode(state.getFileColor()), settingsComponent.getFileColor().getSelectedColor());
+    var colorChanged2 = !Objects.equals(Color.decode(state.getDiscussionTextColor()), settingsComponent.getMergeRequestHintsInDiffView().getSelectedColor());
+    var colorChanged3 = !Objects.equals(Color.decode(state.getMergeRequestColor()), settingsComponent.getMergeRequestColor().getSelectedColor());
+
+    var anythingChanged = colorChanged1 || colorChanged2 || colorChanged3;
+
+    if (anythingChanged) {
+      return true;
+    }
+
+    for (int i = 0; i < state.getConnectionConfigs().size(); i++) {
+      var s = state.getConnectionConfigs().get(i);
+      var s2 = settingsComponent.getConnectionConfigs().get(i);
+      if (!Objects.equals(s, s2)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @Override

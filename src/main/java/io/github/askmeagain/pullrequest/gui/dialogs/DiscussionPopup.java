@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,45 +17,54 @@ public class DiscussionPopup {
     var textArea = new JTextArea();
     var sendButton = new JButton("Send");
 
-    var textAreaWrapper = new JBScrollPane(textArea);
-    textAreaWrapper.setSize(new Dimension(395, 200));
-    textAreaWrapper.setPreferredSize(new Dimension(395, 200));
-    textAreaWrapper.setMaximumSize(new Dimension(395, 200));
-    textAreaWrapper.setMinimumSize(new Dimension(395, 200));
-    textArea.setSize(new Dimension(395, 200));
-    textArea.setPreferredSize(new Dimension(395, 200));
-    textArea.setMaximumSize(new Dimension(395, 200));
-    textArea.setMinimumSize(new Dimension(395, 200));
+    var existingCommentsPanel = createNewCommentChainPanel(discussion);
 
-    var builder = FormBuilder.createFormBuilder();
+    var sendTextField = new JBScrollPane(textArea);
 
-    for (var comment : discussion.getReviewComments()) {
-      var fakeLabel = new JTextField(comment.toString());
-      fakeLabel.setEditable(false);
-      fakeLabel.setBorder(null);
-      fakeLabel.setBackground(null);
-      fakeLabel.setSize(400,50);
-      builder = builder.addComponent(fakeLabel).addSeparator();
-    }
-
-    var component = builder.addComponent(textAreaWrapper)
+    var dialogPanel = FormBuilder.createFormBuilder()
+        .addComponent(existingCommentsPanel)
+        .addComponent(sendTextField)
         .addComponent(sendButton)
-        .addComponentFillVertically(new JPanel(), 10)
+        .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
-    component.setPreferredSize(new Dimension(400, 200 + discussion.getReviewComments().size() * 50));
+    sendTextField.setPreferredSize(new Dimension(400, 100));
+    existingCommentsPanel.setPreferredSize(new Dimension(400, 200));
 
     var popup = JBPopupFactory.getInstance()
-        .createComponentPopupBuilder(component, textArea)
+        .createComponentPopupBuilder(dialogPanel, textArea)
         .setRequestFocus(true)
         .createPopup();
 
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText());
       popup.cancel();
-      sendButton.setEnabled(false);
     });
 
     return popup;
+  }
+
+  private static JBScrollPane createNewCommentChainPanel(MergeRequestDiscussion discussion) {
+    var panelBuilder = FormBuilder.createFormBuilder();
+
+    for (var i = 0; i < discussion.getReviewComments().size(); i++) {
+      var label = getTextField(discussion.getReviewComments().get(i).toString());
+      panelBuilder = panelBuilder.addSeparator().addComponent(label);
+    }
+
+    var panel = panelBuilder.addComponentFillVertically(new JPanel(), 10)
+        .getPanel();
+
+    return new JBScrollPane(panel);
+  }
+
+  @NotNull
+  private static JTextField getTextField(String comment) {
+    var fakeLabel = new JTextField(comment);
+    fakeLabel.setEditable(false);
+    fakeLabel.setBorder(null);
+    fakeLabel.setBackground(null);
+    fakeLabel.setSize(400, 50);
+    return fakeLabel;
   }
 }
