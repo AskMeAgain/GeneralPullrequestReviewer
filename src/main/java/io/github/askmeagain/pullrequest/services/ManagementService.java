@@ -14,8 +14,7 @@ import javax.swing.tree.DefaultTreeModel;
 @Service
 public final class ManagementService {
 
-  private final PullrequestPluginState state = StateService.getInstance().getState();
-
+  @Getter
   private final RootNode rootNode = new RootNode();
   @Getter
   private final Tree tree = new Tree(rootNode);

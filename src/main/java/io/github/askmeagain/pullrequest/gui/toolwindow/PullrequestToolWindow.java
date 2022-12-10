@@ -57,7 +57,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     tree.setCellRenderer(new PullrequestToolWindowCellRenderer());
 
     tree.addMouseListener(new MouseClickListener(tree));
-    tree.addTreeWillExpandListener(new PluginTreeExpansionListener());
+    tree.addTreeWillExpandListener(PluginTreeExpansionListener.getInstance());
 
     return createListPanel(buttonToolBar, tree);
   }
