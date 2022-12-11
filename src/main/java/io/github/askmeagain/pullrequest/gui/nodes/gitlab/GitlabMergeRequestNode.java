@@ -21,10 +21,14 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   private final ConnectionConfig connection;
   private final String projectId;
 
+  @Getter
+  private final MergeRequest mergeRequest;
+
   public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig, String projectId) {
     display = mergeRequest.getName();
     mergeRequestId = mergeRequest.getId();
     this.projectId = projectId;
+    this.mergeRequest = mergeRequest;
     this.connection = connectionConfig;
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();

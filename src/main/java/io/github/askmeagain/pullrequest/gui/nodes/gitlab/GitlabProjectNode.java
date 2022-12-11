@@ -54,9 +54,7 @@ public class GitlabProjectNode extends BaseTreeNode {
         GitlabMergeRequestNode::getMergeRequestId
     );
 
-    //TODO
-    addNewNodeFromLists(mergeRequests,
-        this.<GitlabMergeRequestNode, MergeRequest>getChilds(x -> x.ge),
+    addNewNodeFromLists(mergeRequests, this.getChilds(GitlabMergeRequestNode::getMergeRequest),
         mr -> new GitlabMergeRequestNode(mr, connectionConfig, projectId));
   }
 }
