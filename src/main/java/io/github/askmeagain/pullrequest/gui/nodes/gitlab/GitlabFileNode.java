@@ -11,6 +11,7 @@ import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
   private final String sourceBranch;
   private final String targetBranch;
+  @Getter
   private final String filePath;
   private final String mergeRequestId;
   private final ConnectionConfig connection;

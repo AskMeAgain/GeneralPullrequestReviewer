@@ -4,7 +4,7 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 
 import javax.swing.tree.MutableTreeNode;
 
-public interface ConnectionMarker extends MutableTreeNode {
+public interface ConnectionMarker extends NodeBehaviour {
 
   ConnectionConfig getConnection();
 }

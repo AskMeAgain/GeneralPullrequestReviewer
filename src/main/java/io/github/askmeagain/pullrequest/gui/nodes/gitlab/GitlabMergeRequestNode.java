@@ -3,11 +3,12 @@ package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.gui.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.function.Function;
 
 
 public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
@@ -38,16 +39,31 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
 
   @Override
   public void onCreation() {
-    add(new DefaultMutableTreeNode("hidden"));
+    add(new FakeNode());
+  }
+
+  @Override
+  public void refresh() {
+    if (isCollapsed()) {
+      return;
+    }
+    beforeExpanded();
   }
 
   @Override
   public void beforeExpanded() {
-    removeAllChildren();
+    removeFakeNode();
 
-    gitlabService.getFilesOfPr(projectId, connection, mergeRequestId)
-        .stream()
-        .map(file -> new GitlabFileNode(sourceBranch, targetBranch, file, mergeRequestId, connection, projectId))
-        .forEach(this::add);
+    var filesOfPr = gitlabService.getFilesOfPr(projectId, connection, mergeRequestId);
+
+    removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GitlabFileNode::getFilePath);
+    addNewNodeFromLists(filesOfPr, this.getChilds(GitlabFileNode::getFilePath), file -> new GitlabFileNode(
+        sourceBranch,
+        targetBranch,
+        file,
+        mergeRequestId,
+        connection,
+        projectId
+    ));
   }
 }

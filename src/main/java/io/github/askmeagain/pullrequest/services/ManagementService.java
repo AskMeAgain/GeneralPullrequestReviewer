@@ -6,6 +6,7 @@ import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.gui.nodes.RootNode;
 import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabConnectionNode;
+import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
 import lombok.Getter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -19,8 +20,10 @@ public final class ManagementService {
   @Getter
   private final Tree tree = new Tree(rootNode);
 
+  private final PluginTreeExpansionListener listener = PluginTreeExpansionListener.getInstance();
+
   public void refreshList() {
-    rootNode.refresh();
+    listener.doWithoutTriggers(rootNode::refresh);
   }
 
   public static ManagementService getInstance() {

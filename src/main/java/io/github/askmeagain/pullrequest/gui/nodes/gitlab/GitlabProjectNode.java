@@ -1,19 +1,19 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
-import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.gui.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.HashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class GitlabProjectNode extends BaseTreeNode {
+  @Getter
   private final String projectId;
   private final ConnectionConfig connectionConfig;
   private final String projectName;
@@ -26,51 +26,35 @@ public class GitlabProjectNode extends BaseTreeNode {
 
   @Override
   public void refresh() {
-    var mergeRequests = gitlabService.getMergeRequests(projectId, connectionConfig);
-    var mergeRequestsMap = mergeRequests.stream()
-        .collect(Collectors.toMap(MergeRequest::getId, Function.identity()));
-
-    var childMap = new HashMap<String, GitlabMergeRequestNode>();
-
-    //check for existing
-    for (int i = 0; i < getChildCount(); i++) {
-      var child = getChildAt(i);
-      if (child instanceof GitlabMergeRequestNode) {
-        var casted = (GitlabMergeRequestNode) child;
-        if (mergeRequestsMap.containsKey(casted.getMergeRequestId())) {
-          casted.refresh();
-          childMap.put(casted.getMergeRequestId(), casted);
-        } else {
-          remove(i);
-          i--;
-        }
-      }
+    if (isCollapsed()) {
+      return;
     }
 
-    //new merge requests
-    for (var mergeRequest : mergeRequests) {
-      if (!childMap.containsKey(mergeRequest.getId())) {
-        var newNode = new GitlabMergeRequestNode(mergeRequest, connectionConfig, projectId);
-        add(newNode);
-      }
-    }
-
-    super.refresh();
+    beforeExpanded();
   }
 
   @Override
   public void onCreation() {
-    add(new DefaultMutableTreeNode("hidden"));
+    add(new FakeNode());
   }
 
   @Override
   public void beforeExpanded() {
-    removeAllChildren();
+    removeFakeNode();
 
-    gitlabService.getMergeRequests(projectId, connectionConfig)
-        .stream()
-        .map(mergeRequest -> new GitlabMergeRequestNode(mergeRequest, connectionConfig, projectId))
-        .peek(GitlabMergeRequestNode::onCreation)
-        .forEach(this::add);
+    var mergeRequests = gitlabService.getMergeRequests(projectId, connectionConfig);
+
+    var mergeRequestIds = mergeRequests.stream()
+        .map(MergeRequest::getId)
+        .collect(Collectors.toList());
+
+    removeOrRefreshNodes(
+        mergeRequestIds,
+        this.getChilds(Function.identity()),
+        GitlabMergeRequestNode::getMergeRequestId
+    );
+
+    addNewNodeFromLists(mergeRequests, this.getChilds(Function.identity()),
+        mr -> new GitlabMergeRequestNode(mr, connectionConfig, projectId));
   }
 }
