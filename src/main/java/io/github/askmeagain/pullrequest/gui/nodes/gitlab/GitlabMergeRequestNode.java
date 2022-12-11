@@ -38,22 +38,15 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   }
 
   @Override
-  public void onCreation() {
-    add(new FakeNode());
-  }
-
-  @Override
   public void refresh() {
     if (isCollapsed()) {
       return;
     }
-    beforeExpanded();
+    onClick();
   }
 
   @Override
-  public void beforeExpanded() {
-    removeFakeNode();
-
+  public void onClick() {
     var filesOfPr = gitlabService.getFilesOfPr(projectId, connection, mergeRequestId);
 
     removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GitlabFileNode::getFilePath);
