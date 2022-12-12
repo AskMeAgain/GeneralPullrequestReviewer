@@ -1,5 +1,6 @@
 package io.github.askmeagain.pullrequest.settings;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ColorPanel;
 import com.intellij.ui.components.JBTabbedPane;
@@ -19,10 +20,17 @@ public class PullrequestSettingsWindow {
 
   private final JPanel panel;
 
-  private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(new VcsImplementation[]{
-      VcsImplementation.GITLAB,
-      VcsImplementation.TEST
-  });
+  private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(getIntegrations());
+
+  private static VcsImplementation[] getIntegrations() {
+    var integrations = new ArrayList<>(List.of(VcsImplementation.GITLAB));
+
+    if (ApplicationManager.getApplication().isInternal()) {
+      integrations.add(VcsImplementation.TEST);
+    }
+
+    return integrations.toArray(VcsImplementation[]::new);
+  }
 
   @Getter
   private final List<IntegrationFactory> integrationPanels = new ArrayList<>();
