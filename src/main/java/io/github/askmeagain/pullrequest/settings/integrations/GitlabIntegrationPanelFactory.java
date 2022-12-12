@@ -1,21 +1,15 @@
 package io.github.askmeagain.pullrequest.settings.integrations;
 
-import com.intellij.ui.TabbedPane;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPasswordField;
-import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.PasswordService;
-import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class GitlabIntegrationPanelFactory implements IntegrationFactory {
@@ -36,7 +30,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     name.setText(connectionConfig.getName());
     gitlabUrl.setText(connectionConfig.getConfigs().get("gitlabUrl"));
     gitlabProjects.setText(connectionConfig.getConfigs().get("projects"));
-    legacyGitlab.setText(connectionConfig.getConfigs().get("legacy_gitlab"));
+    legacyGitlab.setSelected(Boolean.parseBoolean(connectionConfig.getConfigs().get("legacy_gitlab")));
     gitlabApiToken.setText(passwordService.getPassword(connectionConfig.getName()));
 
     delete.addActionListener(onDelete);
@@ -61,7 +55,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     config.setName(name.getText());
     config.setVcsImplementation(VcsImplementation.GITLAB);
     config.getConfigs().put("gitlabUrl", gitlabUrl.getText());
-    config.getConfigs().put("legacy_gitlab", legacyGitlab.getText());
+    config.getConfigs().put("legacy_gitlab", String.valueOf(legacyGitlab.isSelected()));
     config.getConfigs().put("projects", gitlabProjects.getText());
 
     return config;
