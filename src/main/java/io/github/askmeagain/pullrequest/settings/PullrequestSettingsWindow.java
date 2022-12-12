@@ -7,8 +7,9 @@ import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
-import io.github.askmeagain.pullrequest.settings.integrations.GitlabIntegrationPanelFactory;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
+import io.github.askmeagain.pullrequest.settings.integrations.gitlab.GitlabIntegrationPanelFactory;
+import io.github.askmeagain.pullrequest.settings.integrations.test.TestIntegrationPanelFactory;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -59,6 +60,18 @@ public class PullrequestSettingsWindow {
         integrationPanels.add(gitlabConnectionPanel);
         tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
         tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
+      } else if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.TEST) {
+        var testConnectionPanel = new TestIntegrationPanelFactory(
+            new ConnectionConfig(),
+            l -> {
+              tabbedPane.remove(tabbedPane.getSelectedIndex());
+              integrationPanels.remove(tabbedPane.getSelectedIndex());
+            }
+        );
+        var component = testConnectionPanel.create();
+        integrationPanels.add(testConnectionPanel);
+        tabbedPane.insertTab("New Test Connection", null, component, "", tabbedPane.getSelectedIndex());
+        tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
       } else {
         System.out.println("Not implemented");
       }
@@ -91,6 +104,11 @@ public class PullrequestSettingsWindow {
   private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig, int index, JBTabbedPane tabbedPane) {
     if (connectionConfig.getVcsImplementation() == VcsImplementation.GITLAB) {
       return new GitlabIntegrationPanelFactory(connectionConfig, l -> {
+        tabbedPane.remove(index);
+        integrationPanels.remove(index);
+      });
+    } else if (connectionConfig.getVcsImplementation() == VcsImplementation.TEST) {
+      return new TestIntegrationPanelFactory(connectionConfig, l -> {
         tabbedPane.remove(index);
         integrationPanels.remove(index);
       });

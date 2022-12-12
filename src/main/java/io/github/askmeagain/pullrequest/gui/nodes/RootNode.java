@@ -1,10 +1,12 @@
 package io.github.askmeagain.pullrequest.gui.nodes;
 
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabConnectionNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.ConnectionMarker;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.NodeBehaviour;
+import io.github.askmeagain.pullrequest.gui.nodes.test.TestConnectionNode;
 import io.github.askmeagain.pullrequest.services.StateService;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -34,8 +36,18 @@ public class RootNode extends BaseTreeNode {
   public void onCreation() {
     state.getConnectionConfigs()
         .stream()
-        .map(GitlabConnectionNode::new)
-        .peek(GitlabConnectionNode::onCreation)
+        .map(this::resolveNode)
+        .peek(NodeBehaviour::onCreation)
         .forEach(this::add);
+  }
+
+  private NodeBehaviour resolveNode(ConnectionConfig connectionConfig) {
+    switch (connectionConfig.getVcsImplementation()) {
+      case TEST:
+        return new TestConnectionNode(connectionConfig);
+      case GITLAB:
+        return new GitlabConnectionNode(connectionConfig);
+    }
+    return null;
   }
 }
