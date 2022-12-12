@@ -5,6 +5,7 @@ import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
+import io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy.Change;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
@@ -51,6 +52,15 @@ public final class GitlabService implements VcsService {
 
   @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    if (Boolean.parseBoolean(connection.getConfigs().get("legacy_gitlab"))) {
+      return new GitlabRestClient(connection)
+          .getMergerequestDiffLegacy(projectId, mergeRequestId)
+          .getChanges()
+          .stream()
+          .map(Change::getNew_path)
+          .collect(Collectors.toList());
+    }
+
     return new GitlabRestClient(connection)
         .getMergeRequestDiff(projectId, mergeRequestId).stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)

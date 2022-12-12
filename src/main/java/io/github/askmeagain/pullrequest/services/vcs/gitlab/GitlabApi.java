@@ -6,6 +6,7 @@ import feign.Param;
 import feign.RequestLine;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
+import io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy.GitlabDiffsLegacyResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
@@ -25,6 +26,13 @@ public interface GitlabApi {
 
   @RequestLine("GET /projects/{projectId}/merge_requests/{merge_request_iid}/diffs?private_token={token}")
   List<GitlabMergeRequestFileDiff> getMergerequestDiff(
+      @Param("projectId") String projectId,
+      @Param("merge_request_iid") String mergeRequestId,
+      @Param("token") String token
+  );
+
+  @RequestLine("GET /projects/{projectId}/merge_requests/{merge_request_iid}/changes?private_token={token}")
+  GitlabDiffsLegacyResponse getMergerequestDiffLegacy(
       @Param("projectId") String projectId,
       @Param("merge_request_iid") String mergeRequestId,
       @Param("token") String token

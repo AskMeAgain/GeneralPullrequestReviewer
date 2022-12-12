@@ -6,6 +6,7 @@ import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
+import io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy.GitlabDiffsLegacyResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
@@ -52,6 +53,10 @@ public class GitlabRestClient {
 
   public List<GitlabMergeRequestFileDiff> getMergeRequestDiff(String projectId, String mergeRequestId) {
     return gitlabApi.getMergerequestDiff(projectId, mergeRequestId, getToken());
+  }
+
+  public GitlabDiffsLegacyResponse getMergerequestDiffLegacy(String projectId, String mergeRequestId) {
+    return gitlabApi.getMergerequestDiffLegacy(projectId, mergeRequestId, getToken());
   }
 
   public List<GitlabDiscussionResponse> getDiscussions(String project, String mergeRequestId) {

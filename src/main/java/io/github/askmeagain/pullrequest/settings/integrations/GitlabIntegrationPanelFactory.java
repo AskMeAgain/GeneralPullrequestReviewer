@@ -24,6 +24,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField name = new JBTextField();
   private final JBTextField gitlabUrl = new JBTextField();
   private final JBTextField gitlabProjects = new JBTextField();
+  private final JCheckBox legacyGitlab = new JCheckBox();
   private final JButton delete = new JButton("Delete Integration");
   private final ConnectionConfig connectionConfig;
 
@@ -35,6 +36,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     name.setText(connectionConfig.getName());
     gitlabUrl.setText(connectionConfig.getConfigs().get("gitlabUrl"));
     gitlabProjects.setText(connectionConfig.getConfigs().get("projects"));
+    legacyGitlab.setText(connectionConfig.getConfigs().get("legacy_gitlab"));
     gitlabApiToken.setText(passwordService.getPassword(connectionConfig.getName()));
 
     delete.addActionListener(onDelete);
@@ -44,6 +46,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
         .addLabeledComponent("Gitlab Api token", gitlabApiToken, 1, false)
         .addLabeledComponent("Gitlab url", gitlabUrl, 1, false)
         .addLabeledComponent("Projects", gitlabProjects, 1, false)
+        .addLabeledComponent("Legacy gitlab", legacyGitlab, 1, false)
         .addComponent(delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
@@ -58,6 +61,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     config.setName(name.getText());
     config.setVcsImplementation(VcsImplementation.GITLAB);
     config.getConfigs().put("gitlabUrl", gitlabUrl.getText());
+    config.getConfigs().put("legacy_gitlab", legacyGitlab.getText());
     config.getConfigs().put("projects", gitlabProjects.getText());
 
     return config;

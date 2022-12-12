@@ -1,0 +1,67 @@
+package io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy;
+
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.Date;
+@Data
+public class GitlabDiffsLegacyResponse {
+  int id;
+  int iid;
+  int project_id;
+  String title;
+  String description;
+  String state;
+  Date created_at;
+  Date updated_at;
+  Object merged_by;
+  Object merge_user;
+  Object merged_at;
+  ClosedBy closed_by;
+  Date closed_at;
+  String target_branch;
+  String source_branch;
+  int user_notes_count;
+  int upvotes;
+  int downvotes;
+  Author author;
+  ArrayList<Object> assignees;
+  Object assignee;
+  ArrayList<Object> reviewers;
+  int source_project_id;
+  int target_project_id;
+  ArrayList<Object> labels;
+  boolean draft;
+  boolean work_in_progress;
+  Object milestone;
+  boolean merge_when_pipeline_succeeds;
+  String merge_status;
+  String detailed_merge_status;
+  String sha;
+  Object merge_commit_sha;
+  Object squash_commit_sha;
+  Object discussion_locked;
+  Object should_remove_source_branch;
+  boolean force_remove_source_branch;
+  String reference;
+  References references;
+  String web_url;
+  TimeStats time_stats;
+  boolean squash;
+  TaskCompletionStatus task_completion_status;
+  boolean has_conflicts;
+  boolean blocking_discussions_resolved;
+  Object approvals_before_merge;
+  boolean subscribed;
+  String changes_count;
+  Object latest_build_started_at;
+  Object latest_build_finished_at;
+  Object first_deployed_to_production_at;
+  Object pipeline;
+  Object head_pipeline;
+  DiffRefs diff_refs;
+  Object merge_error;
+  User user;
+  ArrayList<Change> changes;
+  boolean overflow;
+}

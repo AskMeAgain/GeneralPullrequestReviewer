@@ -4,6 +4,7 @@ import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
 import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabConnectionNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.ConnectionMarker;
 import io.github.askmeagain.pullrequest.services.StateService;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
