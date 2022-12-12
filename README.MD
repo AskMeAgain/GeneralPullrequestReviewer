@@ -1,5 +1,6 @@
-![current look](image.png)
+# Intellij Pullrequest Plugin
 
+* Still WIP
 
 ---------------------------------
 

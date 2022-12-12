@@ -49,4 +49,5 @@ signPlugin {
 
 publishPlugin {
     token = System.getenv("PUBLISH_TOKEN")
+    channels = ["unstable"]
 }
