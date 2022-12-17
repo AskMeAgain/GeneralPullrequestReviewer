@@ -24,7 +24,7 @@ dependencies {
 intellij {
     updateSinceUntilBuild = false
     version = '2021.3.2'
-    plugins = ['com.intellij.java']
+    plugins = ['com.intellij.java', 'Git4Idea']
 }
 
 patchPluginXml {

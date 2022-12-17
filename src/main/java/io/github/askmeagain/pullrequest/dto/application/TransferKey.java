@@ -1,12 +1,12 @@
 package io.github.askmeagain.pullrequest.dto.application;
 
 import com.intellij.openapi.util.Key;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
-import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 
 import java.util.List;
 
 public class TransferKey {
+  public static final Key<String> SourceBranch = Key.create("sourceBranch");
+  public static final Key<String> TargetBranch = Key.create("targetBranch");
   public static final Key<ReviewFile> DataContextKeySource = Key.create("source");
   public static final Key<ReviewFile> DataContextKeyTarget = Key.create("target");
   public static final Key<Boolean> IsSource = Key.create("isSource");
