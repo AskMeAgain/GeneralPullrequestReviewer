@@ -31,16 +31,20 @@
     </extensions>
 
     <actions>
+        <group id="io.github.askmeagain.pullrequest.group.pullrequests.contextMenu"
+               text="Context Menu"
+               popup="false">
+            <action class="io.github.askmeagain.pullrequest.actions.CheckoutMergeRequestAction"
+                    icon="AllIcons.Actions.CheckOut"
+                    text="Checkout"
+            />
+        </group>
         <group id="io.github.askmeagain.pullrequest.group.pullrequests"
                text="History Group"
                popup="false">
             <action class="io.github.askmeagain.pullrequest.actions.RefreshMergeRequestListAction"
                     icon="AllIcons.Actions.Refresh"
                     text="RefreshMergeRequestList"
-            />
-            <action class="io.github.askmeagain.pullrequest.actions.CheckoutMergeRequestAction"
-                    icon="AllIcons.Actions.CheckOut"
-                    text="CheckoutMergeRequestAction"
             />
         </group>
         <action class="io.github.askmeagain.pullrequest.actions.AddCommentAction"
