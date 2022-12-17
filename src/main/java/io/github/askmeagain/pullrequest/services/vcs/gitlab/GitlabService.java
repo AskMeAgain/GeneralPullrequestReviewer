@@ -16,10 +16,8 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import javax.xml.transform.sax.SAXTransformerFactory;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,6 +71,10 @@ public final class GitlabService implements VcsService {
         .stream()
         .map(discussion -> {
           var n = discussion.getNotes().get(0);
+          if (n.getPosition() == null) {
+            return null;
+          }
+
           var isNotSource = n.getPosition().getOld_line() != null;
 
           return MergeRequestDiscussion.builder()
@@ -87,6 +89,7 @@ public final class GitlabService implements VcsService {
                   .collect(Collectors.toList()))
               .build();
         })
+        .filter(Objects::nonNull)
         .collect(Collectors.toList());
   }
 

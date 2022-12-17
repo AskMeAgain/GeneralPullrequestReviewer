@@ -1,6 +1,5 @@
 package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
-import feign.Body;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
@@ -38,7 +37,7 @@ public interface GitlabApi {
       @Param("token") String token
   );
 
-  @RequestLine("GET /projects/{projectId}/repository/files/{filePath}?private_token={token}&ref={branch}")
+  @RequestLine(value = "GET /projects/{projectId}/repository/files/{filePath}?private_token={token}&ref={branch}", decodeSlash = false)
   Map<String, String> getFileOfBranch(
       @Param("projectId") String projectId,
       @Param("filePath") String filePath,

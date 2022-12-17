@@ -4,9 +4,9 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
@@ -14,6 +14,7 @@ import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,7 +107,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
   @Override
   public String toString() {
-    return filePath;
+    return Path.of(filePath).getFileName().toString();
   }
 
 }

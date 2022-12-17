@@ -4,6 +4,7 @@ import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy.GitlabDiffsLegacyResponse;
@@ -12,8 +13,8 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddComme
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
-import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.services.PasswordService;
+import io.github.askmeagain.pullrequest.services.PluginUtils;
 
 import java.util.Base64;
 import java.util.List;
@@ -44,7 +45,7 @@ public class GitlabRestClient {
   }
 
   public String getFileOfBranch(String projectId, String filePath, String branch) {
-    var encodedFilePath = filePath.replace(".", "%2E");
+    var encodedFilePath = PluginUtils.encodePath(filePath);
 
     var base64 = gitlabApi.getFileOfBranch(projectId, encodedFilePath, getToken(), branch).get("content");
 
