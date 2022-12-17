@@ -1,8 +1,8 @@
 <idea-plugin>
     <id>io.github.askmeagain.pullrequest</id>
-    <name>PullrequestPlugin</name>
+    <name>General Pullrequest Reviewer</name>
     <version>0.0.1</version>
-    <vendor url="https://github.com/AskMeAgain/IntellijPullrequestPlugin">AskMeAgain</vendor>
+    <vendor url="https://github.com/AskMeAgain/GeneralPullrequestReviewer">AskMeAgain</vendor>
 
     <description>
         <!--........................this will be replaced by the pathPluginXml gradle task...........................-->
