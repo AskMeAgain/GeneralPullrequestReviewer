@@ -11,16 +11,27 @@ public class CheckoutMergeRequestAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     var ref = "abc";
-    var instance = GitRepositoryManager.getInstance(e.getProject());
-    var repos = instance.getRepositories();
+    //var repos = instance.getRepositories();
     int i = 0;
-    //GitBrancher.getInstance(e.getProject()).checkout(ref, false, repos, null);
+    //
   }
 
   @Override
   public void update(@NotNull AnActionEvent e) {
     var lastSelectedPathComponent = ManagementService.getInstance().getTree().getLastSelectedPathComponent();
 
-    e.getPresentation().setEnabled(lastSelectedPathComponent instanceof MergeRequestMarker);
+    e.getPresentation().setEnabled(false);
+
+    if (lastSelectedPathComponent instanceof MergeRequestMarker) {
+      var casted = (MergeRequestMarker) lastSelectedPathComponent;
+      var instance = GitRepositoryManager.getInstance(e.getProject());
+
+      var gitRepository = instance.getRepositories().get(0);
+      var hasBranch = gitRepository.getBranches().findBranchByName(casted.getTargetBranchName());
+
+      if (hasBranch != null) {
+        e.getPresentation().setEnabled(true);
+      }
+    }
   }
 }

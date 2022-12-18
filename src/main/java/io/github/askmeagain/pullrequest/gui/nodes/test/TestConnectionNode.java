@@ -1,28 +1,24 @@
 package io.github.askmeagain.pullrequest.gui.nodes.test;
 
-import com.intellij.ui.treeStructure.Tree;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabProjectNode;
-import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.ConnectionMarker;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.Arrays;
-
 @RequiredArgsConstructor
-public class TestConnectionNode extends BaseTreeNode {
+public class TestConnectionNode extends BaseTreeNode implements ConnectionMarker {
 
-  private final ConnectionConfig connectionConfig;
+  @Getter
+  private final ConnectionConfig connection;
 
   @Override
   public String toString() {
-    return connectionConfig.getName();
+    return connection.getName();
   }
 
   @Override
   public void onCreation() {
-    add(new TestProjectNode( "CoolProject"));
+    add(new TestProjectNode("CoolProject"));
   }
-
 }

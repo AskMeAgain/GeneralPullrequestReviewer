@@ -70,4 +70,9 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
         projectId
     ));
   }
+
+  @Override
+  public String getTargetBranchName() {
+    return targetBranch;
+  }
 }
