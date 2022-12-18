@@ -9,7 +9,6 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.FileNodeMarker;
-import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +27,9 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String mergeRequestId;
   private final ConnectionConfig connection;
   private final GitlabService gitlabService = GitlabService.getInstance();
-
-  private final PluginTreeExpansionListener listener = PluginTreeExpansionListener.getInstance();
   private final String projectId;
 
-  @Override
-  public void onClick() {
+  public void openFile() {
     var sourceFile = gitlabService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
     var targetFile = gitlabService.getFileOfBranch(projectId, connection, targetBranch, filePath);
 
@@ -97,8 +93,8 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private void loadComments(List<MergeRequestDiscussion> comments) {
     removeAllChildren();
     comments.stream()
-        .map(GitlabDiscussionNode::new)
-        .peek(GitlabDiscussionNode::onCreation)
+        .map(GitlabDiscussionNodeMarker::new)
+        .peek(GitlabDiscussionNodeMarker::onCreation)
         .forEach(this::add);
 
     //TODO

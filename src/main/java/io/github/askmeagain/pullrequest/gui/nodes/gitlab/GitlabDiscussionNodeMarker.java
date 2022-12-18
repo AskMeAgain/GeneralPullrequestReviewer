@@ -1,15 +1,12 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
-import com.thoughtworks.qdox.model.expression.Add;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
-import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.gui.nodes.interfaces.DiscussionNodeMarker;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-
 @RequiredArgsConstructor
-public class GitlabDiscussionNode extends BaseTreeNode {
+public class GitlabDiscussionNodeMarker extends BaseTreeNode implements DiscussionNodeMarker {
 
   private final MergeRequestDiscussion gitlabDiscussion;
 

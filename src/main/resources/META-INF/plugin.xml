@@ -36,8 +36,10 @@
                popup="false">
             <action class="io.github.askmeagain.pullrequest.actions.CheckoutMergeRequestAction"
                     icon="AllIcons.Actions.CheckOut"
-                    text="Checkout"
-            />
+                    text="Checkout"/>
+            <action class="io.github.askmeagain.pullrequest.actions.OpenFileAction"
+                    icon="AllIcons.Actions.OpenNewTab"
+                    text="OpenFile"/>
         </group>
         <group id="io.github.askmeagain.pullrequest.group.pullrequests"
                text="History Group"
