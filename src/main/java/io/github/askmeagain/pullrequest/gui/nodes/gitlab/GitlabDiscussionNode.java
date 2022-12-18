@@ -1,12 +1,15 @@
 package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
 
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
+import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.gui.nodes.interfaces.DiscussionNodeMarker;
 import lombok.RequiredArgsConstructor;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 @RequiredArgsConstructor
-public class GitlabDiscussionNodeMarker extends BaseTreeNode implements DiscussionNodeMarker {
+public class GitlabDiscussionNode extends BaseTreeNode implements DiscussionNodeMarker {
 
   private final MergeRequestDiscussion gitlabDiscussion;
 
@@ -22,11 +25,11 @@ public class GitlabDiscussionNodeMarker extends BaseTreeNode implements Discussi
 
   @Override
   public void onCreation() {
-//    removeAllChildren();
-//    gitlabDiscussion.getReviewComments()
-//        .stream()
-//        .map(ReviewComment::toString)
-//        .map(DefaultMutableTreeNode::new)
-//        .forEach(this::addNode);
+    removeAllChildren();
+    gitlabDiscussion.getReviewComments()
+        .stream()
+        .map(ReviewComment::toString)
+        .map(DefaultMutableTreeNode::new)
+        .forEach(this::add);
   }
 }

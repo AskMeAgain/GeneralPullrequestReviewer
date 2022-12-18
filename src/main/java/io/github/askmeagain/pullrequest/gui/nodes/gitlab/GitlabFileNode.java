@@ -93,12 +93,9 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private void loadComments(List<MergeRequestDiscussion> comments) {
     removeAllChildren();
     comments.stream()
-        .map(GitlabDiscussionNodeMarker::new)
-        .peek(GitlabDiscussionNodeMarker::onCreation)
+        .map(GitlabDiscussionNode::new)
+        .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
-
-    //TODO
-    //listener.doWithoutTriggers(() -> tree.expandPath(new TreePath(this.getPath())));
   }
 
   @Override
