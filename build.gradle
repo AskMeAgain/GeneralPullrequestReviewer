@@ -12,22 +12,25 @@ repositories {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
-    implementation 'org.apache.commons:commons-lang3:3.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    implementation 'io.github.openfeign:feign-okhttp:10.11'
-    implementation 'io.github.openfeign:feign-jackson:10.11'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'io.github.openfeign:feign-core:12.1'
+    implementation 'io.github.openfeign:feign-okhttp:12.1'
+    implementation 'io.github.openfeign:feign-jackson:12.1'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
 
 intellij {
     updateSinceUntilBuild = false
-    version = '2021.3.2'
+    version = '2022.1'
     plugins = ['com.intellij.java', 'Git4Idea']
 }
 
 patchPluginXml {
+    sinceBuild = "213.*"
     version = project.getVersion()
     changeNotes = new File("marketplace-changenotes.html").text
     pluginDescription = new File("marketplace-description.html").text
