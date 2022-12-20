@@ -10,6 +10,19 @@ repositories {
     mavenCentral()
 }
 
+task copyDependencies {
+    doLast {
+        sourceSets.main.runtimeClasspath.each { file ->
+            if (file.toString().endsWith(".jar")) {
+                copy {
+                    from file
+                    into 'libs/'
+                }
+            }
+        }
+    }
+}
+
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
