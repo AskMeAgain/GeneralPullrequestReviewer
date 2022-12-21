@@ -13,6 +13,7 @@ import io.github.askmeagain.pullrequest.settings.integrations.test.TestIntegrati
 import lombok.Getter;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,54 +45,30 @@ public class PullrequestSettingsWindow {
 
   public PullrequestSettingsWindow(Map<String, ConnectionConfig> configMap) {
     var tabbedPane = new JBTabbedPane();
-    var connectionConfigs = new ArrayList<>(configMap.values());
 
     var addProjectButton = new JButton("Add Connection");
     addProjectButton.addActionListener(a -> {
-      if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
-        var gitlabConnectionPanel = new GitlabIntegrationPanelFactory(
-            new ConnectionConfig(),
-            l -> {
-              tabbedPane.remove(tabbedPane.getSelectedIndex());
-              integrationPanels.remove(tabbedPane.getSelectedIndex());
-            }
-        );
-        var component = gitlabConnectionPanel.create();
-        integrationPanels.add(gitlabConnectionPanel);
-        tabbedPane.insertTab("New Gitlab Connection", null, component, "", tabbedPane.getSelectedIndex());
-        tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
-      } else if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.TEST) {
-        var testConnectionPanel = new TestIntegrationPanelFactory(
-            new ConnectionConfig(),
-            l -> {
-              tabbedPane.remove(tabbedPane.getSelectedIndex());
-              integrationPanels.remove(tabbedPane.getSelectedIndex());
-            }
-        );
-        var component = testConnectionPanel.create();
-        integrationPanels.add(testConnectionPanel);
-        tabbedPane.insertTab("New Test Connection", null, component, "", tabbedPane.getSelectedIndex());
-        tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
-      } else {
-        System.out.println("Not implemented");
-      }
+      var selectedItem = (VcsImplementation) selectedVcsImplementation.getSelectedItem();
+      var testConnectionPanel = resolveComponent(new ConnectionConfig(selectedItem), tabbedPane.getSelectedIndex(), tabbedPane);
+      var component = testConnectionPanel.create();
+      integrationPanels.add(testConnectionPanel);
+      tabbedPane.insertTab("New Test Connection", null, component, "", tabbedPane.getSelectedIndex());
+      tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
     });
 
-    var addTab = FormBuilder.createFormBuilder()
-        .addLabeledComponent("Select vcs integration", selectedVcsImplementation)
-        .addComponent(addProjectButton)
-        .addComponentFillVertically(new JPanel(), 0)
-        .getPanel();
-
+    var connectionConfigs = new ArrayList<>(configMap.values());
     for (int i = 0; i < connectionConfigs.size(); i++) {
       var connection = connectionConfigs.get(i);
       var impl = resolveComponent(connection, i, tabbedPane);
       integrationPanels.add(impl);
-      var component = impl.create();
-      tabbedPane.addTab(connection.getName(), component);
+      tabbedPane.addTab(connection.getName(), impl.create());
     }
 
-    tabbedPane.addTab("Add Connection", addTab);
+    tabbedPane.addTab("Add Connection", FormBuilder.createFormBuilder()
+        .addLabeledComponent("Select vcs integration", selectedVcsImplementation)
+        .addComponent(addProjectButton)
+        .addComponentFillVertically(new JPanel(), 0)
+        .getPanel());
 
     panel = FormBuilder.createFormBuilder()
         .addComponent(tabbedPane)
@@ -102,18 +79,20 @@ public class PullrequestSettingsWindow {
   }
 
   private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig, int index, JBTabbedPane tabbedPane) {
-    if (connectionConfig.getVcsImplementation() == VcsImplementation.GITLAB) {
-      return new GitlabIntegrationPanelFactory(connectionConfig, l -> {
-        tabbedPane.remove(index);
-        integrationPanels.remove(index);
-      });
-    } else if (connectionConfig.getVcsImplementation() == VcsImplementation.TEST) {
-      return new TestIntegrationPanelFactory(connectionConfig, l -> {
-        tabbedPane.remove(index);
-        integrationPanels.remove(index);
-      });
+    switch (connectionConfig.getVcsImplementation()) {
+      case GITLAB:
+        return new GitlabIntegrationPanelFactory(connectionConfig, deleteListener(index, tabbedPane));
+      case TEST:
+        return new TestIntegrationPanelFactory(connectionConfig, deleteListener(index, tabbedPane));
     }
-    throw new RuntimeException("whatever");
+    throw new RuntimeException("This will not happen");
+  }
+
+  private ActionListener deleteListener(int index, JBTabbedPane tabbedPane) {
+    return l -> {
+      tabbedPane.remove(index);
+      integrationPanels.remove(index);
+    };
   }
 
   private JPanel colorPickers() {

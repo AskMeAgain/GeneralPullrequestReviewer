@@ -1,12 +1,9 @@
 package io.github.askmeagain.pullrequest.dto.application;
 
-import com.intellij.credentialStore.CredentialAttributes;
-import com.intellij.credentialStore.CredentialAttributesKt;
-import com.intellij.credentialStore.Credentials;
-import com.intellij.ide.passwordSafe.PasswordSafe;
-import com.intellij.util.Producer;
-import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,5 +17,9 @@ public class ConnectionConfig {
   VcsImplementation vcsImplementation;
   String name;
   Map<String, String> configs = new HashMap<>();
+
+  public ConnectionConfig(VcsImplementation vcsImplementation) {
+    this.vcsImplementation = vcsImplementation;
+  }
 
 }

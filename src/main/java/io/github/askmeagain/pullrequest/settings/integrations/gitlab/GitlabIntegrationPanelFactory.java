@@ -1,6 +1,5 @@
 package io.github.askmeagain.pullrequest.settings.integrations.gitlab;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ui.components.JBPasswordField;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
@@ -37,16 +36,14 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
 
     delete.addActionListener(onDelete);
 
-    var label = new JLabel("Projects");
-    label.setIcon(AllIcons.General.ContextHelp);
-    label.setToolTipText("Comma separated list of projects");
-    label.setHorizontalTextPosition(SwingConstants.LEFT);
+    var projectsLabel = getHelpLabel("Projects", "Comma separated list of projects");
+    var urlLabel = getHelpLabel("Gitlab url", "api url should end with api/v4/");
 
     return FormBuilder.createFormBuilder()
         .addLabeledComponent("Name", name, 1, false)
-        .addLabeledComponent("Gitlab Api token", gitlabApiToken, 1, false)
-        .addLabeledComponent("Gitlab url", gitlabUrl, 1, false)
-        .addLabeledComponent(label, gitlabProjects, 1, false)
+        .addLabeledComponent("Gitlab api token", gitlabApiToken, 1, false)
+        .addLabeledComponent(urlLabel, gitlabUrl, 1, false)
+        .addLabeledComponent(projectsLabel, gitlabProjects, 1, false)
         .addLabeledComponent("Legacy gitlab", legacyGitlab, 1, false)
         .addComponent(delete)
         .addComponentFillVertically(new JPanel(), 0)
