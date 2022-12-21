@@ -1,5 +1,6 @@
 package io.github.askmeagain.pullrequest.settings.integrations.gitlab;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ui.components.JBPasswordField;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
@@ -20,7 +21,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField gitlabUrl = new JBTextField();
   private final JBTextField gitlabProjects = new JBTextField();
   private final JCheckBox legacyGitlab = new JCheckBox();
-  private final JButton delete = new JButton("Delete Integration");
+  private final JButton delete = new JButton("Delete Connection");
   private final ConnectionConfig connectionConfig;
 
   private final ActionListener onDelete;
@@ -36,18 +37,23 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
 
     delete.addActionListener(onDelete);
 
+    var label = new JLabel("Projects");
+    label.setIcon(AllIcons.General.ContextHelp);
+    label.setToolTipText("Comma separated list of projects");
+    label.setHorizontalTextPosition(SwingConstants.LEFT);
+
     return FormBuilder.createFormBuilder()
         .addLabeledComponent("Name", name, 1, false)
         .addLabeledComponent("Gitlab Api token", gitlabApiToken, 1, false)
         .addLabeledComponent("Gitlab url", gitlabUrl, 1, false)
-        .addLabeledComponent("Projects", gitlabProjects, 1, false)
+        .addLabeledComponent(label, gitlabProjects, 1, false)
         .addLabeledComponent("Legacy gitlab", legacyGitlab, 1, false)
         .addComponent(delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
   }
 
-  public String getPassword(){
+  public String getPassword() {
     return String.valueOf(gitlabApiToken.getPassword());
   }
 

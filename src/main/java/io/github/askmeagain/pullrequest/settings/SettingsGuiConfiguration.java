@@ -55,7 +55,6 @@ public class SettingsGuiConfiguration implements Configurable {
     var colorChanged3 = !Objects.equals(Color.decode(state.getMergeRequestColor()), settingsComponent.getMergeRequestColor().getSelectedColor());
 
     var anythingChanged = colorChanged1 || colorChanged2 || colorChanged3;
-
     if (anythingChanged) {
       return true;
     }

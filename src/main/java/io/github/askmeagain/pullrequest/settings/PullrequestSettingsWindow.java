@@ -46,7 +46,7 @@ public class PullrequestSettingsWindow {
     var tabbedPane = new JBTabbedPane();
     var connectionConfigs = new ArrayList<>(configMap.values());
 
-    var addProjectButton = new JButton("Add Project");
+    var addProjectButton = new JButton("Add Connection");
     addProjectButton.addActionListener(a -> {
       if (selectedVcsImplementation.getSelectedItem() == VcsImplementation.GITLAB) {
         var gitlabConnectionPanel = new GitlabIntegrationPanelFactory(

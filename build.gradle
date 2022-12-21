@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '1.5.2'
+    id 'org.jetbrains.intellij' version '1.10.1'
     id 'java'
 }
 
@@ -8,19 +8,6 @@ version System.getenv("RELEASE_VERSION")
 
 repositories {
     mavenCentral()
-}
-
-task copyDependencies {
-    doLast {
-        sourceSets.main.runtimeClasspath.each { file ->
-            if (file.toString().endsWith(".jar")) {
-                copy {
-                    from file
-                    into 'libs/'
-                }
-            }
-        }
-    }
 }
 
 dependencies {
