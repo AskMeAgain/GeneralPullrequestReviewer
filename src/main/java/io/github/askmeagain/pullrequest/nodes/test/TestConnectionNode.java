@@ -1,8 +1,8 @@
-package io.github.askmeagain.pullrequest.gui.nodes.test;
+package io.github.askmeagain.pullrequest.nodes.test;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.ConnectionMarker;
+import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.NodeBehaviour;
+import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;

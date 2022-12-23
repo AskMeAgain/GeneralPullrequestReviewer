@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.nodes.gitlab;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
@@ -7,8 +7,8 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
-import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

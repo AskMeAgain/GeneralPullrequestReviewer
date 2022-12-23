@@ -37,9 +37,12 @@
             <action class="io.github.askmeagain.pullrequest.actions.CheckoutMergeRequestAction"
                     icon="AllIcons.Actions.CheckOut"
                     text="Checkout"/>
+            <action class="io.github.askmeagain.pullrequest.actions.ApproveMergeRequestAction"
+                    icon="AllIcons.Actions.Checked"
+                    text="Approve Merge Request"/>
             <action class="io.github.askmeagain.pullrequest.actions.OpenFileAction"
                     icon="AllIcons.Actions.OpenNewTab"
-                    text="OpenFile"/>
+                    text="Open File"/>
             <action class="io.github.askmeagain.pullrequest.actions.RefreshNodeAction"
                     icon="AllIcons.Actions.Refresh"
                     text="Refresh"/>

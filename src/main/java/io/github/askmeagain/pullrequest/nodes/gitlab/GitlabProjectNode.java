@@ -1,9 +1,9 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.nodes.gitlab;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
-import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.FakeNode;
+import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

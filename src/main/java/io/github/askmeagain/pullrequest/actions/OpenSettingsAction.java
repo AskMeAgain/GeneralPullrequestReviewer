@@ -3,7 +3,7 @@ package io.github.askmeagain.pullrequest.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.ConnectionMarker;
+import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
 import io.github.askmeagain.pullrequest.services.ManagementService;
 import io.github.askmeagain.pullrequest.services.SettingsGuiService;
 import io.github.askmeagain.pullrequest.services.StateService;

@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes.interfaces;
+package io.github.askmeagain.pullrequest.nodes.interfaces;
 
 public interface MergeRequestMarker {
 

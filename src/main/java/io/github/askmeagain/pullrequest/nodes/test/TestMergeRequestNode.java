@@ -1,7 +1,7 @@
-package io.github.askmeagain.pullrequest.gui.nodes.test;
+package io.github.askmeagain.pullrequest.nodes.test;
 
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
-import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.vcs.test.TestService;
 import lombok.Getter;
 

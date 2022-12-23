@@ -1,20 +1,18 @@
-package io.github.askmeagain.pullrequest.gui.nodes;
+package io.github.askmeagain.pullrequest.nodes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.ui.tree.TreeUtil;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.NodeBehaviour;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
+import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
 import io.github.askmeagain.pullrequest.services.ManagementService;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import java.awt.Window;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

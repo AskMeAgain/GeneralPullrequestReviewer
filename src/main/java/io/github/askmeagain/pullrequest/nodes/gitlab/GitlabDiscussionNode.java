@@ -1,9 +1,9 @@
-package io.github.askmeagain.pullrequest.gui.nodes.gitlab;
+package io.github.askmeagain.pullrequest.nodes.gitlab;
 
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
-import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.DiscussionNodeMarker;
+import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;

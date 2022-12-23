@@ -1,11 +1,11 @@
-package io.github.askmeagain.pullrequest.gui.nodes;
+package io.github.askmeagain.pullrequest.nodes;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabConnectionNode;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.ConnectionMarker;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.NodeBehaviour;
-import io.github.askmeagain.pullrequest.gui.nodes.test.TestConnectionNode;
+import io.github.askmeagain.pullrequest.nodes.gitlab.GitlabConnectionNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
+import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
+import io.github.askmeagain.pullrequest.nodes.test.TestConnectionNode;
 import io.github.askmeagain.pullrequest.services.StateService;
 
 import java.util.function.Function;

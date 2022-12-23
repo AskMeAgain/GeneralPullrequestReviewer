@@ -2,7 +2,7 @@ package io.github.askmeagain.pullrequest.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.NodeBehaviour;
+import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
 import io.github.askmeagain.pullrequest.services.ManagementService;
 import org.jetbrains.annotations.NotNull;
 

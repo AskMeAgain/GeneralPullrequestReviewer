@@ -3,14 +3,9 @@ package io.github.askmeagain.pullrequest.services;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.gui.nodes.RootNode;
-import io.github.askmeagain.pullrequest.gui.nodes.gitlab.GitlabConnectionNode;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
+import io.github.askmeagain.pullrequest.nodes.RootNode;
 import lombok.Getter;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 @Service
 public final class ManagementService {

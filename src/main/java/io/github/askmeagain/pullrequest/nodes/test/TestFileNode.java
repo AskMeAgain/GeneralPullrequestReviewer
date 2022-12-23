@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.gui.nodes.test;
+package io.github.askmeagain.pullrequest.nodes.test;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
@@ -6,7 +6,7 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
-import io.github.askmeagain.pullrequest.gui.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.services.vcs.test.TestService;
 import lombok.RequiredArgsConstructor;
 

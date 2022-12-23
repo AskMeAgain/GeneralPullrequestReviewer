@@ -3,17 +3,14 @@ package io.github.askmeagain.pullrequest.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import git4idea.repo.GitRepositoryManager;
-import io.github.askmeagain.pullrequest.gui.nodes.interfaces.MergeRequestMarker;
+import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.ManagementService;
 import org.jetbrains.annotations.NotNull;
 
 public class CheckoutMergeRequestAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    var ref = "abc";
-    //var repos = instance.getRepositories();
-    int i = 0;
-    //
+    //TODO to be implemented
   }
 
   @Override
