@@ -35,6 +35,4 @@ public class TestMergeRequestNode extends BaseTreeNode {
         .map(file -> new TestFileNode(sourceBranch, targetBranch, file, mergeRequestId))
         .forEach(this::add);
   }
-
-
 }
