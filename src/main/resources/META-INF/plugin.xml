@@ -49,7 +49,11 @@
                popup="false">
             <action class="io.github.askmeagain.pullrequest.actions.RefreshMergeRequestListAction"
                     icon="AllIcons.Actions.Refresh"
-                    text="RefreshMergeRequestList"
+                    text="Refresh Merge Requests"
+            />
+            <action class="io.github.askmeagain.pullrequest.actions.OpenSettingsAction"
+                    icon="AllIcons.General.Settings"
+                    text="Open Settings"
             />
         </group>
         <action class="io.github.askmeagain.pullrequest.actions.AddCommentAction"
