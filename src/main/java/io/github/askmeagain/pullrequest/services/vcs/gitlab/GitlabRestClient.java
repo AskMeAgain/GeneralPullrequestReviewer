@@ -4,6 +4,7 @@ import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
+import io.github.askmeagain.pullrequest.PluginUtils;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
@@ -14,7 +15,6 @@ import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeReque
 import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.services.PasswordService;
-import io.github.askmeagain.pullrequest.services.PluginUtils;
 
 import java.util.Base64;
 import java.util.List;

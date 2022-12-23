@@ -17,7 +17,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
                 parentId="tools"
-                instance="io.github.askmeagain.pullrequest.settings.SettingsGuiService"
+                instance="io.github.askmeagain.pullrequest.services.SettingsGuiService"
                 id="io.github.askmeagain.more.shortcuts.settings.SettingsGuiManager"
                 displayName="Pullrequests"/>
         <toolWindow id="Pullrequests" secondary="false"

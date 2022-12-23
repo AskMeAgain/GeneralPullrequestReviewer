@@ -1,11 +1,9 @@
-package io.github.askmeagain.pullrequest.settings;
+package io.github.askmeagain.pullrequest.services;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.options.Configurable;
-import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.services.PasswordService;
-import io.github.askmeagain.pullrequest.services.StateService;
+import io.github.askmeagain.pullrequest.settings.PullrequestSettingsWindow;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
@@ -15,16 +13,15 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static io.github.askmeagain.pullrequest.services.PluginUtils.toHexColor;
+import static io.github.askmeagain.pullrequest.PluginUtils.toHexColor;
 
 @Service
 public final class SettingsGuiService implements Configurable {
 
   @Getter(lazy = true)
   private final StateService stateService = StateService.getInstance();
-  private PullrequestSettingsWindow settingsComponent;
-
   private final PasswordService passwordService = PasswordService.getInstance();
+  private PullrequestSettingsWindow settingsComponent;
 
   @Override
   @Nls(capitalization = Nls.Capitalization.Title)
@@ -34,7 +31,7 @@ public final class SettingsGuiService implements Configurable {
 
   @Override
   public JComponent getPreferredFocusedComponent() {
-    return settingsComponent.getPreferredFocusedComponent();
+    return settingsComponent.getPanel();
   }
 
   public SettingsGuiService() {
@@ -49,7 +46,7 @@ public final class SettingsGuiService implements Configurable {
 
   @Override
   public JComponent createComponent() {
-    return settingsComponent.getPreferredFocusedComponent();
+    return settingsComponent.getPanel();
   }
 
   @Override
@@ -112,14 +109,6 @@ public final class SettingsGuiService implements Configurable {
   @Override
   public void disposeUIResources() {
     settingsComponent = null;
-  }
-
-  public void setSelectedTab(ConnectionConfig connectionConfig) {
-    if (connectionConfig == null) {
-      return;
-    }
-
-    settingsComponent.setSelectedTab(connectionConfig);
   }
 
   public static SettingsGuiService getInstance() {

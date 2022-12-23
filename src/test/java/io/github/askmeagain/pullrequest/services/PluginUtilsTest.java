@@ -1,5 +1,6 @@
 package io.github.askmeagain.pullrequest.services;
 
+import io.github.askmeagain.pullrequest.PluginUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

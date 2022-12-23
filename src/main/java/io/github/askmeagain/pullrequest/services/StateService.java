@@ -6,6 +6,8 @@ import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 @Service
@@ -13,6 +15,10 @@ import org.jetbrains.annotations.NotNull;
 public final class StateService implements PersistentStateComponent<PullrequestPluginState> {
 
   private PullrequestPluginState pullrequestPluginState = new PullrequestPluginState();
+
+  @Getter
+  @Setter
+  private String selectedTab;
 
   @Override
   public @NotNull PullrequestPluginState getState() {

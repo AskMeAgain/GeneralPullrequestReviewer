@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
+import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import io.github.askmeagain.pullrequest.settings.integrations.gitlab.GitlabIntegrationPanelFactory;
 import io.github.askmeagain.pullrequest.settings.integrations.test.TestIntegrationPanelFactory;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 public class PullrequestSettingsWindow {
 
+  @Getter
   private final JPanel panel;
   private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(getIntegrations());
   private final JBTabbedPane tabbedPane = new JBTabbedPane();
@@ -44,7 +46,6 @@ public class PullrequestSettingsWindow {
   }
 
   public PullrequestSettingsWindow(Map<String, ConnectionConfig> configMap) {
-
     var addProjectButton = new JButton("Add Connection");
     addProjectButton.addActionListener(a -> {
       var selectedItem = (VcsImplementation) selectedVcsImplementation.getSelectedItem();
@@ -75,11 +76,13 @@ public class PullrequestSettingsWindow {
         .addComponent(colorPickers())
         .addComponentFillVertically(new JPanel(), 10)
         .getPanel();
+
+    setSelectedTab(StateService.getInstance().getSelectedTab());
   }
 
-  public void setSelectedTab(ConnectionConfig connectionConfig) {
+  private void setSelectedTab(String connectionName) {
     for (int i = 0; i < integrationPanels.size(); i++) {
-      if (integrationPanels.get(i).getConfig().getName().equals(connectionConfig.getName())) {
+      if (integrationPanels.get(i).getConfig().getName().equals(connectionName)) {
         tabbedPane.setSelectedIndex(i);
       }
     }
@@ -109,9 +112,5 @@ public class PullrequestSettingsWindow {
         .addLabeledComponent("MergeRequest comment hints", mergeRequestHintsInDiffView)
         .addComponentFillVertically(new JPanel(), 10)
         .getPanel();
-  }
-
-  public JComponent getPreferredFocusedComponent() {
-    return panel;
   }
 }

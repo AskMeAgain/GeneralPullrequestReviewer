@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.services;
+package io.github.askmeagain.pullrequest;
 
 import java.awt.*;
 
