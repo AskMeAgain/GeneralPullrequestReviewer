@@ -22,6 +22,9 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   private final String projectId;
 
   @Getter
+  private final Boolean canBeMerged;
+
+  @Getter
   private final MergeRequest mergeRequest;
 
   public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig, String projectId) {
@@ -32,6 +35,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
     this.connection = connectionConfig;
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
+    canBeMerged = mergeRequest.getApproved();
   }
 
   private final GitlabService gitlabService = GitlabService.getInstance();
@@ -75,4 +79,5 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   public String getTargetBranchName() {
     return targetBranch;
   }
+
 }

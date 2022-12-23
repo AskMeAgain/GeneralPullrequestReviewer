@@ -35,6 +35,7 @@ public final class GitlabService implements VcsService {
     return getGitlabMergeRequests(projectId, connection)
         .stream()
         .map(pr -> MergeRequest.builder()
+            .approved(pr.merge_status.equals("can_be_merged"))
             .id(pr.getIid() + "")
             .name(pr.getTitle())
             .sourceBranch(pr.getSource_branch())

@@ -53,17 +53,14 @@ public abstract class BaseTreeNode extends DefaultMutableTreeNode implements Nod
 
   @Override
   public void onCreation() {
-
   }
 
   @Override
   public void beforeExpanded() {
-
   }
 
   @Override
   public void onClick() {
-
   }
 
   protected Project getActiveProject() {

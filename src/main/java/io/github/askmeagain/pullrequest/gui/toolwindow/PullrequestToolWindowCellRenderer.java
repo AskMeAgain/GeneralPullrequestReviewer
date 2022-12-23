@@ -1,5 +1,6 @@
 package io.github.askmeagain.pullrequest.gui.toolwindow;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
@@ -29,13 +30,18 @@ public class PullrequestToolWindowCellRenderer extends ColoredTreeCellRenderer {
   ) {
     var color = GRAYED;
 
+    setIcon(null);
+
     if (value instanceof FileNodeMarker) {
       color = Color.decode(state.getFileColor());
     } else if (value instanceof MergeRequestMarker) {
       color = Color.decode(state.getMergeRequestColor());
+      var casted = (MergeRequestMarker) value;
+      if (casted.getCanBeMerged()) {
+        setIcon(AllIcons.Actions.Commit);
+      }
     }
 
-    setIcon(null);
     var attributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
     append(value.toString(), attributes);
   }

@@ -38,7 +38,7 @@
                     icon="AllIcons.Actions.CheckOut"
                     text="Checkout"/>
             <action class="io.github.askmeagain.pullrequest.actions.ApproveMergeRequestAction"
-                    icon="AllIcons.Actions.Checked"
+                    icon="AllIcons.Actions.Commit"
                     text="Approve Merge Request"/>
             <action class="io.github.askmeagain.pullrequest.actions.OpenFileAction"
                     icon="AllIcons.Actions.OpenNewTab"
