@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.settings;
+package io.github.askmeagain.pullrequest.gui.settings;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.ComboBox;

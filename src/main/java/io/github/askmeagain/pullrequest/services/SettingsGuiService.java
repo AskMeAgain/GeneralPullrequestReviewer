@@ -3,7 +3,7 @@ package io.github.askmeagain.pullrequest.services;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.options.Configurable;
-import io.github.askmeagain.pullrequest.settings.PullrequestSettingsWindow;
+import io.github.askmeagain.pullrequest.gui.settings.PullrequestSettingsWindow;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import lombok.Getter;
 import org.jetbrains.annotations.Nls;
