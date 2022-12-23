@@ -17,7 +17,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
                 parentId="tools"
-                instance="io.github.askmeagain.pullrequest.settings.SettingsGuiConfiguration"
+                instance="io.github.askmeagain.pullrequest.settings.SettingsGuiService"
                 id="io.github.askmeagain.more.shortcuts.settings.SettingsGuiManager"
                 displayName="Pullrequests"/>
         <toolWindow id="Pullrequests" secondary="false"
@@ -53,8 +53,9 @@
             />
             <action class="io.github.askmeagain.pullrequest.actions.OpenSettingsAction"
                     icon="AllIcons.General.Settings"
-                    text="Open Settings"
-            />
+                    text="Open Settings">
+                <add-to-group group-id="io.github.askmeagain.pullrequest.group.pullrequests.contextMenu"/>
+            </action>
         </group>
         <action class="io.github.askmeagain.pullrequest.actions.AddCommentAction"
                 icon="AllIcons.Actions.AddFile"

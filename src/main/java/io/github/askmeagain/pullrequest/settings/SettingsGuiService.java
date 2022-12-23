@@ -1,6 +1,9 @@
 package io.github.askmeagain.pullrequest.settings;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.options.Configurable;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
@@ -14,7 +17,8 @@ import java.util.stream.Collectors;
 
 import static io.github.askmeagain.pullrequest.services.PluginUtils.toHexColor;
 
-public class SettingsGuiConfiguration implements Configurable {
+@Service
+public final class SettingsGuiService implements Configurable {
 
   @Getter(lazy = true)
   private final StateService stateService = StateService.getInstance();
@@ -33,8 +37,7 @@ public class SettingsGuiConfiguration implements Configurable {
     return settingsComponent.getPreferredFocusedComponent();
   }
 
-  @Override
-  public JComponent createComponent() {
+  public SettingsGuiService() {
     var state = getStateService().getState();
 
     settingsComponent = new PullrequestSettingsWindow(state.getMap());
@@ -42,7 +45,10 @@ public class SettingsGuiConfiguration implements Configurable {
     settingsComponent.getFileColor().setSelectedColor(Color.decode(state.getFileColor()));
     settingsComponent.getMergeRequestColor().setSelectedColor(Color.decode(state.getMergeRequestColor()));
     settingsComponent.getMergeRequestHintsInDiffView().setSelectedColor(Color.decode(state.getMergeRequestCommentHint()));
+  }
 
+  @Override
+  public JComponent createComponent() {
     return settingsComponent.getPreferredFocusedComponent();
   }
 
@@ -106,5 +112,17 @@ public class SettingsGuiConfiguration implements Configurable {
   @Override
   public void disposeUIResources() {
     settingsComponent = null;
+  }
+
+  public void setSelectedTab(ConnectionConfig connectionConfig) {
+    if (connectionConfig == null) {
+      return;
+    }
+
+    settingsComponent.setSelectedTab(connectionConfig);
+  }
+
+  public static SettingsGuiService getInstance() {
+    return ApplicationManager.getApplication().getService(SettingsGuiService.class);
   }
 }

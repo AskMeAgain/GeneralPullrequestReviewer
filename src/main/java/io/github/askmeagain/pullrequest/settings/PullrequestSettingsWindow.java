@@ -21,8 +21,17 @@ import java.util.Map;
 public class PullrequestSettingsWindow {
 
   private final JPanel panel;
-
   private final JComboBox<VcsImplementation> selectedVcsImplementation = new ComboBox<>(getIntegrations());
+  private final JBTabbedPane tabbedPane = new JBTabbedPane();
+
+  @Getter
+  private final List<IntegrationFactory> integrationPanels = new ArrayList<>();
+  @Getter
+  private final ColorPanel mergeRequestColor = new ColorPanel();
+  @Getter
+  private final ColorPanel fileColor = new ColorPanel();
+  @Getter
+  private final ColorPanel mergeRequestHintsInDiffView = new ColorPanel();
 
   private static VcsImplementation[] getIntegrations() {
     var integrations = new ArrayList<>(List.of(VcsImplementation.GITLAB));
@@ -34,17 +43,7 @@ public class PullrequestSettingsWindow {
     return integrations.toArray(VcsImplementation[]::new);
   }
 
-  @Getter
-  private final List<IntegrationFactory> integrationPanels = new ArrayList<>();
-  @Getter
-  private final ColorPanel mergeRequestColor = new ColorPanel();
-  @Getter
-  private final ColorPanel fileColor = new ColorPanel();
-  @Getter
-  private final ColorPanel mergeRequestHintsInDiffView = new ColorPanel();
-
   public PullrequestSettingsWindow(Map<String, ConnectionConfig> configMap) {
-    var tabbedPane = new JBTabbedPane();
 
     var addProjectButton = new JButton("Add Connection");
     addProjectButton.addActionListener(a -> {
@@ -76,6 +75,14 @@ public class PullrequestSettingsWindow {
         .addComponent(colorPickers())
         .addComponentFillVertically(new JPanel(), 10)
         .getPanel();
+  }
+
+  public void setSelectedTab(ConnectionConfig connectionConfig) {
+    for (int i = 0; i < integrationPanels.size(); i++) {
+      if (integrationPanels.get(i).getConfig().getName().equals(connectionConfig.getName())) {
+        tabbedPane.setSelectedIndex(i);
+      }
+    }
   }
 
   private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig, int index, JBTabbedPane tabbedPane) {
