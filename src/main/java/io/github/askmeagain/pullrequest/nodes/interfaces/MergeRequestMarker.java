@@ -5,4 +5,6 @@ public interface MergeRequestMarker {
   String getTargetBranchName();
 
   Boolean getCanBeMerged();
+
+  void approveMergeRequest();
 }

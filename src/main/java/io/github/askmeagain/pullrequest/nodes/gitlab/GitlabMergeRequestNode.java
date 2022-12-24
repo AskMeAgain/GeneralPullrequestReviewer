@@ -80,4 +80,9 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
     return targetBranch;
   }
 
+  @Override
+  public void approveMergeRequest() {
+    GitlabService.getInstance().approveMergeRequest(connection, mergeRequestId);
+  }
+
 }

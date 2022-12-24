@@ -9,7 +9,11 @@ import org.jetbrains.annotations.NotNull;
 public class ApproveMergeRequestAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    //TODO to be implemented
+    var lastSelectedPathComponent = ManagementService.getInstance().getTree().getLastSelectedPathComponent();
+    if (lastSelectedPathComponent instanceof MergeRequestMarker) {
+      var casted = (MergeRequestMarker) lastSelectedPathComponent;
+      casted.approveMergeRequest();
+    }
   }
 
   @Override

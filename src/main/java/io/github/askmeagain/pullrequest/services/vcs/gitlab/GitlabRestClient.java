@@ -84,4 +84,8 @@ public class GitlabRestClient {
   public GitlabProjectResponse getProject(String projectId) {
     return gitlabApi.getProject(projectId, getToken());
   }
+
+  public void approveMergeRequest(String mergeRequestId) {
+    //TODO
+  }
 }

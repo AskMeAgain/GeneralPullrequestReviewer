@@ -133,4 +133,8 @@ public final class GitlabService implements VcsService {
   private List<GitlabMergeRequestResponse> getGitlabMergeRequests(String projectId, ConnectionConfig connection) {
     return new GitlabRestClient(connection).getMergeRequests(projectId);
   }
+
+  public void approveMergeRequest(ConnectionConfig connection, String mergeRequestId) {
+    new GitlabRestClient(connection).approveMergeRequest(mergeRequestId);
+  }
 }
