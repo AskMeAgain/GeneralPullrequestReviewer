@@ -7,13 +7,14 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.vcs.test.TestService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class TestFileNode extends BaseTreeNode {
+public class TestFileNode extends BaseTreeNode implements FileNodeMarker {
 
   private final String sourceBranch;
   private final String targetBranch;
@@ -72,5 +73,9 @@ public class TestFileNode extends BaseTreeNode {
     return filePath;
   }
 
+  @Override
+  public void openFile() {
+
+  }
 }
 

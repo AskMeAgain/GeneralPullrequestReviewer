@@ -19,6 +19,8 @@ public class TestConnectionNode extends BaseTreeNode implements ConnectionMarker
 
   @Override
   public void onCreation() {
-    add(new TestProjectNode("CoolProject"));
+    var coolProject = new TestProjectNode("CoolProject");
+    add(coolProject);
+    coolProject.onCreation();
   }
 }

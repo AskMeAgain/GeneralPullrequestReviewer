@@ -36,7 +36,6 @@ public class MouseClickListener extends MouseAdapter {
           var runnable = (NodeBehaviour) lastPathComponent;
           runnable.onClick();
         }
-
       }
     }
   }
