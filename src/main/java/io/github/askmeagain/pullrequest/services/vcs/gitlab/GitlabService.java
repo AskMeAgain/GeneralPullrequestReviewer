@@ -47,6 +47,7 @@ public final class GitlabService implements VcsService {
     }
 
     var api = Feign.builder()
+        .requestInterceptor(template -> template.query("private_token", getToken(connection)))
         .client(new OkHttpClient())
         .encoder(new JacksonEncoder())
         .decoder(new JacksonDecoder())
@@ -71,15 +72,21 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public void addCommentToThread(String projectId, ConnectionConfig connection, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    getOrCreateApi(connection).addCommentToThread(request, projectId, mergeRequestId, discussionId, getToken(connection));
+  public void addCommentToThread(
+      String projectId,
+      ConnectionConfig connection,
+      String mergeRequestId,
+      String discussionId,
+      GitlabAddCommentToDiscussionRequest request
+  ) {
+    getOrCreateApi(connection).addCommentToThread(request, projectId, mergeRequestId, discussionId);
   }
 
   @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     if (Boolean.parseBoolean(connection.getConfigs().get("legacy_gitlab"))) {
       return getOrCreateApi(connection)
-          .getMergerequestDiffLegacy(projectId, mergeRequestId, getToken(connection))
+          .getMergerequestDiffLegacy(projectId, mergeRequestId)
           .getChanges()
           .stream()
           .map(Change::getNew_path)
@@ -87,7 +94,7 @@ public final class GitlabService implements VcsService {
     }
 
     return getOrCreateApi(connection)
-        .getMergerequestDiff(projectId, mergeRequestId, getToken(connection))
+        .getMergerequestDiff(projectId, mergeRequestId)
         .stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)
         .collect(Collectors.toList());
@@ -125,14 +132,14 @@ public final class GitlabService implements VcsService {
   public String getFileOfBranch(String projectId, ConnectionConfig connection, String branch, String filePath) {
     var encodedFilePath = PluginUtils.encodePath(filePath);
 
-    var response = getOrCreateApi(connection).getFileOfBranch(projectId, encodedFilePath, branch, getToken(connection));
+    var response = getOrCreateApi(connection).getFileOfBranch(projectId, encodedFilePath, branch);
 
     return new String(Base64.getDecoder().decode(response.get("content")));
   }
 
   @Override
   public void addMergeRequestComment(String projectId, ConnectionConfig connection, String mergeRequestId, CommentRequest comment) {
-    var diffVersion = getOrCreateApi(connection).getDiffVersion(projectId, mergeRequestId, getToken(connection)).get(0);
+    var diffVersion = getOrCreateApi(connection).getDiffVersion(projectId, mergeRequestId).get(0);
 
     var request = GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
@@ -148,25 +155,25 @@ public final class GitlabService implements VcsService {
             .build())
         .build();
 
-    getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId, getToken(connection));
+    getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId);
   }
 
   public GitlabProjectResponse getProject(ConnectionConfig connection, String projectId) {
-    return getOrCreateApi(connection).getProject(projectId, getToken(connection));
+    return getOrCreateApi(connection).getProject(projectId);
   }
 
   @SneakyThrows
   private List<GitlabDiscussionResponse> getDiscussionsOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
-    return getOrCreateApi(connection).getDiscussions(projectId, mergeRequestId, getToken(connection));
+    return getOrCreateApi(connection).getDiscussions(projectId, mergeRequestId);
   }
 
   @SneakyThrows
   private List<GitlabMergeRequestResponse> getGitlabMergeRequests(String projectId, ConnectionConfig connection) {
-    return getOrCreateApi(connection).getMergeRequests(projectId, getToken(connection));
+    return getOrCreateApi(connection).getMergeRequests(projectId);
   }
 
   public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
-    getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId, getToken(connection));
+    getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId);
   }
 
   private String getToken(ConnectionConfig connection) {
