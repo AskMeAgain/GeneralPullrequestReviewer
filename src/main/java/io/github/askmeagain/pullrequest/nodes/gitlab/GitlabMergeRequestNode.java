@@ -76,7 +76,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   }
 
   @Override
-  public String getTargetBranchName() {
+  public String getSourceBranch() {
     return targetBranch;
   }
 

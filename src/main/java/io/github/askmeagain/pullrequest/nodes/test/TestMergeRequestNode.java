@@ -39,7 +39,7 @@ public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMa
   }
 
   @Override
-  public String getTargetBranchName() {
+  public String getSourceBranch() {
     return "test";
   }
 

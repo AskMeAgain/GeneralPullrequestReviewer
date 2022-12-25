@@ -2,7 +2,7 @@ package io.github.askmeagain.pullrequest.nodes.interfaces;
 
 public interface MergeRequestMarker {
 
-  String getTargetBranchName();
+  String getSourceBranch();
 
   Boolean getCanBeMerged();
 
