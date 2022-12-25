@@ -33,7 +33,12 @@ public class CheckoutMergeRequestAction extends AnAction {
       var casted = (MergeRequestMarker) lastSelectedPathComponent;
       var instance = GitRepositoryManager.getInstance(e.getProject());
 
-      var gitRepository = instance.getRepositories().get(0);
+      var repositories = instance.getRepositories();
+      if (repositories.isEmpty()) {
+        return;
+      }
+
+      var gitRepository = repositories.get(0);
       var hasBranch = gitRepository.getBranches().findBranchByName(casted.getSourceBranch());
 
       if (hasBranch != null) {

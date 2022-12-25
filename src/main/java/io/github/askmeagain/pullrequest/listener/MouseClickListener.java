@@ -39,5 +39,4 @@ public class MouseClickListener extends MouseAdapter {
       }
     }
   }
-
 }
