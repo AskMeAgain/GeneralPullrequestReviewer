@@ -1,0 +1,76 @@
+package io.github.askmeagain.pullrequest.settings.integrations.github;
+
+import com.intellij.ui.components.JBPasswordField;
+import com.intellij.ui.components.JBTextField;
+import com.intellij.util.ui.FormBuilder;
+import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
+import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
+import io.github.askmeagain.pullrequest.services.PasswordService;
+import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
+import lombok.RequiredArgsConstructor;
+
+import javax.swing.*;
+import java.awt.event.ActionListener;
+
+@RequiredArgsConstructor
+public class GithubIntegrationPanelFactory implements IntegrationFactory {
+
+  private final JBPasswordField githubApiToken = new JBPasswordField();
+  private final JBTextField name = new JBTextField();
+  private final JBTextField githubUrl = new JBTextField();
+  private final JBTextField repoName = new JBTextField();
+  private final JBTextField userName = new JBTextField();
+  private final JButton delete = new JButton("Delete Connection");
+  private final ConnectionConfig connectionConfig;
+
+  private final ActionListener onDelete;
+
+  private final PasswordService passwordService = PasswordService.getInstance();
+
+  public JPanel create() {
+    name.setText(connectionConfig.getName());
+    githubUrl.setText(connectionConfig.getConfigs().get("githubUrl"));
+
+    if (connectionConfig.getConfigs().get("githubUrl") == null) {
+      githubUrl.setText("https://api.github.com/repos/");
+    }
+
+    repoName.setText(connectionConfig.getConfigs().get("repoName"));
+    userName.setText(connectionConfig.getConfigs().get("userName"));
+
+    githubApiToken.setText(passwordService.getPassword(connectionConfig.getName()));
+
+    delete.addActionListener(onDelete);
+
+    var repoLabel = getHelpLabel("Repo Name", "Comma separated list of repo names of the same user");
+    var usernameLabel = getHelpLabel("User Name", "Username in the repo url");
+    var urlLabel = getHelpLabel("Github url", "api url should end with api/v4/");
+
+    var panel = FormBuilder.createFormBuilder()
+        .addLabeledComponent("Name", name, 1, false)
+        .addLabeledComponent("Github api token", githubApiToken, 1, false)
+        .addLabeledComponent(urlLabel, githubUrl, 1, false)
+        .addLabeledComponent(usernameLabel, userName, 1, false)
+        .addLabeledComponent(repoLabel, repoName, 1, false)
+        .addComponent(delete)
+        .addComponentFillVertically(new JPanel(), 0)
+        .getPanel();
+    panel.setName(connectionConfig.getName());
+    return panel;
+  }
+
+  public String getPassword() {
+    return String.valueOf(githubApiToken.getPassword());
+  }
+
+  public ConnectionConfig getConfig() {
+    var config = new ConnectionConfig();
+    config.setName(name.getText());
+    config.setVcsImplementation(VcsImplementation.GITHUB);
+    config.getConfigs().put("githubUrl", githubUrl.getText());
+    config.getConfigs().put("userName", userName.getText());
+    config.getConfigs().put("repoName", repoName.getText());
+
+    return config;
+  }
+}
