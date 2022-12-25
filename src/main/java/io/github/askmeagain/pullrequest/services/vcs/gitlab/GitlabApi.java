@@ -41,8 +41,8 @@ public interface GitlabApi {
   Map<String, String> getFileOfBranch(
       @Param("projectId") String projectId,
       @Param("filePath") String filePath,
-      @Param("token") String token,
-      @Param("branch") String branch
+      @Param("branch") String branch,
+      @Param("token") String token
   );
 
   @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/discussions?private_token={token}")

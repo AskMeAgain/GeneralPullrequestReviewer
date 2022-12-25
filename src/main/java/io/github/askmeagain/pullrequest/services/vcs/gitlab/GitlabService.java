@@ -2,6 +2,11 @@ package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import feign.okhttp.OkHttpClient;
+import io.github.askmeagain.pullrequest.PluginUtils;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
@@ -11,13 +16,13 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
+import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +31,29 @@ public final class GitlabService implements VcsService {
   @Getter(lazy = true)
   private final PullrequestPluginState state = StateService.getInstance().getState();
 
+  private final Map<String, GitlabApi> apisPerConnection = new HashMap<>();
+
+  private final PasswordService passwordService = PasswordService.getInstance();
+
   public static GitlabService getInstance() {
     return ApplicationManager.getApplication().getService(GitlabService.class);
+  }
+
+  private GitlabApi getOrCreateApi(ConnectionConfig connection) {
+    var name = connection.getName();
+
+    if (apisPerConnection.containsKey(name)) {
+      return apisPerConnection.get(name);
+    }
+
+    var api = Feign.builder()
+        .client(new OkHttpClient())
+        .encoder(new JacksonEncoder())
+        .decoder(new JacksonDecoder())
+        .target(GitlabApi.class, connection.getConfigs().get("gitlabUrl"));
+    apisPerConnection.put(name, api);
+
+    return apisPerConnection.get(name);
   }
 
   @SneakyThrows
@@ -46,22 +72,23 @@ public final class GitlabService implements VcsService {
 
   @Override
   public void addCommentToThread(String projectId, ConnectionConfig connection, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
-    new GitlabRestClient(connection).addCommentToThread(projectId, mergeRequestId, discussionId, request);
+    getOrCreateApi(connection).addCommentToThread(request, projectId, mergeRequestId, discussionId, getToken(connection));
   }
 
   @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     if (Boolean.parseBoolean(connection.getConfigs().get("legacy_gitlab"))) {
-      return new GitlabRestClient(connection)
-          .getMergerequestDiffLegacy(projectId, mergeRequestId)
+      return getOrCreateApi(connection)
+          .getMergerequestDiffLegacy(projectId, mergeRequestId, getToken(connection))
           .getChanges()
           .stream()
           .map(Change::getNew_path)
           .collect(Collectors.toList());
     }
 
-    return new GitlabRestClient(connection)
-        .getMergeRequestDiff(projectId, mergeRequestId).stream()
+    return getOrCreateApi(connection)
+        .getMergerequestDiff(projectId, mergeRequestId, getToken(connection))
+        .stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)
         .collect(Collectors.toList());
   }
@@ -96,12 +123,16 @@ public final class GitlabService implements VcsService {
 
   @Override
   public String getFileOfBranch(String projectId, ConnectionConfig connection, String branch, String filePath) {
-    return new GitlabRestClient(connection).getFileOfBranch(projectId, filePath, branch);
+    var encodedFilePath = PluginUtils.encodePath(filePath);
+
+    var response = getOrCreateApi(connection).getFileOfBranch(projectId, encodedFilePath, branch, getToken(connection));
+
+    return new String(Base64.getDecoder().decode(response.get("content")));
   }
 
   @Override
   public void addMergeRequestComment(String projectId, ConnectionConfig connection, String mergeRequestId, CommentRequest comment) {
-    var diffVersion = new GitlabRestClient(connection).getDiffVersion(projectId, mergeRequestId).get(0);
+    var diffVersion = getOrCreateApi(connection).getDiffVersion(projectId, mergeRequestId, getToken(connection)).get(0);
 
     var request = GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
@@ -117,24 +148,28 @@ public final class GitlabService implements VcsService {
             .build())
         .build();
 
-    new GitlabRestClient(connection).addMergeRequestComment(projectId, mergeRequestId, request);
+    getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId, getToken(connection));
   }
 
   public GitlabProjectResponse getProject(ConnectionConfig connection, String projectId) {
-    return new GitlabRestClient(connection).getProject(projectId);
+    return getOrCreateApi(connection).getProject(projectId, getToken(connection));
   }
 
   @SneakyThrows
   private List<GitlabDiscussionResponse> getDiscussionsOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
-    return new GitlabRestClient(connection).getDiscussions(projectId, mergeRequestId);
+    return getOrCreateApi(connection).getDiscussions(projectId, mergeRequestId, getToken(connection));
   }
 
   @SneakyThrows
   private List<GitlabMergeRequestResponse> getGitlabMergeRequests(String projectId, ConnectionConfig connection) {
-    return new GitlabRestClient(connection).getMergeRequests(projectId);
+    return getOrCreateApi(connection).getMergeRequests(projectId, getToken(connection));
   }
 
   public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
-    new GitlabRestClient(connection).approveMergeRequest(projectId, mergeRequestId);
+    getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId, getToken(connection));
+  }
+
+  private String getToken(ConnectionConfig connection) {
+    return passwordService.getPassword(connection.getName());
   }
 }
