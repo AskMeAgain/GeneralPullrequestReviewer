@@ -39,7 +39,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     var projectsLabel = getHelpLabel("Projects", "Comma separated list of projects");
     var urlLabel = getHelpLabel("Gitlab url", "api url should end with api/v4/");
 
-    return FormBuilder.createFormBuilder()
+    var panel = FormBuilder.createFormBuilder()
         .addLabeledComponent("Name", name, 1, false)
         .addLabeledComponent("Gitlab api token", gitlabApiToken, 1, false)
         .addLabeledComponent(urlLabel, gitlabUrl, 1, false)
@@ -48,6 +48,8 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
         .addComponent(delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
+    panel.setName(connectionConfig.getName());
+    return panel;
   }
 
   public String getPassword() {

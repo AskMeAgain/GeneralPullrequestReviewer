@@ -60,9 +60,7 @@ public interface GitlabApi {
   );
 
   @RequestLine("GET /projects/{projectId}")
-  GitlabProjectResponse getProject(
-      @Param("projectId") String projectId
-  );
+  GitlabProjectResponse getProject(@Param("projectId") String projectId);
 
   @Headers("Content-Type: application/json")
   @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes")

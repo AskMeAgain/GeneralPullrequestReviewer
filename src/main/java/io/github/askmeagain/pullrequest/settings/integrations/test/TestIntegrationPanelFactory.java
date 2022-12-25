@@ -23,11 +23,13 @@ public class TestIntegrationPanelFactory implements IntegrationFactory {
 
     delete.addActionListener(onDelete);
 
-    return FormBuilder.createFormBuilder()
+    var panel = FormBuilder.createFormBuilder()
         .addLabeledComponent("Name", name, 1, false)
         .addComponent(delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
+    panel.setName(connectionConfig.getName());
+    return panel;
   }
 
   public String getPassword() {

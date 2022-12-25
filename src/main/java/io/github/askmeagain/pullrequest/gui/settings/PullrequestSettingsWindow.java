@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class PullrequestSettingsWindow {
 
@@ -49,17 +50,15 @@ public class PullrequestSettingsWindow {
     var addProjectButton = new JButton("Add Connection");
     addProjectButton.addActionListener(a -> {
       var selectedItem = (VcsImplementation) selectedVcsImplementation.getSelectedItem();
-      var testConnectionPanel = resolveComponent(new ConnectionConfig(selectedItem), tabbedPane.getSelectedIndex(), tabbedPane);
+      var testConnectionPanel = resolveComponent(new ConnectionConfig(selectedItem));
       var component = testConnectionPanel.create();
       integrationPanels.add(testConnectionPanel);
       tabbedPane.insertTab("New Test Connection", null, component, "", tabbedPane.getSelectedIndex());
       tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
     });
 
-    var connectionConfigs = new ArrayList<>(configMap.values());
-    for (int i = 0; i < connectionConfigs.size(); i++) {
-      var connection = connectionConfigs.get(i);
-      var impl = resolveComponent(connection, i, tabbedPane);
+    for (var connection : configMap.values()) {
+      var impl = resolveComponent(connection);
       integrationPanels.add(impl);
       tabbedPane.addTab(connection.getName(), impl.create());
     }
@@ -88,20 +87,27 @@ public class PullrequestSettingsWindow {
     }
   }
 
-  private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig, int index, JBTabbedPane tabbedPane) {
+  private IntegrationFactory resolveComponent(ConnectionConfig connectionConfig) {
     switch (connectionConfig.getVcsImplementation()) {
       case GITLAB:
-        return new GitlabIntegrationPanelFactory(connectionConfig, deleteListener(index, tabbedPane));
+        return new GitlabIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
       case TEST:
-        return new TestIntegrationPanelFactory(connectionConfig, deleteListener(index, tabbedPane));
+        return new TestIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
     }
     throw new RuntimeException("This will not happen");
   }
 
-  private ActionListener deleteListener(int index, JBTabbedPane tabbedPane) {
-    return l -> {
-      tabbedPane.remove(index);
-      integrationPanels.remove(index);
+  private ActionListener deleteListener(ConnectionConfig connection) {
+    return unused -> {
+      integrationPanels.removeIf(x -> x.getConfig().getName().equals(connection.getName()));
+
+      for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+        var componentAt = tabbedPane.getComponentAt(i);
+        if (Objects.equals(componentAt.getName(), connection.getName())) {
+          tabbedPane.remove(i);
+          return;
+        }
+      }
     };
   }
 
