@@ -42,17 +42,15 @@ public final class GitlabService implements VcsService {
   private GitlabApi getOrCreateApi(ConnectionConfig connection) {
     var name = connection.getName();
 
-    if (apisPerConnection.containsKey(name)) {
-      return apisPerConnection.get(name);
+    if (!apisPerConnection.containsKey(name)) {
+      var api = Feign.builder()
+          .requestInterceptor(template -> template.query("private_token", getToken(connection)))
+          .client(new OkHttpClient())
+          .encoder(new JacksonEncoder())
+          .decoder(new JacksonDecoder())
+          .target(GitlabApi.class, connection.getConfigs().get("gitlabUrl"));
+      apisPerConnection.put(name, api);
     }
-
-    var api = Feign.builder()
-        .requestInterceptor(template -> template.query("private_token", getToken(connection)))
-        .client(new OkHttpClient())
-        .encoder(new JacksonEncoder())
-        .decoder(new JacksonDecoder())
-        .target(GitlabApi.class, connection.getConfigs().get("gitlabUrl"));
-    apisPerConnection.put(name, api);
 
     return apisPerConnection.get(name);
   }
