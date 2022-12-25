@@ -134,7 +134,7 @@ public final class GitlabService implements VcsService {
     return new GitlabRestClient(connection).getMergeRequests(projectId);
   }
 
-  public void approveMergeRequest(ConnectionConfig connection, String mergeRequestId) {
-    new GitlabRestClient(connection).approveMergeRequest(mergeRequestId);
+  public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    new GitlabRestClient(connection).approveMergeRequest(projectId, mergeRequestId);
   }
 }

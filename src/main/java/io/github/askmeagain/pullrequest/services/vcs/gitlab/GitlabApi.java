@@ -83,4 +83,11 @@ public interface GitlabApi {
       @Param("discId") String discussionId,
       @Param("token") String gitlabToken
   );
+
+  @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/approve?private_token={token}")
+  void approveMergeRequest(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("token") String gitlabToken
+  );
 }

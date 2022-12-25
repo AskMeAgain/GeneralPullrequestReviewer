@@ -82,7 +82,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
 
   @Override
   public void approveMergeRequest() {
-    GitlabService.getInstance().approveMergeRequest(connection, mergeRequestId);
+    GitlabService.getInstance().approveMergeRequest(projectId, connection, mergeRequestId);
   }
 
 }

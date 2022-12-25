@@ -47,4 +47,9 @@ public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMa
   public Boolean getCanBeMerged() {
     return true;
   }
+
+  @Override
+  public void approveMergeRequest() {
+    //Nothing
+  }
 }
