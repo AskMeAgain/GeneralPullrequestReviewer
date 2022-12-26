@@ -42,6 +42,7 @@ public final class GithubService implements VcsService {
       );
 
       var api = Feign.builder()
+          .requestInterceptor(template -> template.header("Authorization", "Bearer " + getToken(connection)))
           .client(new OkHttpClient())
           .encoder(new JacksonEncoder())
           .decoder(new JacksonDecoder())
