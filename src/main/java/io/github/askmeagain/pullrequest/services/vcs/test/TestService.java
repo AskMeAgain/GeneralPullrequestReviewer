@@ -22,31 +22,12 @@ public final class TestService implements VcsService {
             .sourceBranch("target")
             .id("1")
             .name("The first test PR")
-            .files(List.of(
-                ReviewFile.builder()
-                    .fileName("File1.txt")
-                    .fileContent("abcasd")
-                    .build(),
-                ReviewFile.builder()
-                    .fileName("File2.txt")
-                    .fileContent("abcasd")
-                    .build()
-            ))
             .build(),
         MergeRequest.builder()
             .targetBranch("master")
             .sourceBranch("target2")
             .id("2")
             .name("The second test PR")
-            .files(List.of(
-                ReviewFile.builder()
-                    .fileName("File3.txt")
-                    .fileContent("abcasd")
-                    .build(),
-                ReviewFile.builder()
-                    .fileName("File4.txt")
-                    .fileContent("abcasd")
-                    .build()))
             .build()
     );
   }

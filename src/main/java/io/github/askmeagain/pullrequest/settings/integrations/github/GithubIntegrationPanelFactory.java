@@ -8,6 +8,7 @@ import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -31,7 +32,7 @@ public class GithubIntegrationPanelFactory implements IntegrationFactory {
     name.setText(connectionConfig.getName());
     githubUrl.setText(connectionConfig.getConfigs().get("githubUrl"));
 
-    if (connectionConfig.getConfigs().get("githubUrl") == null) {
+    if (StringUtils.isBlank(connectionConfig.getConfigs().get("githubUrl"))) {
       githubUrl.setText("https://api.github.com/repos/");
     }
 

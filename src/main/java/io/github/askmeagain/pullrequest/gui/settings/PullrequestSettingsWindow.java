@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
+import io.github.askmeagain.pullrequest.settings.integrations.github.GithubIntegrationPanelFactory;
 import io.github.askmeagain.pullrequest.settings.integrations.gitlab.GitlabIntegrationPanelFactory;
 import io.github.askmeagain.pullrequest.settings.integrations.test.TestIntegrationPanelFactory;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class PullrequestSettingsWindow {
   private final ColorPanel mergeRequestHintsInDiffView = new ColorPanel();
 
   private static VcsImplementation[] getIntegrations() {
-    var integrations = new ArrayList<>(List.of(VcsImplementation.GITLAB));
+    var integrations = new ArrayList<>(List.of(VcsImplementation.GITLAB, VcsImplementation.GITHUB));
 
     if (ApplicationManager.getApplication().isInternal()) {
       integrations.add(VcsImplementation.TEST);
@@ -93,6 +94,8 @@ public class PullrequestSettingsWindow {
         return new GitlabIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
       case TEST:
         return new TestIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
+      case GITHUB:
+        return new GithubIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
     }
     throw new RuntimeException("This will not happen");
   }
