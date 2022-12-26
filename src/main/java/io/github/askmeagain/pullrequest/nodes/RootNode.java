@@ -2,11 +2,13 @@ package io.github.askmeagain.pullrequest.nodes;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.nodes.github.GithubConnectionNode;
 import io.github.askmeagain.pullrequest.nodes.gitlab.GitlabConnectionNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
 import io.github.askmeagain.pullrequest.nodes.test.TestConnectionNode;
 import io.github.askmeagain.pullrequest.services.StateService;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Function;
 
@@ -47,7 +49,9 @@ public class RootNode extends BaseTreeNode {
         return new TestConnectionNode(connectionConfig);
       case GITLAB:
         return new GitlabConnectionNode(connectionConfig);
+      case GITHUB:
+        return new GithubConnectionNode(connectionConfig);
     }
-    return null;
+    throw new NotImplementedException("Arg");
   }
 }

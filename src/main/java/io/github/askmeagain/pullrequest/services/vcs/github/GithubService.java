@@ -38,7 +38,7 @@ public final class GithubService implements VcsService {
     if (!apisPerConnection.containsKey(name)) {
       var url = String.format("%s%s",
           connection.getConfigs().get("githubUrl"),
-          connection.getConfigs().get("githubUrl")
+          connection.getConfigs().get("userName")
       );
 
       var api = Feign.builder()
