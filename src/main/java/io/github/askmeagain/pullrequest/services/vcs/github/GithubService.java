@@ -7,6 +7,7 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.*;
+import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
@@ -67,13 +68,21 @@ public final class GithubService implements VcsService {
   }
 
   @Override
-  public void addCommentToThread(String projectId, ConnectionConfig connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+  public void addCommentToThread(
+      String projectId,
+      ConnectionConfig connectionName,
+      String mergeRequestId,
+      String discussionId,
+      GitlabAddCommentToDiscussionRequest request
+  ) {
 
   }
 
   @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId) {
-    return null;
+    return getOrCreateApi(connectionName).getMergerequestDiff(projectId, mergeRequestId).stream()
+        .map(GithubDiffResponse::getFilename)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -87,7 +96,12 @@ public final class GithubService implements VcsService {
   }
 
   @Override
-  public void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment) {
+  public void addMergeRequestComment(
+      String projectId,
+      ConnectionConfig connectionName,
+      String mergeRequestId,
+      CommentRequest comment
+  ) {
 
   }
 

@@ -1,6 +1,6 @@
-package io.github.askmeagain.pullrequest.dto.github;
+package io.github.askmeagain.pullrequest.dto.github.mergerequest;
 
-public class User {
+public class Owner {
   public String login;
   public int id;
   public String node_id;

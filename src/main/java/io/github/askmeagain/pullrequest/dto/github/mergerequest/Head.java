@@ -1,13 +1,12 @@
-package io.github.askmeagain.pullrequest.dto.github;
+package io.github.askmeagain.pullrequest.dto.github.mergerequest;
 
 import lombok.Data;
 
 @Data
-public class Base {
+public class Head {
   String label;
   String ref;
   String sha;
   User user;
   Repo repo;
 }
-

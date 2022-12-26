@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.dto.github;
+package io.github.askmeagain.pullrequest.dto.github.mergerequest;
 
 public class Links {
   public Self self;

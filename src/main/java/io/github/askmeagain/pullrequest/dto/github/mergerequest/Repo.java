@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.dto.github;
+package io.github.askmeagain.pullrequest.dto.github.mergerequest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

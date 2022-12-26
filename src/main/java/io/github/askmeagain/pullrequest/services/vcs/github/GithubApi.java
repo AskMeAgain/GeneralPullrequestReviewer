@@ -2,7 +2,8 @@ package io.github.askmeagain.pullrequest.services.vcs.github;
 
 import feign.Param;
 import feign.RequestLine;
-import io.github.askmeagain.pullrequest.dto.github.GithubMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
+import io.github.askmeagain.pullrequest.dto.github.mergerequest.GithubMergeRequestResponse;
 
 import java.util.List;
 
@@ -11,12 +12,12 @@ public interface GithubApi {
   @RequestLine("GET /{projectId}/pulls")
   List<GithubMergeRequestResponse> getMergeRequests(@Param("projectId") String projectId);
 
-//  @RequestLine("GET /projects/{projectId}/merge_requests/{merge_request_iid}/diffs")
-//  List<GitlabMergeRequestFileDiff> getMergerequestDiff(
-//      @Param("projectId") String projectId,
-//      @Param("merge_request_iid") String mergeRequestId
-//  );
-//
+  @RequestLine("GET /{projectId}/pulls/{merge_request_iid}/files")
+  List<GithubDiffResponse> getMergerequestDiff(
+      @Param("projectId") String projectId,
+      @Param("merge_request_iid") String mergeRequestId
+  );
+
 //  @RequestLine("GET /projects/{projectId}/merge_requests/{merge_request_iid}/changes")
 //  GitlabDiffsLegacyResponse getMergerequestDiffLegacy(
 //      @Param("projectId") String projectId,
