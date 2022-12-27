@@ -21,4 +21,6 @@ public interface VcsService {
   String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath);
 
   void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment);
+
+  void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId);
 }

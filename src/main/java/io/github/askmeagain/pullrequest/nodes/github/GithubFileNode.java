@@ -12,6 +12,7 @@ import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -31,7 +32,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
 
   public void openFile() {
     var sourceFile = githubService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
-    var targetFile = githubService.getFileOfBranch(projectId, connection, targetBranch, filePath);
+    var targetFile = getFileOfBranchOrDefault();
 
     var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId);
 
@@ -75,6 +76,15 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     DiffManager.getInstance().showDiff(projectId, request);
 
     loadComments(comments);
+  }
+
+  @NotNull
+  private String getFileOfBranchOrDefault() {
+    try {
+      return githubService.getFileOfBranch(projectId, connection, targetBranch, filePath);
+    } catch (Exception e) {
+      return "";
+    }
   }
 
   @Override

@@ -4,10 +4,8 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
-import io.github.askmeagain.pullrequest.nodes.gitlab.GitlabFileNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
-import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 
 import java.util.function.Function;
@@ -66,8 +64,8 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
 
     var filesOfPr = githubService.getFilesOfPr(projectId, connection, mergeRequestId);
 
-    removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GitlabFileNode::getFilePath);
-    addNewNodeFromLists(filesOfPr, this.getChilds(GitlabFileNode::getFilePath), file -> new GitlabFileNode(
+    removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GithubFileNode::getFilePath);
+    addNewNodeFromLists(filesOfPr, this.getChilds(GithubFileNode::getFilePath), file -> new GithubFileNode(
         sourceBranch,
         targetBranch,
         file,
@@ -84,6 +82,6 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
 
   @Override
   public void approveMergeRequest() {
-    GitlabService.getInstance().approveMergeRequest(projectId, connection, mergeRequestId);
+    GithubService.getInstance().approveMergeRequest(projectId, connection, mergeRequestId);
   }
 }

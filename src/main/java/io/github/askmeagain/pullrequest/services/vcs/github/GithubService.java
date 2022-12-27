@@ -13,7 +13,9 @@ import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
+import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +60,8 @@ public final class GithubService implements VcsService {
   public List<MergeRequest> getMergeRequests(String projectId, ConnectionConfig connectionName) {
     return getOrCreateApi(connectionName).getMergeRequests(projectId).stream()
         .map(x -> MergeRequest.builder()
-            .targetBranch(x.getHead().getRef())
-            .sourceBranch("whatever")
+            .targetBranch(x.getBase().getRef())
+            .sourceBranch(x.getHead().getRef())
             .id(x.getNumber() + "")
             .name(x.getTitle())
             .approved(true)
@@ -92,7 +94,11 @@ public final class GithubService implements VcsService {
 
   @Override
   public String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
-    return null;
+    var encodedFilePath = encodePath(filePath);
+
+    var response = getOrCreateApi(connectionName).getFileOfBranch(projectId, encodedFilePath, branch);
+
+    return new String(Base64.getDecoder().decode(response.getContent().trim()));
   }
 
   @Override
@@ -105,8 +111,20 @@ public final class GithubService implements VcsService {
 
   }
 
+  public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    throw new NotImplementedException("asd");
+    //getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId);
+  }
+
   private String getToken(ConnectionConfig connection) {
     return passwordService.getPassword(connection.getName());
+  }
+
+  public static String encodePath(String path) {
+    return path
+        .replaceAll("/", "%2F")
+        .replaceAll(" ", "%20")
+        .replaceAll("-", "%2D");
   }
 
 }

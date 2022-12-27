@@ -87,4 +87,9 @@ public final class TestService implements VcsService {
   public void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment) {
     //Do nothing
   }
+
+  @Override
+  public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    //Do nothing
+  }
 }

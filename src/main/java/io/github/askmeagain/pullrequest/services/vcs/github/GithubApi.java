@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.services.vcs.github;
 import feign.Param;
 import feign.RequestLine;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
+import io.github.askmeagain.pullrequest.dto.github.file.GithubFileContentResponse;
 import io.github.askmeagain.pullrequest.dto.github.mergerequest.GithubMergeRequestResponse;
 
 import java.util.List;
@@ -18,18 +19,18 @@ public interface GithubApi {
       @Param("merge_request_iid") String mergeRequestId
   );
 
-//  @RequestLine("GET /projects/{projectId}/merge_requests/{merge_request_iid}/changes")
+  //  @RequestLine("GET /projects/{projectId}/merge_requests/{merge_request_iid}/changes")
 //  GitlabDiffsLegacyResponse getMergerequestDiffLegacy(
 //      @Param("projectId") String projectId,
 //      @Param("merge_request_iid") String mergeRequestId
 //  );
 //
-//  @RequestLine(value = "GET /projects/{projectId}/repository/files/{filePath}?ref={branch}", decodeSlash = false)
-//  Map<String, String> getFileOfBranch(
-//      @Param("projectId") String projectId,
-//      @Param("filePath") String filePath,
-//      @Param("branch") String branch
-//  );
+  @RequestLine(value = "GET /{projectId}/contents/{filePath}?ref={branch}", decodeSlash = false)
+  GithubFileContentResponse getFileOfBranch(
+      @Param("projectId") String projectId,
+      @Param("filePath") String filePath,
+      @Param("branch") String branch
+  );
 //
 //  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/discussions")
 //  List<GitlabDiscussionResponse> getDiscussions(
