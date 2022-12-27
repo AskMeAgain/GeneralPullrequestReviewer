@@ -31,8 +31,8 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String projectId;
 
   public void openFile() {
-    var sourceFile = getFileOfBranchOrDefault("", sourceBranch);
-    var targetFile = getFileOfBranchOrDefault("", targetBranch);
+    var sourceFile = getFileOfBranchOrDefault(sourceBranch);
+    var targetFile = getFileOfBranchOrDefault(targetBranch);
 
     var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
 
@@ -79,11 +79,11 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   }
 
   @NotNull
-  private String getFileOfBranchOrDefault(String branch, String defaultValue) {
+  private String getFileOfBranchOrDefault(String branch) {
     try {
       return githubService.getFileOfBranch(projectId, connection, branch, filePath);
     } catch (Exception e) {
-      return defaultValue;
+      return "";
     }
   }
 

@@ -98,12 +98,18 @@ public final class GithubService implements VcsService {
         .filter(x -> x.getIn_reply_to_id() != null)
         .collect(Collectors.groupingBy(GithubDiscussionResponse::getIn_reply_to_id));
 
-    return discussions.stream()
+    var s = discussions.stream()
         .filter(x -> x.getPath().equals(filePath))
+        .filter(x -> x.getIn_reply_to_id() == null)
         .map(x -> MergeRequestDiscussion.builder()
-            .line(x.getLine())
+            .line(x.getLine() - 1)
             .isSourceDiscussion(x.getSide().equals("RIGHT"))
-            .discussionId(x.getIn_reply_to_id())
+            .discussionId(x.getId() + "")
+            .reviewComment(ReviewComment.builder()
+                .text(x.getBody())
+                .discussionId(x.getId() + "")
+                .author(x.getAuthor_association())
+                .build())
             .reviewComments(map.getOrDefault(x.getId() + "", Collections.emptyList()).stream()
                 .map(y -> ReviewComment.builder()
                     .text(y.getBody())
@@ -113,6 +119,7 @@ public final class GithubService implements VcsService {
                 .collect(Collectors.toList()))
             .build())
         .collect(Collectors.toList());
+    return s;
   }
 
   @Override
@@ -121,7 +128,7 @@ public final class GithubService implements VcsService {
 
     var response = getOrCreateApi(connectionName).getFileOfBranch(projectId, encodedFilePath, branch);
 
-    return new String(Base64.getDecoder().decode(response.getContent().trim()));
+    return new String(Base64.getDecoder().decode(response.getContent().replaceAll("\n", "")));
   }
 
   @Override
