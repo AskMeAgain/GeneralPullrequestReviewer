@@ -99,7 +99,13 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
+  public List<MergeRequestDiscussion> getCommentsOfPr(
+      String projectId,
+      ConnectionConfig connection,
+      String mergeRequestId,
+      String file
+  ) {
+    //TODO filter for file
     return getDiscussionsOfPr(projectId, connection, mergeRequestId)
         .stream()
         .map(discussion -> {

@@ -33,7 +33,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     var sourceFile = gitlabService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
     var targetFile = gitlabService.getFileOfBranch(projectId, connection, targetBranch, filePath);
 
-    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
@@ -79,14 +79,14 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
   @Override
   public void beforeExpanded() {
-    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
   }
 
   @Override
   public void refresh() {
     super.refresh();
-    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId);
+    var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
   }
 

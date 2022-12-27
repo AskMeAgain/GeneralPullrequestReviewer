@@ -27,7 +27,7 @@ public class TestFileNode extends BaseTreeNode implements FileNodeMarker {
     var sourceFile = testService.getFileOfBranch(null, null, sourceBranch, filePath);
     var targetFile = testService.getFileOfBranch(null, null, targetBranch, filePath);
 
-    var comments = testService.getCommentsOfPr(null, null, mergeRequestId);
+    var comments = testService.getCommentsOfPr(null, null, mergeRequestId, null);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());

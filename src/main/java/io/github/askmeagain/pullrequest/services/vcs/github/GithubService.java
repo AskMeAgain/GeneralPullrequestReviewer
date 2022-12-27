@@ -8,6 +8,7 @@ import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
+import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
@@ -15,10 +16,7 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,8 +86,33 @@ public final class GithubService implements VcsService {
   }
 
   @Override
-  public List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId) {
-    return null;
+  public List<MergeRequestDiscussion> getCommentsOfPr(
+      String projectId,
+      ConnectionConfig connectionName,
+      String mergeRequestId,
+      String filePath
+  ) {
+    var discussions = getOrCreateApi(connectionName).getDiscussions(projectId, mergeRequestId);
+
+    var map = discussions.stream()
+        .filter(x -> x.getIn_reply_to_id() != null)
+        .collect(Collectors.groupingBy(GithubDiscussionResponse::getIn_reply_to_id));
+
+    return discussions.stream()
+        .filter(x -> x.getPath().equals(filePath))
+        .map(x -> MergeRequestDiscussion.builder()
+            .line(x.getLine())
+            .isSourceDiscussion(x.getSide().equals("RIGHT"))
+            .discussionId(x.getIn_reply_to_id())
+            .reviewComments(map.getOrDefault(x.getId() + "", Collections.emptyList()).stream()
+                .map(y -> ReviewComment.builder()
+                    .text(y.getBody())
+                    .discussionId(y.getIn_reply_to_id())
+                    .author(y.getAuthor_association())
+                    .build())
+                .collect(Collectors.toList()))
+            .build())
+        .collect(Collectors.toList());
   }
 
   @Override

@@ -33,7 +33,12 @@ public final class TestService implements VcsService {
   }
 
   @Override
-  public void addCommentToThread(String projectId, ConnectionConfig connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request) {
+  public void addCommentToThread(
+      String projectId, ConnectionConfig connectionName,
+      String mergeRequestId,
+      String discussionId,
+      GitlabAddCommentToDiscussionRequest request
+  ) {
     //Do nothing
   }
 
@@ -43,7 +48,12 @@ public final class TestService implements VcsService {
   }
 
   @Override
-  public List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId) {
+  public List<MergeRequestDiscussion> getCommentsOfPr(
+      String projectId,
+      ConnectionConfig connectionName,
+      String mergeRequestId,
+      String file
+  ) {
     return List.of(
         MergeRequestDiscussion.builder()
             .line(10)

@@ -16,7 +16,7 @@ public interface VcsService {
 
   List<String> getFilesOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId);
 
-  List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId);
+  List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId, String file);
 
   String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath);
 

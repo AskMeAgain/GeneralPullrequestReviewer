@@ -31,10 +31,10 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String projectId;
 
   public void openFile() {
-    var sourceFile = githubService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
-    var targetFile = getFileOfBranchOrDefault();
+    var sourceFile = getFileOfBranchOrDefault("", sourceBranch);
+    var targetFile = getFileOfBranchOrDefault("", targetBranch);
 
-    var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId);
+    var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
 
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
@@ -79,24 +79,24 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   }
 
   @NotNull
-  private String getFileOfBranchOrDefault() {
+  private String getFileOfBranchOrDefault(String branch, String defaultValue) {
     try {
-      return githubService.getFileOfBranch(projectId, connection, targetBranch, filePath);
+      return githubService.getFileOfBranch(projectId, connection, branch, filePath);
     } catch (Exception e) {
-      return "";
+      return defaultValue;
     }
   }
 
   @Override
   public void beforeExpanded() {
-    var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId);
+    var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
   }
 
   @Override
   public void refresh() {
     super.refresh();
-    var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId);
+    var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
   }
 
