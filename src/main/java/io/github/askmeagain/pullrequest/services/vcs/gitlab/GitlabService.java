@@ -107,12 +107,15 @@ public final class GitlabService implements VcsService {
       String mergeRequestId,
       String file
   ) {
-    //TODO filter for file
     return getDiscussionsOfPr(projectId, connection, mergeRequestId)
         .stream()
         .map(discussion -> {
           var n = discussion.getNotes().get(0);
           if (n.getPosition() == null) {
+            return null;
+          }
+
+          if (!Objects.equals(n.getPosition().getNew_path(), file)) {
             return null;
           }
 
