@@ -8,6 +8,7 @@ import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.function.Function;
 
 
@@ -27,9 +28,13 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   @Getter
   private final MergeRequest mergeRequest;
 
+  @Getter
+  private final List<String> reviewerUrls;
+
   public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig, String projectId) {
     display = mergeRequest.getName();
     mergeRequestId = mergeRequest.getId();
+    this.reviewerUrls = mergeRequest.getReviewer();
     this.projectId = projectId;
     this.mergeRequest = mergeRequest;
     this.connection = connectionConfig;

@@ -6,6 +6,8 @@ import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.test.TestService;
 import lombok.Getter;
 
+import java.util.List;
+
 
 public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
 
@@ -51,5 +53,11 @@ public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMa
   @Override
   public void approveMergeRequest() {
     //Nothing
+  }
+
+  @Override
+  public List<String> getReviewerUrls() {
+    //TODO
+    return List.of("https://www.w3schools.com/images/lamp.jpg", "https://cdn-icons-png.flaticon.com/512/5039/5039041.png");
   }
 }

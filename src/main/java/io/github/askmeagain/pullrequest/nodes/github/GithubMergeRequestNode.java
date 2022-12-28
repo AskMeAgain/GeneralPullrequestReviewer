@@ -8,6 +8,7 @@ import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.function.Function;
 
 
@@ -22,6 +23,9 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
   private final String projectId;
 
   @Getter
+  private final List<String> reviewerUrls;
+
+  @Getter
   private final Boolean canBeMerged;
 
   @Getter
@@ -33,6 +37,7 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     this.projectId = projectId;
     this.mergeRequest = mergeRequest;
     this.connection = connectionConfig;
+    this.reviewerUrls = mergeRequest.getReviewer();
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
     canBeMerged = mergeRequest.getApproved();

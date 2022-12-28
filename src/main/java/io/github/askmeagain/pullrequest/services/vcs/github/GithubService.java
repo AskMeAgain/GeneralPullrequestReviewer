@@ -9,6 +9,7 @@ import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
 import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
+import io.github.askmeagain.pullrequest.dto.github.mergerequest.Assignee;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
@@ -58,6 +59,8 @@ public final class GithubService implements VcsService {
   public List<MergeRequest> getMergeRequests(String projectId, ConnectionConfig connectionName) {
     return getOrCreateApi(connectionName).getMergeRequests(projectId).stream()
         .map(x -> MergeRequest.builder()
+            //TODO switch to reviewers
+            .reviewer(x.getAssignees().stream().map(Assignee::getAvatar_url).collect(Collectors.toList()))
             .targetBranch(x.getBase().getRef())
             .sourceBranch(x.getHead().getRef())
             .id(x.getNumber() + "")

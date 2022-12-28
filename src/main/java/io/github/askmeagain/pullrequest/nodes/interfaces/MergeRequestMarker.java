@@ -1,5 +1,7 @@
 package io.github.askmeagain.pullrequest.nodes.interfaces;
 
+import java.util.List;
+
 public interface MergeRequestMarker {
 
   String getSourceBranch();
@@ -7,4 +9,6 @@ public interface MergeRequestMarker {
   Boolean getCanBeMerged();
 
   void approveMergeRequest();
+
+  List<String> getReviewerUrls();
 }

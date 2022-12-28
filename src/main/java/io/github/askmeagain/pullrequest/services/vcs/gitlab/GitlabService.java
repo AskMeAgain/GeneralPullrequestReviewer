@@ -15,6 +15,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionRe
 import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.Reviewer;
 import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
@@ -60,6 +61,7 @@ public final class GitlabService implements VcsService {
     return getGitlabMergeRequests(projectId, connection)
         .stream()
         .map(pr -> MergeRequest.builder()
+            .reviewer(pr.getReviewers().stream().map(Reviewer::getAvatar_url).collect(Collectors.toList()))
             .approved(pr.merge_status.equals("can_be_merged"))
             .id(pr.getIid() + "")
             .name(pr.getTitle())

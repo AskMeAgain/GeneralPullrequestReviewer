@@ -26,7 +26,7 @@ public class GithubMergeRequestResponse {
   Object merged_at;
   String merge_commit_sha;
   Object assignee;
-  ArrayList<Object> assignees;
+  ArrayList<Assignee> assignees;
   ArrayList<Object> requested_reviewers;
   ArrayList<Object> requested_teams;
   ArrayList<Object> labels;

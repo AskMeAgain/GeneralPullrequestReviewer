@@ -3,6 +3,8 @@ package io.github.askmeagain.pullrequest.dto.application;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
+
 @Value
 @Builder
 public class MergeRequest {
@@ -14,6 +16,8 @@ public class MergeRequest {
   String targetBranch;
 
   Boolean approved;
+
+  List<String> reviewer;
 
   @Override
   public String toString() {
