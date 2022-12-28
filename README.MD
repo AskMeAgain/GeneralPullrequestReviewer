@@ -10,7 +10,10 @@
    2. Each node needs to implement the marker interfaces
 2. Create settings integration panel factory (for getting the connection values)
 
+## Todo
 
+* Better TreeCellRenderer
+* Custom Diff Viewer (with references + buttons)
 
 
 
