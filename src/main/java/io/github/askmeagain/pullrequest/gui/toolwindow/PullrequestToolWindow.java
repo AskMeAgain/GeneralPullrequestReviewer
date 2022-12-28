@@ -97,5 +97,4 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     toolbar.setTargetComponent(parent);
     return toolbar.getComponent();
   }
-
 }
