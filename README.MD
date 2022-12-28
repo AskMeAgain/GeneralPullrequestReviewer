@@ -14,6 +14,7 @@
 
 * Better TreeCellRenderer
 * Custom Diff Viewer (with references + buttons)
+* BitBucket implementation
 
 
 
