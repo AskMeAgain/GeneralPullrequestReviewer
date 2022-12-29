@@ -3,10 +3,7 @@ package io.github.askmeagain.pullrequest.nodes.github;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
-import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
-import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
+import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
@@ -40,19 +37,19 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
 
     var sourceReviewFile = ReviewFile.builder()
-        .fileContent(sourceFile)
+        .fileContent(sourceFile.getFileContent())
         .fileName(sourceBranch)
         .reviewDiscussions(sourceComments)
         .build();
 
     var targetReviewFile = ReviewFile.builder()
-        .fileContent(targetFile)
+        .fileContent(targetFile.getFileContent())
         .fileName(targetBranch)
         .reviewDiscussions(targetComments)
         .build();
 
-    var content1 = DiffContentFactory.getInstance().create(sourceFile);
-    var content2 = DiffContentFactory.getInstance().create(targetFile);
+    var content1 = DiffContentFactory.getInstance().create(sourceFile.getFileContent());
+    var content2 = DiffContentFactory.getInstance().create(targetFile.getFileContent());
     var request = new SimpleDiffRequest(
         filePath,
         content2,
@@ -70,6 +67,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.ProjectId, projectId);
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
+    request.putUserData(TransferKey.CommitId, sourceFile.getCommitId());
 
     var projectId = getActiveProject();
 
@@ -79,11 +77,13 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   }
 
   @NotNull
-  private String getFileOfBranchOrDefault(String branch) {
+  private FileResponse getFileOfBranchOrDefault(String branch) {
     try {
       return githubService.getFileOfBranch(projectId, connection, branch, filePath);
     } catch (Exception e) {
-      return "";
+      return FileResponse.builder()
+          .fileContent("")
+          .build();
     }
   }
 

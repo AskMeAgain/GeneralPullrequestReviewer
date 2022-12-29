@@ -1,9 +1,6 @@
 package io.github.askmeagain.pullrequest.services.vcs;
 
-import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
-import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
+import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 
 import java.util.List;
@@ -18,7 +15,7 @@ public interface VcsService {
 
   List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId, String file);
 
-  String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath);
+  FileResponse getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath);
 
   void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment);
 

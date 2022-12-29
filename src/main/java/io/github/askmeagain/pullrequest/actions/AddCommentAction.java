@@ -3,8 +3,8 @@ package io.github.askmeagain.pullrequest.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.CommentRequest;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.AddCommentDialog;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +27,7 @@ public class AddCommentAction extends AnAction {
                 editor.getUserData(TransferKey.MergeRequestId),
                 CommentRequest.builder()
                     .text(text)
+                    .commitId(editor.getUserData(TransferKey.CommitId))
                     .oldFileName(editor.getUserData(TransferKey.FileName))
                     .newFileName(editor.getUserData(TransferKey.FileName))
                     .sourceComment(editor.getUserData(TransferKey.IsSource))

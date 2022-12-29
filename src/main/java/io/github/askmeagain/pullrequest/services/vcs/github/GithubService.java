@@ -7,6 +7,7 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.*;
+import io.github.askmeagain.pullrequest.dto.github.comment.GithubMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
 import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.github.mergerequest.Assignee;
@@ -101,7 +102,7 @@ public final class GithubService implements VcsService {
         .filter(x -> x.getIn_reply_to_id() != null)
         .collect(Collectors.groupingBy(GithubDiscussionResponse::getIn_reply_to_id));
 
-    var s = discussions.stream()
+    return discussions.stream()
         .filter(x -> x.getPath().equals(filePath))
         .filter(x -> x.getIn_reply_to_id() == null)
         .map(x -> MergeRequestDiscussion.builder()
@@ -122,16 +123,18 @@ public final class GithubService implements VcsService {
                 .collect(Collectors.toList()))
             .build())
         .collect(Collectors.toList());
-    return s;
   }
 
   @Override
-  public String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
+  public FileResponse getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
     var encodedFilePath = encodePath(filePath);
 
     var response = getOrCreateApi(connectionName).getFileOfBranch(projectId, encodedFilePath, branch);
 
-    return new String(Base64.getDecoder().decode(response.getContent().replaceAll("\n", "")));
+    return FileResponse.builder()
+        .fileContent(new String(Base64.getDecoder().decode(response.getContent().replaceAll("\n", ""))))
+        .commitId(response.getSha())
+        .build();
   }
 
   @Override
@@ -141,7 +144,17 @@ public final class GithubService implements VcsService {
       String mergeRequestId,
       CommentRequest comment
   ) {
-
+    getOrCreateApi(connectionName).addMergeRequestComment(
+        GithubMergeRequestCommentRequest.builder()
+            .commit_id(comment.getCommitId())
+            .body(comment.getText())
+            .line(comment.getLine())
+            .side(comment.isSourceComment() ? "RIGHT" : "LEFT")
+            .path(comment.isSourceComment() ? comment.getOldFileName() : comment.getNewFileName())
+            .build(),
+        projectId,
+        mergeRequestId
+    );
   }
 
   public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
@@ -159,5 +172,4 @@ public final class GithubService implements VcsService {
         .replaceAll(" ", "%20")
         .replaceAll("-", "%2D");
   }
-
 }

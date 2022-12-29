@@ -14,5 +14,6 @@ public class TransferKey {
   public static final Key<String> ProjectId = Key.create("projectId");
   public static final Key<String> FileName = Key.create("fileName");
   public static final Key<ConnectionConfig> Connection = Key.create("Connection");
+  public static final Key<String> CommitId = Key.create("CommitId");
   public static final Key<List<MergeRequestDiscussion>> AllDiscussions = Key.create("allDiscussions");
 }

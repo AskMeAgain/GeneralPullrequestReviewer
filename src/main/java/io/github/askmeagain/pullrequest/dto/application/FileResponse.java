@@ -5,13 +5,8 @@ import lombok.Value;
 
 @Value
 @Builder
-public class CommentRequest {
+public class FileResponse {
 
-  boolean sourceComment;
-  String text;
-  int line;
-
+  String fileContent;
   String commitId;
-  String newFileName;
-  String oldFileName;
 }

@@ -89,8 +89,11 @@ public final class TestService implements VcsService {
   }
 
   @Override
-  public String getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
-    return "Abc\nasd\nasd\nasd\nasd\nasddddd\nghjghjhgj\nfghfghfgh\nasdkfgk";
+  public FileResponse getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
+    return FileResponse.builder()
+        .fileContent("Abc\nasd\nasd\nasd\nasd\nasddddd\nghjghjhgj\nfghfghfgh\nasdkfgk")
+        .commitId("abc+")
+        .build();
   }
 
   @Override

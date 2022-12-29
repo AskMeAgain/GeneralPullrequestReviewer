@@ -138,12 +138,15 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public String getFileOfBranch(String projectId, ConnectionConfig connection, String branch, String filePath) {
+  public FileResponse getFileOfBranch(String projectId, ConnectionConfig connection, String branch, String filePath) {
     var encodedFilePath = PluginUtils.encodePath(filePath);
 
     var response = getOrCreateApi(connection).getFileOfBranch(projectId, encodedFilePath, branch);
 
-    return new String(Base64.getDecoder().decode(response.get("content")));
+    return FileResponse.builder()
+        .fileContent(new String(Base64.getDecoder().decode(response.get("content"))))
+        .commitId(response.get("commit_id"))
+        .build();
   }
 
   @Override

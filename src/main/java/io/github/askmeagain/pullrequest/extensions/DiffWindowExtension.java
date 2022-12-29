@@ -13,8 +13,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.JBColor;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.listener.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.services.StateService;
 import lombok.SneakyThrows;
@@ -45,6 +45,9 @@ public class DiffWindowExtension extends DiffExtension {
 
     sourceEditor.putUserData(TransferKey.Connection, request.getUserData(TransferKey.Connection));
     targetEditor.putUserData(TransferKey.Connection, request.getUserData(TransferKey.Connection));
+
+    sourceEditor.putUserData(TransferKey.CommitId, request.getUserData(TransferKey.CommitId));
+    targetEditor.putUserData(TransferKey.CommitId, request.getUserData(TransferKey.CommitId));
 
     sourceEditor.putUserData(TransferKey.ProjectId, request.getUserData(TransferKey.ProjectId));
     targetEditor.putUserData(TransferKey.ProjectId, request.getUserData(TransferKey.ProjectId));
