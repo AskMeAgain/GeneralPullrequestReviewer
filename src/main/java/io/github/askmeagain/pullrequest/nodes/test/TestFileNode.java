@@ -33,19 +33,19 @@ public class TestFileNode extends BaseTreeNode implements FileNodeMarker {
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
 
     var sourceReviewFile = ReviewFile.builder()
-        .fileContent(sourceFile)
+        .fileContent(sourceFile.getFileContent())
         .fileName(sourceBranch)
         .reviewDiscussions(sourceComments)
         .build();
 
     var targetReviewFile = ReviewFile.builder()
-        .fileContent(targetFile)
+        .fileContent(targetFile.getFileContent())
         .fileName(targetBranch)
         .reviewDiscussions(targetComments)
         .build();
 
-    var content1 = DiffContentFactory.getInstance().create(sourceFile);
-    var content2 = DiffContentFactory.getInstance().create(targetFile);
+    var content1 = DiffContentFactory.getInstance().create(sourceFile.getFileContent());
+    var content2 = DiffContentFactory.getInstance().create(targetFile.getFileContent());
     var request = new SimpleDiffRequest(
         filePath,
         content2,

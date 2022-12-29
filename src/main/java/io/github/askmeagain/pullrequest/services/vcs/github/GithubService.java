@@ -61,6 +61,7 @@ public final class GithubService implements VcsService {
     return getOrCreateApi(connectionName).getMergeRequests(projectId).stream()
         .map(x -> MergeRequest.builder()
             //TODO switch to reviewers
+            .commitSha(x.getHead().getSha())
             .reviewer(x.getAssignees().stream().map(Assignee::getAvatar_url).collect(Collectors.toList()))
             .targetBranch(x.getBase().getRef())
             .sourceBranch(x.getHead().getRef())
@@ -148,8 +149,8 @@ public final class GithubService implements VcsService {
         GithubMergeRequestCommentRequest.builder()
             .commit_id(comment.getCommitId())
             .body(comment.getText())
-            .line(comment.getLine())
-            .side(comment.isSourceComment() ? "RIGHT" : "LEFT")
+            .line(comment.getLine() + 1)
+            .side(comment.isSourceComment() ? "LEFT" : "RIGHT")
             .path(comment.isSourceComment() ? comment.getOldFileName() : comment.getNewFileName())
             .build(),
         projectId,

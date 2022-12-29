@@ -20,6 +20,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
 
   private final String sourceBranch;
   private final String targetBranch;
+  private final String commitId;
   @Getter
   private final String filePath;
   private final String mergeRequestId;
@@ -67,7 +68,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.ProjectId, projectId);
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
-    request.putUserData(TransferKey.CommitId, sourceFile.getCommitId());
+    request.putUserData(TransferKey.CommitId, commitId);
 
     var projectId = getActiveProject();
 

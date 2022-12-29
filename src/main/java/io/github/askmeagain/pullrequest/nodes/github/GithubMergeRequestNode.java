@@ -22,6 +22,8 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
   private final ConnectionConfig connection;
   private final String projectId;
 
+  private final String commitId;
+
   @Getter
   private final List<String> reviewerUrls;
 
@@ -33,6 +35,7 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
 
   public GithubMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig, String projectId) {
     display = mergeRequest.getName();
+    this.commitId = mergeRequest.getCommitSha();
     mergeRequestId = mergeRequest.getId();
     this.projectId = projectId;
     this.mergeRequest = mergeRequest;
@@ -73,6 +76,7 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     addNewNodeFromLists(filesOfPr, this.getChilds(GithubFileNode::getFilePath), file -> new GithubFileNode(
         sourceBranch,
         targetBranch,
+        commitId,
         file,
         mergeRequestId,
         connection,

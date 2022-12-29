@@ -19,6 +19,8 @@ public class MergeRequest {
 
   List<String> reviewer;
 
+  String commitSha;
+
   @Override
   public String toString() {
     return name;
