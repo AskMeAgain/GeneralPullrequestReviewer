@@ -8,6 +8,7 @@ import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
 import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.github.file.GithubFileContentResponse;
 import io.github.askmeagain.pullrequest.dto.github.mergerequest.GithubMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public interface GithubApi {
       @Param("mergeRequestId") String mergeRequestId
   );
 
-//  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/versions")
+  //  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/versions")
 //  List<MergeRequestVersions> getDiffVersion(
 //      @Param("projectId") String projectId,
 //      @Param("mergeRequestId") String mergeRequestId
@@ -51,16 +52,16 @@ public interface GithubApi {
 //
 //  @RequestLine("GET /projects/{projectId}")
 //  GitlabProjectResponse getProject(@Param("projectId") String projectId);
-//
-//  @Headers("Content-Type: application/json")
-//  @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes")
-//  void addCommentToThread(
-//      GitlabAddCommentToDiscussionRequest request,
-//      @Param("projectId") String projectId,
-//      @Param("mergeRequestId") String mergeRequestId,
-//      @Param("discId") String discussionId
-//  );
-//
+
+  @Headers("Content-Type: application/json")
+  @RequestLine("POST /{projectId}/pulls/{mergeRequestId}/comments/{discId}/replies")
+  void addCommentToThread(
+      GitlabAddCommentToDiscussionRequest request,
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("discId") String discussionId
+  );
+
 //  @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/approve")
 //  void approveMergeRequest(
 //      @Param("projectId") String projectId,

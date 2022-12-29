@@ -80,7 +80,7 @@ public final class GithubService implements VcsService {
       String discussionId,
       GitlabAddCommentToDiscussionRequest request
   ) {
-
+    getOrCreateApi(connectionName).addCommentToThread();
   }
 
   @Override
