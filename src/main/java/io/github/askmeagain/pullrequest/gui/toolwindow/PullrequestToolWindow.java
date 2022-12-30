@@ -9,8 +9,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
-import io.github.askmeagain.pullrequest.listener.MouseClickListener;
 import io.github.askmeagain.pullrequest.listener.PluginTreeExpansionListener;
+import io.github.askmeagain.pullrequest.listener.PluginTreeMouseClickListener;
 import io.github.askmeagain.pullrequest.services.ManagementService;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class PullrequestToolWindow implements ToolWindowFactory, DumbAware {
     tree.setRootVisible(false);
     tree.setCellRenderer(new PullrequestToolWindowCellRenderer());
 
-    tree.addMouseListener(new MouseClickListener(tree));
+    tree.addMouseListener(new PluginTreeMouseClickListener(tree));
     tree.addTreeWillExpandListener(PluginTreeExpansionListener.getInstance());
 
     return createListPanel(buttonToolBar, tree);

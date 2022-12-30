@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import static com.intellij.openapi.ui.popup.JBPopupFactory.ActionSelectionAid.SPEEDSEARCH;
 
 @RequiredArgsConstructor
-public class MouseClickListener extends MouseAdapter {
+public class PluginTreeMouseClickListener extends MouseAdapter {
   private final Tree tree;
 
   public void mouseClicked(MouseEvent me) {

@@ -11,9 +11,12 @@ import java.util.List;
 public class MergeRequestDiscussion {
 
   String discussionId;
+
   int line;
+
   @Singular
   List<ReviewComment> reviewComments;
+
   boolean isSourceDiscussion;
 
 }
