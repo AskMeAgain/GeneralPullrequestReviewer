@@ -9,9 +9,9 @@ import feign.okhttp.OkHttpClient;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.github.comment.GithubMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
+import io.github.askmeagain.pullrequest.dto.github.discussionnote.GithubAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.github.mergerequest.Assignee;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
@@ -78,9 +78,16 @@ public final class GithubService implements VcsService {
       ConnectionConfig connectionName,
       String mergeRequestId,
       String discussionId,
-      GitlabAddCommentToDiscussionRequest request
+      String body
   ) {
-    getOrCreateApi(connectionName).addCommentToThread();
+    getOrCreateApi(connectionName).addCommentToThread(
+        GithubAddCommentToDiscussionRequest.builder()
+            .body(body)
+            .build(),
+        projectId,
+        mergeRequestId,
+        discussionId
+    );
   }
 
   @Override
@@ -113,13 +120,13 @@ public final class GithubService implements VcsService {
             .reviewComment(ReviewComment.builder()
                 .text(x.getBody())
                 .discussionId(x.getId() + "")
-                .author(x.getAuthor_association())
+                .author(x.getUser().getLogin())
                 .build())
             .reviewComments(map.getOrDefault(x.getId() + "", Collections.emptyList()).stream()
                 .map(y -> ReviewComment.builder()
                     .text(y.getBody())
                     .discussionId(y.getIn_reply_to_id())
-                    .author(y.getAuthor_association())
+                    .author(x.getUser().getLogin())
                     .build())
                 .collect(Collectors.toList()))
             .build())

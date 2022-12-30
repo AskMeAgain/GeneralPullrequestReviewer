@@ -5,10 +5,10 @@ import feign.Param;
 import feign.RequestLine;
 import io.github.askmeagain.pullrequest.dto.github.comment.GithubMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
+import io.github.askmeagain.pullrequest.dto.github.discussionnote.GithubAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.github.file.GithubFileContentResponse;
 import io.github.askmeagain.pullrequest.dto.github.mergerequest.GithubMergeRequestResponse;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public interface GithubApi {
   @Headers("Content-Type: application/json")
   @RequestLine("POST /{projectId}/pulls/{mergeRequestId}/comments/{discId}/replies")
   void addCommentToThread(
-      GitlabAddCommentToDiscussionRequest request,
+      GithubAddCommentToDiscussionRequest request,
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId,
       @Param("discId") String discussionId

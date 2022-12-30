@@ -3,7 +3,6 @@ package io.github.askmeagain.pullrequest.services.vcs.test;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import io.github.askmeagain.pullrequest.dto.application.*;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public final class TestService implements VcsService {
       String projectId, ConnectionConfig connectionName,
       String mergeRequestId,
       String discussionId,
-      GitlabAddCommentToDiscussionRequest request
+      String text
   ) {
     //Do nothing
   }

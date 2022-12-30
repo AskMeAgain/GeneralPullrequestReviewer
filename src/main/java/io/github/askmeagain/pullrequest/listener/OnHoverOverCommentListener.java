@@ -7,12 +7,10 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.ui.popup.JBPopup;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
+import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
-import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -84,10 +82,8 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
             connection,
             editor.getUserData(TransferKey.MergeRequestId),
             mergeRequestDiscussion.getDiscussionId(),
-            GitlabAddCommentToDiscussionRequest.builder()
-                .body(text)
-                .build())
-    );
+            text
+        ));
 
     currentActivePopup.showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
   }

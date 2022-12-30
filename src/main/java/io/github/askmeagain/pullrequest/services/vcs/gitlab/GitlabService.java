@@ -77,9 +77,16 @@ public final class GitlabService implements VcsService {
       ConnectionConfig connection,
       String mergeRequestId,
       String discussionId,
-      GitlabAddCommentToDiscussionRequest request
+      String text
   ) {
-    getOrCreateApi(connection).addCommentToThread(request, projectId, mergeRequestId, discussionId);
+    getOrCreateApi(connection).addCommentToThread(
+        GitlabAddCommentToDiscussionRequest.builder()
+            .body(text)
+            .build(),
+        projectId,
+        mergeRequestId,
+        discussionId
+    );
   }
 
   @Override

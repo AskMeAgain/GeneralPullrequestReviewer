@@ -1,6 +1,5 @@
 package io.github.askmeagain.pullrequest.dto.application;
 
-import com.intellij.openapi.util.TextRange;
 import lombok.Builder;
 import lombok.Value;
 
@@ -14,7 +13,7 @@ public class ReviewComment {
 
   @Override
   public String toString() {
-    return author + ":" + text;
+    return author + ": " + text;
   }
 
 }

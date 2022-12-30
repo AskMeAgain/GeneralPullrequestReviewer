@@ -1,7 +1,6 @@
 package io.github.askmeagain.pullrequest.services.vcs;
 
 import io.github.askmeagain.pullrequest.dto.application.*;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 
 import java.util.List;
 
@@ -9,7 +8,7 @@ public interface VcsService {
 
   List<MergeRequest> getMergeRequests(String projectId, ConnectionConfig connectionName);
 
-  void addCommentToThread(String projectId, ConnectionConfig connectionName, String mergeRequestId, String discussionId, GitlabAddCommentToDiscussionRequest request);
+  void addCommentToThread(String projectId, ConnectionConfig connectionName, String mergeRequestId, String discussionId, String body);
 
   List<String> getFilesOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId);
 
