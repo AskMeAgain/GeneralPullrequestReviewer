@@ -9,15 +9,16 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 public class DiscussionPopup {
 
-  public static JBPopup create(MergeRequestDiscussion discussion, Consumer<String> onSend) {
+  public static JBPopup create(List<MergeRequestDiscussion> discussion, BiConsumer<String, String> onSend) {
     var textArea = new JTextArea();
     var sendButton = new JButton("Send");
 
-    var existingCommentsPanel = createNewCommentChainPanel(discussion);
+    var existingCommentsPanel = createNewCommentChainPanel(discussion.get(0));
 
     var sendTextField = new JBScrollPane(textArea);
 
@@ -36,10 +37,10 @@ public class DiscussionPopup {
         .setRequestFocus(true)
         .createPopup();
 
-    sendButton.addActionListener(actionEvent -> {
-      onSend.accept(textArea.getText());
-      popup.cancel();
-    });
+//    sendButton.addActionListener(actionEvent -> {
+//      onSend.accept(textArea.getText(), discussion.getDiscussionId());
+//      popup.cancel();
+//    });
 
     return popup;
   }

@@ -16,27 +16,28 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  private final Map<Integer, MergeRequestDiscussion> linesPerFoldRegionSource;
-  private final Map<Integer, MergeRequestDiscussion> linesPerFoldRegionTarget;
+  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
+  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
   private JBPopup currentActivePopup;
 
   private int currentActiveLine;
+  private boolean currentActiveIsSource;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
   private final ConnectionConfig connection;
 
   public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
     linesPerFoldRegionTarget = comments.stream()
-        .filter(MergeRequestDiscussion::isSourceDiscussion)
-        .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
-    linesPerFoldRegionSource = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
-        .collect(Collectors.toMap(MergeRequestDiscussion::getLine, Function.identity()));
+        .collect(Collectors.groupingBy(MergeRequestDiscussion::getLine));
+    linesPerFoldRegionSource = comments.stream()
+        .filter(MergeRequestDiscussion::isSourceDiscussion)
+        .collect(Collectors.groupingBy(MergeRequestDiscussion::getLine));
+
     this.connection = connection;
   }
 
@@ -46,10 +47,24 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     var pos = editor.xyToLogicalPosition(new Point(editorMouseEvent.getMouseEvent().getPoint()));
     var isSource = editor.getUserData(TransferKey.IsSource);
 
-    if (linesPerFoldRegionTarget.containsKey(pos.line) && !isSource) {
-      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionTarget.get(pos.line));
-    } else if (linesPerFoldRegionSource.containsKey(pos.line) && isSource) {
-      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionSource.get(pos.line));
+    var visualPosition = editorMouseEvent.getVisualPosition();
+
+    var offset = editor.visualPositionToOffset(visualPosition);
+
+    var document = editor.getDocument();
+
+    //if cursor is out of line
+    if (document.getLineCount() <= pos.line) {
+      return;
+    }
+    if (document.getLineStartOffset(pos.line) < offset && offset > document.getLineEndOffset(pos.line)) {
+      return;
+    }
+
+    if (linesPerFoldRegionTarget.containsKey(pos.line) && isSource) {
+      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionTarget.get(pos.line), true);
+    } else if (linesPerFoldRegionSource.containsKey(pos.line) && !isSource) {
+      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionSource.get(pos.line), false);
     }
   }
 
@@ -57,31 +72,29 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
       EditorMouseEvent e,
       Editor editor,
       LogicalPosition pos,
-      MergeRequestDiscussion mergeRequestDiscussion
+      List<MergeRequestDiscussion> mergeRequestDiscussion,
+      boolean isSource
   ) {
-    if (currentActiveLine == pos.line && currentActivePopup.isVisible()) {
+    //already active
+    if (currentActivePopup != null && currentActivePopup.isVisible() && currentActiveLine == pos.line && currentActiveIsSource == isSource) {
       return;
+    } else if (currentActivePopup != null) {
+      //turn off
+      currentActivePopup.cancel();
     }
 
-    if (currentActiveLine == pos.line) {
-      currentActivePopup.setUiVisible(true);
-    }
-
-    if (currentActivePopup != null) {
-      currentActivePopup.setUiVisible(false);
-    }
-
+    currentActiveIsSource = isSource;
     currentActiveLine = pos.line;
 
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
 
     currentActivePopup = DiscussionPopup.create(
         mergeRequestDiscussion,
-        text -> vcsService.addCommentToThread(
+        (text, discId) -> vcsService.addCommentToThread(
             editor.getUserData(TransferKey.ProjectId),
             connection,
             editor.getUserData(TransferKey.MergeRequestId),
-            mergeRequestDiscussion.getDiscussionId(),
+            discId,
             text
         ));
 
