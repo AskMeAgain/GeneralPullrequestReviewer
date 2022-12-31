@@ -61,10 +61,10 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
       return;
     }
 
-    if (linesPerFoldRegionTarget.containsKey(pos.line) && isSource) {
-      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionTarget.get(pos.line), true);
-    } else if (linesPerFoldRegionSource.containsKey(pos.line) && !isSource) {
-      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionSource.get(pos.line), false);
+    if (linesPerFoldRegionTarget.containsKey(pos.line) && !isSource) {
+      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionTarget.get(pos.line), false);
+    } else if (linesPerFoldRegionSource.containsKey(pos.line) && isSource) {
+      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionSource.get(pos.line), true);
     }
   }
 

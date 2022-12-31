@@ -57,8 +57,8 @@ public class DiffWindowExtension extends DiffExtension {
         request.getUserData(TransferKey.Connection)
     );
 
-    doForEditor(sourceEditor, request, TransferKey.DataContextKeyTarget, listener);
-    doForEditor(targetEditor, request, TransferKey.DataContextKeySource, listener);
+    doForEditor(targetEditor, request, TransferKey.DataContextKeyTarget, listener);
+    doForEditor(sourceEditor, request, TransferKey.DataContextKeySource, listener);
   }
 
   @SneakyThrows

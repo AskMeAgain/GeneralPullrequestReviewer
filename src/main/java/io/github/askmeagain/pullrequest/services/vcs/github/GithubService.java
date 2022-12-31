@@ -115,7 +115,7 @@ public final class GithubService implements VcsService {
         .filter(x -> x.getIn_reply_to_id() == null)
         .map(x -> MergeRequestDiscussion.builder()
             .line(x.getLine() - 1)
-            .isSourceDiscussion(x.getSide().equals("RIGHT"))
+            .isSourceDiscussion(x.getSide().equals("LEFT"))
             .discussionId(x.getId() + "")
             .reviewComment(ReviewComment.builder()
                 .text(x.getBody())
@@ -156,7 +156,8 @@ public final class GithubService implements VcsService {
         GithubMergeRequestCommentRequest.builder()
             .commit_id(comment.getCommitId())
             .body(comment.getText())
-            .line(comment.getLine() + 1)
+            .line(comment.getLineEnd() + 1)
+            .start_line(comment.getLineStart() + 1)
             .side(comment.isSourceComment() ? "LEFT" : "RIGHT")
             .path(comment.isSourceComment() ? comment.getOldFileName() : comment.getNewFileName())
             .build(),

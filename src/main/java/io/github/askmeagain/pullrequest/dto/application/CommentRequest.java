@@ -9,7 +9,8 @@ public class CommentRequest {
 
   boolean sourceComment;
   String text;
-  int line;
+  int lineStart;
+  int lineEnd;
 
   String commitId;
   String newFileName;

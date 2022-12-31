@@ -31,7 +31,8 @@ public class AddCommentAction extends AnAction {
                     .oldFileName(editor.getUserData(TransferKey.FileName))
                     .newFileName(editor.getUserData(TransferKey.FileName))
                     .sourceComment(editor.getUserData(TransferKey.IsSource))
-                    .line(editor.offsetToLogicalPosition(caret.getSelectionEnd()).line)
+                    .lineStart(editor.offsetToLogicalPosition(caret.getSelectionStart()).line)
+                    .lineEnd(editor.offsetToLogicalPosition(caret.getSelectionEnd()).line)
                     .build()))
             .show());
   }

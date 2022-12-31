@@ -12,5 +12,6 @@ public class GithubMergeRequestCommentRequest {
   String commit_id;
   String side;
   int line;
+  int start_line;
 
 }
