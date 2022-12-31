@@ -169,8 +169,8 @@ public final class GitlabService implements VcsService {
             .start_sha(diffVersion.getStart_commit_sha())
             .new_path(comment.getNewFileName())
             .old_path(comment.getOldFileName())
-            .old_line(comment.isSourceComment() ? comment.getLine() + 1 : null)
-            .new_line(comment.isSourceComment() ? null : comment.getLine() + 1)
+            .old_line(comment.isSourceComment() ? comment.getLineEnd() + 1 : null)
+            .new_line(comment.isSourceComment() ? null : comment.getLineEnd() + 1)
             .build())
         .build();
 
