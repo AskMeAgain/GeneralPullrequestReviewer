@@ -15,4 +15,14 @@ public class CommentRequest {
   String commitId;
   String newFileName;
   String oldFileName;
+
+  Integer firstHunk;
+  Integer lastHunk;
+
+  public boolean isWithinReach() {
+    if (firstHunk == null || lastHunk == null) {
+      return true;
+    }
+    return firstHunk <= lineStart && lastHunk <= lineEnd;
+  }
 }

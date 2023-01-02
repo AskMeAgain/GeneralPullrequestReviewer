@@ -152,8 +152,7 @@ public final class GithubService implements VcsService {
       String mergeRequestId,
       CommentRequest comment
   ) {
-    var flag = false;
-    if (flag) {
+    if (comment.isWithinReach()) {
       System.out.println("This is sadly not possible right now");
       return;
     }

@@ -22,12 +22,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DiffWindowExtension extends DiffExtension {
 
   private static final TextAttributes EDITOR_ATTRIBUTES = new TextAttributes(JBColor.red, null, null, null, Font.BOLD);
 
   private final PullrequestPluginState state = StateService.getInstance().getState();
+
+  private final List<Key> keys = List.of(
+      TransferKey.ProjectId,
+      TransferKey.CommitId,
+      TransferKey.Connection,
+      TransferKey.FileName,
+      TransferKey.MergeRequestId,
+      TransferKey.hunkEnd,
+      TransferKey.HunkStart
+  );
 
   @Override
   public void onViewerCreated(FrameDiffTool.@NotNull DiffViewer viewer, @NotNull DiffContext context, @NotNull DiffRequest request) {
@@ -36,21 +47,6 @@ public class DiffWindowExtension extends DiffExtension {
 
     sourceEditor.putUserData(TransferKey.IsSource, true);
     targetEditor.putUserData(TransferKey.IsSource, false);
-
-    sourceEditor.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
-    targetEditor.putUserData(TransferKey.MergeRequestId, request.getUserData(TransferKey.MergeRequestId));
-
-    sourceEditor.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
-    targetEditor.putUserData(TransferKey.FileName, request.getUserData(TransferKey.FileName));
-
-    sourceEditor.putUserData(TransferKey.Connection, request.getUserData(TransferKey.Connection));
-    targetEditor.putUserData(TransferKey.Connection, request.getUserData(TransferKey.Connection));
-
-    sourceEditor.putUserData(TransferKey.CommitId, request.getUserData(TransferKey.CommitId));
-    targetEditor.putUserData(TransferKey.CommitId, request.getUserData(TransferKey.CommitId));
-
-    sourceEditor.putUserData(TransferKey.ProjectId, request.getUserData(TransferKey.ProjectId));
-    targetEditor.putUserData(TransferKey.ProjectId, request.getUserData(TransferKey.ProjectId));
 
     var listener = new OnHoverOverCommentListener(
         request.getUserData(TransferKey.AllDiscussions),
@@ -64,6 +60,10 @@ public class DiffWindowExtension extends DiffExtension {
   @SneakyThrows
   private void doForEditor(EditorEx editor, DiffRequest request, Key<ReviewFile> fileKey, OnHoverOverCommentListener listener) {
     applyColorScheme(editor);
+
+    for (var key : keys) {
+      editor.putUserData(key, request.getUserData(key));
+    }
 
     var textAttributes = new TextAttributes(null, Color.decode(state.getDiscussionTextColor()), null, null, Font.PLAIN);
 
