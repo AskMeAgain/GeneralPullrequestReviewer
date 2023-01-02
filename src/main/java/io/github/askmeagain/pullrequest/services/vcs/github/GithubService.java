@@ -152,12 +152,20 @@ public final class GithubService implements VcsService {
       String mergeRequestId,
       CommentRequest comment
   ) {
+    var flag = false;
+    if (flag) {
+      System.out.println("This is sadly not possible right now");
+      return;
+    }
+
+    var startLine = !Objects.equals(comment.getLineStart(), comment.getLineEnd()) ? comment.getLineStart() + 1 : null;
+
     getOrCreateApi(connectionName).addMergeRequestComment(
         GithubMergeRequestCommentRequest.builder()
             .commit_id(comment.getCommitId())
             .body(comment.getText())
             .line(comment.getLineEnd() + 1)
-            .start_line(comment.getLineStart() + 1)
+            .start_line(startLine)
             .side(comment.isSourceComment() ? "LEFT" : "RIGHT")
             .path(comment.isSourceComment() ? comment.getOldFileName() : comment.getNewFileName())
             .build(),
