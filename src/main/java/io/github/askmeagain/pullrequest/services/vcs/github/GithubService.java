@@ -145,6 +145,14 @@ public final class GithubService implements VcsService {
         .build();
   }
 
+  public String getDiffHunk(
+      String projectId,
+      ConnectionConfig connection,
+      String mergeRequestId
+  ) {
+    return getOrCreateApi(connection).getDiffHunksOfMergeRequest(projectId, mergeRequestId);
+  }
+
   @Override
   public void addMergeRequestComment(
       String projectId,

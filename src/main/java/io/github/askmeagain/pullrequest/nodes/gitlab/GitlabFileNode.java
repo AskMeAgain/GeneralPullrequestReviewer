@@ -69,6 +69,8 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.ProjectId, projectId);
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
+    request.putUserData(TransferKey.HunkStart, 0);
+    request.putUserData(TransferKey.HunkEnd, 100000);
 
     var projectId = getActiveProject();
 

@@ -30,7 +30,7 @@ public class RootNode extends BaseTreeNode {
     addNewNodeFromLists(
         state.getConnectionConfigs(),
         this.getChilds(ConnectionMarker::getConnection),
-        GitlabConnectionNode::new
+        this::resolveNode
     );
   }
 
@@ -43,7 +43,7 @@ public class RootNode extends BaseTreeNode {
         .forEach(this::add);
   }
 
-  private NodeBehaviour resolveNode(ConnectionConfig connectionConfig) {
+  private BaseTreeNode resolveNode(ConnectionConfig connectionConfig) {
     switch (connectionConfig.getVcsImplementation()) {
       case TEST:
         return new TestConnectionNode(connectionConfig);

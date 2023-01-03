@@ -29,7 +29,7 @@ public class AddCommentAction extends AnAction {
                     .text(text)
                     .commitId(editor.getUserData(TransferKey.CommitId))
                     .firstHunk(editor.getUserData(TransferKey.HunkStart))
-                    .lastHunk(editor.getUserData(TransferKey.hunkEnd))
+                    .lastHunk(editor.getUserData(TransferKey.HunkEnd))
                     .oldFileName(editor.getUserData(TransferKey.FileName))
                     .newFileName(editor.getUserData(TransferKey.FileName))
                     .sourceComment(editor.getUserData(TransferKey.IsSource))

@@ -27,6 +27,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   private final ConnectionConfig connection;
   private final GithubService githubService = GithubService.getInstance();
   private final String projectId;
+  private final String fileHunk;
 
   public void openFile() {
     var sourceFile = getFileOfBranchOrDefault(sourceBranch);
@@ -69,6 +70,9 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
     request.putUserData(TransferKey.CommitId, commitId);
+
+    request.putUserData(TransferKey.HunkStart, 0);
+    request.putUserData(TransferKey.HunkEnd, 1000000000);
 
     var projectId = getActiveProject();
 

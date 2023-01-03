@@ -4,7 +4,6 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
-import io.github.askmeagain.pullrequest.nodes.gitlab.GitlabMergeRequestNode;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +51,7 @@ public class GithubProjectNode extends BaseTreeNode {
     removeOrRefreshNodes(
         mergeRequestIds,
         this.getChilds(Function.identity()),
-        GitlabMergeRequestNode::getMergeRequestId
+        GithubMergeRequestNode::getMergeRequestId
     );
 
     addNewNodeFromLists(mergeRequests, this.getChilds(GithubMergeRequestNode::getMergeRequest),

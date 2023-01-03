@@ -8,7 +8,9 @@ import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 
@@ -71,6 +73,7 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     removeFakeNode();
 
     var filesOfPr = githubService.getFilesOfPr(projectId, connection, mergeRequestId);
+    var diffHunk = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId));
 
     removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GithubFileNode::getFilePath);
     addNewNodeFromLists(filesOfPr, this.getChilds(GithubFileNode::getFilePath), file -> new GithubFileNode(
@@ -80,8 +83,13 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
         file,
         mergeRequestId,
         connection,
-        projectId
+        projectId,
+        diffHunk.getOrDefault(file, "abc")
     ));
+  }
+
+  private Map<String, String> fileHunk(String hunk) {
+    return Collections.emptyMap();
   }
 
   @Override

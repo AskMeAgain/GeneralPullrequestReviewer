@@ -3,7 +3,6 @@ package io.github.askmeagain.pullrequest.nodes.github;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
-import io.github.askmeagain.pullrequest.nodes.gitlab.GitlabProjectNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +41,7 @@ public class GithubConnectionNode extends BaseTreeNode implements ConnectionMark
         .split(","));
 
     removeOrRefreshNodes(projectList, this.getChilds(Function.identity()), GithubProjectNode::getProjectId);
-    addNewNodeFromLists(projectList, getChilds(GitlabProjectNode::getProjectId), project -> new GithubProjectNode(
+    addNewNodeFromLists(projectList, getChilds(GithubProjectNode::getProjectId), project -> new GithubProjectNode(
         project,
         connectionConfig,
         project

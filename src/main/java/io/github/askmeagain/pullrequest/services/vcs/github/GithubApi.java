@@ -30,6 +30,13 @@ public interface GithubApi {
       @Param("branch") String branch
   );
 
+  @Headers("Accept: application/vnd.github.v3.diff")
+  @RequestLine(value = "GET /{projectId}/pulls/{mergeRequestId}")
+  String getDiffHunksOfMergeRequest(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId
+  );
+
   @RequestLine("GET /{projectId}/pulls/{mergeRequestId}/comments")
   List<GithubDiscussionResponse> getDiscussions(
       @Param("projectId") String projectId,

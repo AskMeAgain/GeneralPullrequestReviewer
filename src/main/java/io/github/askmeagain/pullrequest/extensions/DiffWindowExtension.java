@@ -36,7 +36,7 @@ public class DiffWindowExtension extends DiffExtension {
       TransferKey.Connection,
       TransferKey.FileName,
       TransferKey.MergeRequestId,
-      TransferKey.hunkEnd,
+      TransferKey.HunkEnd,
       TransferKey.HunkStart
   );
 
