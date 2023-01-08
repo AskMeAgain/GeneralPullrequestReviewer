@@ -27,7 +27,8 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   private final ConnectionConfig connection;
   private final GithubService githubService = GithubService.getInstance();
   private final String projectId;
-  private final String fileHunk;
+  private final DiffHunk fileHunkSource;
+  private final DiffHunk fileHunkTarget;
 
   public void openFile() {
     var sourceFile = getFileOfBranchOrDefault(sourceBranch);

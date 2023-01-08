@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.services.vcs.github;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import feign.Response;
 import io.github.askmeagain.pullrequest.dto.github.comment.GithubMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.github.diffs.GithubDiffResponse;
 import io.github.askmeagain.pullrequest.dto.github.discussionnote.GithubAddCommentToDiscussionRequest;
@@ -32,7 +33,7 @@ public interface GithubApi {
 
   @Headers("Accept: application/vnd.github.v3.diff")
   @RequestLine(value = "GET /{projectId}/pulls/{mergeRequestId}")
-  String getDiffHunksOfMergeRequest(
+  Response getDiffHunksOfMergeRequest(
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId
   );

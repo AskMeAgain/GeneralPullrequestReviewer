@@ -16,6 +16,7 @@ import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.*;
@@ -145,12 +146,14 @@ public final class GithubService implements VcsService {
         .build();
   }
 
+  @SneakyThrows
   public String getDiffHunk(
       String projectId,
       ConnectionConfig connection,
       String mergeRequestId
   ) {
-    return getOrCreateApi(connection).getDiffHunksOfMergeRequest(projectId, mergeRequestId);
+    var response = getOrCreateApi(connection).getDiffHunksOfMergeRequest(projectId, mergeRequestId);
+    return new String(response.body().asInputStream().readAllBytes());
   }
 
   @Override

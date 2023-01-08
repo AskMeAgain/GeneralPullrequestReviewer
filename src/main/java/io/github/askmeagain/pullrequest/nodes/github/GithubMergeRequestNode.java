@@ -1,17 +1,20 @@
 package io.github.askmeagain.pullrequest.nodes.github;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
+import io.github.askmeagain.pullrequest.dto.application.DiffHunk;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
@@ -73,7 +76,8 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     removeFakeNode();
 
     var filesOfPr = githubService.getFilesOfPr(projectId, connection, mergeRequestId);
-    var diffHunk = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId));
+    var diffHunkSource = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId), true);
+    var diffHunkTarget = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId), false);
 
     removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GithubFileNode::getFilePath);
     addNewNodeFromLists(filesOfPr, this.getChilds(GithubFileNode::getFilePath), file -> new GithubFileNode(
@@ -84,12 +88,16 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
         mergeRequestId,
         connection,
         projectId,
-        diffHunk.getOrDefault(file, "abc")
+        diffHunkSource.get(file),
+        diffHunkTarget.get(file)
     ));
   }
 
-  private Map<String, String> fileHunk(String hunk) {
-    return Collections.emptyMap();
+  private Map<String, DiffHunk> fileHunk(String hunk, boolean isSource) {
+    return Arrays.stream(hunk.split("diff --git"))
+        .filter(StringUtils::isNotBlank)
+        .map(DiffHunk::new)
+        .collect(Collectors.toMap(x -> isSource ? x.getSourceFileName() : x.getTargetFileName(), Function.identity()));
   }
 
   @Override
