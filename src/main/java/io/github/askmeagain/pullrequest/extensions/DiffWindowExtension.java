@@ -35,9 +35,7 @@ public class DiffWindowExtension extends DiffExtension {
       TransferKey.CommitId,
       TransferKey.Connection,
       TransferKey.FileName,
-      TransferKey.MergeRequestId,
-      TransferKey.HunkEnd,
-      TransferKey.HunkStart
+      TransferKey.MergeRequestId
   );
 
   @Override
@@ -47,6 +45,10 @@ public class DiffWindowExtension extends DiffExtension {
 
     sourceEditor.putUserData(TransferKey.IsSource, true);
     targetEditor.putUserData(TransferKey.IsSource, false);
+
+    transferData(sourceEditor, request, TransferKey.SourceHunk);
+    transferData(targetEditor, request, TransferKey.TargetHunk);
+
 
     var listener = new OnHoverOverCommentListener(
         request.getUserData(TransferKey.AllDiscussions),
@@ -62,7 +64,7 @@ public class DiffWindowExtension extends DiffExtension {
     applyColorScheme(editor);
 
     for (var key : keys) {
-      editor.putUserData(key, request.getUserData(key));
+      transferData(editor, request, key);
     }
 
     var textAttributes = new TextAttributes(null, Color.decode(state.getDiscussionTextColor()), null, null, Font.PLAIN);
@@ -79,6 +81,10 @@ public class DiffWindowExtension extends DiffExtension {
     }
     editor.addEditorMouseMotionListener(listener);
     editor.addEditorMouseListener(listener);
+  }
+
+  private static void transferData(EditorEx editor, DiffRequest request, Key key) {
+    editor.putUserData(key, request.getUserData(key));
   }
 
   private static void applyColorScheme(EditorEx editor) {

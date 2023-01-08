@@ -71,9 +71,8 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
     request.putUserData(TransferKey.CommitId, commitId);
-
-    request.putUserData(TransferKey.HunkStart, 0);
-    request.putUserData(TransferKey.HunkEnd, 1000000000);
+    request.putUserData(TransferKey.SourceHunk, fileHunkSource);
+    request.putUserData(TransferKey.TargetHunk, fileHunkTarget);
 
     var projectId = getActiveProject();
 

@@ -16,8 +16,7 @@ public class CommentRequest {
   String newFileName;
   String oldFileName;
 
-  Integer firstHunk;
-  Integer lastHunk;
+  DiffHunk hunk;
 
   public boolean isWithinReach() {
     if (firstHunk == null || lastHunk == null) {
