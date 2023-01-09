@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Start{
-    String line_code;
-    String type;
+public class Start {
+  String line_code;
+  String type;
+  Integer old_line;
+  Integer new_line;
 }

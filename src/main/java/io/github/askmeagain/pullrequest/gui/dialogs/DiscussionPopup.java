@@ -9,16 +9,17 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class DiscussionPopup {
 
-  public static JBPopup create(List<MergeRequestDiscussion> discussion, BiConsumer<String, String> onSend) {
+  public static JBPopup create(List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>> discussion, BiConsumer<String, String> onSend) {
     var textArea = new JTextArea();
     var sendButton = new JButton("Send");
 
-    var existingCommentsPanel = createNewCommentChainPanel(discussion.get(0));
+    var existingCommentsPanel = createNewCommentChainPanel(discussion.get(0).getValue());
 
     var sendTextField = new JBScrollPane(textArea);
 

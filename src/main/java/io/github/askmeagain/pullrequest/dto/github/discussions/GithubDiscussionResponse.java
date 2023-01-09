@@ -25,7 +25,7 @@ public class GithubDiscussionResponse {
   String author_association;
   Links _links;
   Reactions reactions;
-  Object start_line;
+  Integer start_line;
   Object original_start_line;
   Object start_side;
   int line;

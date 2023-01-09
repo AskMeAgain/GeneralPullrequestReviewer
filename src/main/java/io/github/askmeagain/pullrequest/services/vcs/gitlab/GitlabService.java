@@ -127,11 +127,14 @@ public final class GitlabService implements VcsService {
           }
 
           var isNotSource = n.getPosition().getOld_line() != null;
+          var start = n.getPosition().getLine_range().getStart();
+          var end = n.getPosition().getLine_range().getEnd();
 
           return MergeRequestDiscussion.builder()
               .discussionId(discussion.getId())
               .isSourceDiscussion(n.getPosition().getOld_line() == null)
-              .line(isNotSource ? n.getPosition().getOld_line() - 1 : n.getPosition().getNew_line() - 1)
+              .startLine(isNotSource ? start.getOld_line() - 1 : start.getNew_line() - 1)
+              .endLine(isNotSource ? end.getOld_line() - 1 : end.getNew_line() - 1)
               .reviewComments(discussion.getNotes().stream()
                   .map(note -> ReviewComment.builder()
                       .text(note.getBody())

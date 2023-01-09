@@ -14,14 +14,17 @@ import io.github.askmeagain.pullrequest.services.DataRequestService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
-  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
+  private final Map<Integer, List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>>> linesPerFoldRegionSource;
+  private final Map<Integer, List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>>> linesPerFoldRegionTarget;
   private JBPopup currentActivePopup;
 
   private int currentActiveLine;
@@ -33,10 +36,19 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
     linesPerFoldRegionTarget = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
-        .collect(Collectors.groupingBy(MergeRequestDiscussion::getLine));
+        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine())
+            .mapToObj(i -> new AbstractMap.SimpleEntry<>(i, x))
+            .collect(Collectors.toList()))
+        .flatMap(Collection::stream)
+        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey));
+
     linesPerFoldRegionSource = comments.stream()
         .filter(MergeRequestDiscussion::isSourceDiscussion)
-        .collect(Collectors.groupingBy(MergeRequestDiscussion::getLine));
+        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine())
+            .mapToObj(i -> new AbstractMap.SimpleEntry<>(i, x))
+            .collect(Collectors.toList()))
+        .flatMap(Collection::stream)
+        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey));
 
     this.connection = connection;
   }
@@ -72,7 +84,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
       EditorMouseEvent e,
       Editor editor,
       LogicalPosition pos,
-      List<MergeRequestDiscussion> mergeRequestDiscussion,
+      List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>> mergeRequestDiscussion,
       boolean isSource
   ) {
     //already active

@@ -7,12 +7,13 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class MergeRequestDiscussion {
 
   String discussionId;
 
-  int line;
+  int startLine;
+  int endLine;
 
   @Singular
   List<ReviewComment> reviewComments;
