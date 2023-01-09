@@ -18,10 +18,4 @@ public class CommentRequest {
 
   DiffHunk hunk;
 
-  public boolean isWithinReach() {
-    if (firstHunk == null || lastHunk == null) {
-      return true;
-    }
-    return firstHunk <= lineStart && lastHunk <= lineEnd;
-  }
 }

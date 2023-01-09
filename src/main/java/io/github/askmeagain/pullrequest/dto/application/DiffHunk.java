@@ -19,7 +19,6 @@ public class DiffHunk {
   public DiffHunk(String hunk) {
 
     var positionPattern = Pattern.compile("@@ (.*) @@");
-    var namePattern = Pattern.compile("a/(.*) b/(.*) ");
 
     var matcher = positionPattern.matcher(hunk);
     if (matcher.find()) {
@@ -41,8 +40,13 @@ public class DiffHunk {
 
       lastLineTarget = Integer.parseInt(splitTarget2[0]) * -1 + Integer.parseInt(splitTarget2[1]) - 1;
       lastLineSource = Integer.parseInt(splitSource2[0]) + Integer.parseInt(splitSource2[1]) - 1;
+    }
 
-      //file names
+    var namePattern = Pattern.compile("a/(.*?) b/(.*?)\n");
+    var nameMatcher = namePattern.matcher(hunk);
+    if (nameMatcher.find()) {
+      sourceFileName = nameMatcher.group(1);
+      targetFileName = nameMatcher.group(2);
     }
   }
 }

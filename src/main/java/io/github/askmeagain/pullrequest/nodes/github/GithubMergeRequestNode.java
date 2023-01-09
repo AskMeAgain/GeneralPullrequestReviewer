@@ -76,8 +76,8 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     removeFakeNode();
 
     var filesOfPr = githubService.getFilesOfPr(projectId, connection, mergeRequestId);
-    var diffHunkSource = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId), true);
-    var diffHunkTarget = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId), false);
+
+    var diffHunks = fileHunk(githubService.getDiffHunk(projectId, connection, mergeRequestId));
 
     removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GithubFileNode::getFilePath);
     addNewNodeFromLists(filesOfPr, this.getChilds(GithubFileNode::getFilePath), file -> new GithubFileNode(
@@ -88,16 +88,17 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
         mergeRequestId,
         connection,
         projectId,
-        diffHunkSource.get(file),
-        diffHunkTarget.get(file)
+        diffHunks.getOrDefault(file, diffHunks.get(file))
     ));
   }
 
-  private Map<String, DiffHunk> fileHunk(String hunk, boolean isSource) {
+  private Map<String, DiffHunk> fileHunk(String hunk) {
     return Arrays.stream(hunk.split("diff --git"))
         .filter(StringUtils::isNotBlank)
         .map(DiffHunk::new)
-        .collect(Collectors.toMap(x -> isSource ? x.getSourceFileName() : x.getTargetFileName(), Function.identity()));
+        .collect(Collectors.toMap(diffHunk -> diffHunk.getSourceFileName() == null
+            ? diffHunk.getSourceFileName()
+            : diffHunk.getTargetFileName(), Function.identity()));
   }
 
   @Override

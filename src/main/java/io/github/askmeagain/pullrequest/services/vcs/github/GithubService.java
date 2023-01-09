@@ -163,11 +163,12 @@ public final class GithubService implements VcsService {
       String mergeRequestId,
       CommentRequest comment
   ) {
-    if (comment.isWithinReach()) {
+    if (isWithinReach(comment)) {
       System.out.println("This is sadly not possible right now");
       return;
     }
 
+    //TODO
     var startLine = !Objects.equals(comment.getLineStart(), comment.getLineEnd()) ? comment.getLineStart() + 1 : null;
 
     getOrCreateApi(connectionName).addMergeRequestComment(
@@ -182,6 +183,14 @@ public final class GithubService implements VcsService {
         projectId,
         mergeRequestId
     );
+  }
+
+  private boolean isWithinReach(CommentRequest comment) {
+    var diffHunk = comment.getHunk();
+    if (comment.isSourceComment()) {
+      return diffHunk.getFirstLineSource() < comment.getLineStart() && comment.getLineEnd() < diffHunk.getLastLineSource();
+    }
+    return diffHunk.getFirstLineTarget() < comment.getLineStart() && comment.getLineEnd() < diffHunk.getLastLineTarget();
   }
 
   public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {

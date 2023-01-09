@@ -35,7 +35,8 @@ public class DiffWindowExtension extends DiffExtension {
       TransferKey.CommitId,
       TransferKey.Connection,
       TransferKey.FileName,
-      TransferKey.MergeRequestId
+      TransferKey.MergeRequestId,
+      TransferKey.FileHunk
   );
 
   @Override
@@ -45,10 +46,6 @@ public class DiffWindowExtension extends DiffExtension {
 
     sourceEditor.putUserData(TransferKey.IsSource, true);
     targetEditor.putUserData(TransferKey.IsSource, false);
-
-    transferData(sourceEditor, request, TransferKey.SourceHunk);
-    transferData(targetEditor, request, TransferKey.TargetHunk);
-
 
     var listener = new OnHoverOverCommentListener(
         request.getUserData(TransferKey.AllDiscussions),

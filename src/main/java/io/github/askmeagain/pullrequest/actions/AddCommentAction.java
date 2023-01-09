@@ -18,7 +18,6 @@ public class AddCommentAction extends AnAction {
     var editor = e.getRequiredData(CommonDataKeys.EDITOR);
     var projectId = editor.getUserData(TransferKey.ProjectId);
     var connection = editor.getUserData(TransferKey.Connection);
-    var isSource = editor.getUserData(TransferKey.IsSource);
 
     editor.getCaretModel()
         .runForEachCaret(caret -> new AddCommentDialog(text -> dataRequestService.getMapVcsImplementation()
@@ -30,7 +29,7 @@ public class AddCommentAction extends AnAction {
                 CommentRequest.builder()
                     .text(text)
                     .commitId(editor.getUserData(TransferKey.CommitId))
-                    .hunk(editor.getUserData(isSource ? TransferKey.SourceHunk : TransferKey.TargetHunk))
+                    .hunk(editor.getUserData(TransferKey.FileHunk))
                     .oldFileName(editor.getUserData(TransferKey.FileName))
                     .newFileName(editor.getUserData(TransferKey.FileName))
                     .sourceComment(editor.getUserData(TransferKey.IsSource))
