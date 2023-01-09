@@ -169,7 +169,7 @@ public final class GithubService implements VcsService {
     }
 
     //TODO
-    var startLine = !Objects.equals(comment.getLineStart(), comment.getLineEnd()) ? comment.getLineStart() + 1 : null;
+    var startLine = !Objects.equals(comment.getLineStart(), comment.getLineEnd()) ? comment.getLineStart() : null;
 
     getOrCreateApi(connectionName).addMergeRequestComment(
         GithubMergeRequestCommentRequest.builder()
