@@ -63,7 +63,7 @@ public class DiscussionPopup {
     var panelBuilder = FormBuilder.createFormBuilder();
 
     for (var i = 0; i < discussion.getReviewComments().size(); i++) {
-      var label = getTextField(discussion.getReviewComments().get(i).toString());
+      var label = getTextField(discussion.getReviewComments().get(i).toString(), discussion.getDiscussionId());
       panelBuilder = panelBuilder.addSeparator().addComponent(label);
     }
 
@@ -74,7 +74,7 @@ public class DiscussionPopup {
   }
 
   @NotNull
-  private static JPanel getTextField(String comment) {
+  private static JPanel getTextField(String comment, String discussionId) {
     var fakeLabel = new JTextField(comment);
     fakeLabel.setEditable(false);
     fakeLabel.setBorder(null);
@@ -86,9 +86,11 @@ public class DiscussionPopup {
     var preferredSize = new Dimension(30, 30);
 
     var e = new JButton("E");
+    e.addActionListener(l -> System.out.println("Open Edit "));
     e.setPreferredSize(preferredSize);
 
     var ee = new JButton("X");
+    ee.addActionListener(l -> System.out.println("Delete comment"));
     ee.setPreferredSize(preferredSize);
 
     panel.add(e);
