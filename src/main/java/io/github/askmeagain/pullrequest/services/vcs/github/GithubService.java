@@ -17,7 +17,6 @@ import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -195,8 +194,7 @@ public final class GithubService implements VcsService {
   }
 
   public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
-    throw new NotImplementedException("asd");
-    //getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId);
+    getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId);
   }
 
   private String getToken(ConnectionConfig connection) {

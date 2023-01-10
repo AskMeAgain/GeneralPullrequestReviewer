@@ -52,15 +52,6 @@ public interface GithubApi {
       @Param("mergeRequestId") String mergeRequestId
   );
 
-  //  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/versions")
-//  List<MergeRequestVersions> getDiffVersion(
-//      @Param("projectId") String projectId,
-//      @Param("mergeRequestId") String mergeRequestId
-//  );
-//
-//  @RequestLine("GET /projects/{projectId}")
-//  GitlabProjectResponse getProject(@Param("projectId") String projectId);
-
   @Headers("Content-Type: application/json")
   @RequestLine("POST /{projectId}/pulls/{mergeRequestId}/comments/{discId}/replies")
   void addCommentToThread(
@@ -70,9 +61,9 @@ public interface GithubApi {
       @Param("discId") String discussionId
   );
 
-//  @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/approve")
-//  void approveMergeRequest(
-//      @Param("projectId") String projectId,
-//      @Param("mergeRequestId") String mergeRequestId
-//  );
+  @RequestLine("POST /{projectId}/pulls/{mergeRequestId}/approve")
+  void approveMergeRequest(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId
+  );
 }

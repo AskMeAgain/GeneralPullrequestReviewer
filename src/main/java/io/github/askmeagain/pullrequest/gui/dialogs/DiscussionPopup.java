@@ -9,17 +9,35 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class DiscussionPopup {
 
-  public static JBPopup create(List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>> discussion, BiConsumer<String, String> onSend) {
+  public static JBPopup create(List<MergeRequestDiscussion> discussions, BiConsumer<String, String> onSend) {
+
+    //INTENDED use jTabbedPane here because of scroll_tab_layout hidding title
+    var tabPanel = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+
+    var popup = JBPopupFactory.getInstance()
+        .createComponentPopupBuilder(tabPanel, tabPanel)
+        .setRequestFocus(true)
+        .createPopup();
+
+    for (MergeRequestDiscussion discussion : discussions) {
+      var discussionPanel = createPopup(discussion, popup, onSend);
+      tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
+    }
+
+    return popup;
+  }
+
+  @NotNull
+  private static JPanel createPopup(MergeRequestDiscussion discussion, JBPopup popup, BiConsumer<String, String> onSend) {
     var textArea = new JTextArea();
     var sendButton = new JButton("Send");
 
-    var existingCommentsPanel = createNewCommentChainPanel(discussion.get(0).getValue());
+    var existingCommentsPanel = createNewCommentChainPanel(discussion);
 
     var sendTextField = new JBScrollPane(textArea);
 
@@ -33,17 +51,12 @@ public class DiscussionPopup {
     sendTextField.setPreferredSize(new Dimension(400, 100));
     existingCommentsPanel.setPreferredSize(new Dimension(400, 200));
 
-    var popup = JBPopupFactory.getInstance()
-        .createComponentPopupBuilder(dialogPanel, textArea)
-        .setRequestFocus(true)
-        .createPopup();
+    sendButton.addActionListener(actionEvent -> {
+      onSend.accept(textArea.getText(), discussion.getDiscussionId());
+      popup.cancel();
+    });
 
-//    sendButton.addActionListener(actionEvent -> {
-//      onSend.accept(textArea.getText(), discussion.getDiscussionId());
-//      popup.cancel();
-//    });
-
-    return popup;
+    return dialogPanel;
   }
 
   private static JBScrollPane createNewCommentChainPanel(MergeRequestDiscussion discussion) {
@@ -61,12 +74,25 @@ public class DiscussionPopup {
   }
 
   @NotNull
-  private static JTextField getTextField(String comment) {
+  private static JPanel getTextField(String comment) {
     var fakeLabel = new JTextField(comment);
     fakeLabel.setEditable(false);
     fakeLabel.setBorder(null);
     fakeLabel.setBackground(null);
-    fakeLabel.setSize(400, 50);
-    return fakeLabel;
+    fakeLabel.setPreferredSize(new Dimension(317, 50));
+
+    var panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    panel.add(fakeLabel);
+    var preferredSize = new Dimension(30, 30);
+
+    var e = new JButton("E");
+    e.setPreferredSize(preferredSize);
+
+    var ee = new JButton("X");
+    ee.setPreferredSize(preferredSize);
+
+    panel.add(e);
+    panel.add(ee);
+    return panel;
   }
 }

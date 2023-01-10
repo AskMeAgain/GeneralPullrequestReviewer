@@ -55,7 +55,8 @@ public final class TestService implements VcsService {
   ) {
     return List.of(
         MergeRequestDiscussion.builder()
-            .line(10)
+            .startLine(10)
+            .endLine(12)
             .isSourceDiscussion(true)
             .discussionId("1")
             .reviewComments(List.of(ReviewComment.builder()
@@ -70,7 +71,8 @@ public final class TestService implements VcsService {
                     .build()))
             .build(),
         MergeRequestDiscussion.builder()
-            .line(10)
+            .startLine(3)
+            .endLine(4)
             .isSourceDiscussion(true)
             .discussionId("2")
             .reviewComments(List.of(ReviewComment.builder()

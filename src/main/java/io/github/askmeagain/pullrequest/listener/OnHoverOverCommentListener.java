@@ -1,7 +1,6 @@
 package io.github.askmeagain.pullrequest.listener;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
@@ -15,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +23,11 @@ import java.util.stream.IntStream;
 
 public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  private final Map<Integer, List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>>> linesPerFoldRegionSource;
-  private final Map<Integer, List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>>> linesPerFoldRegionTarget;
+  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
+  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
   private JBPopup currentActivePopup;
 
-  private int currentActiveLine;
-  private boolean currentActiveIsSource;
+  private String currentActiveDiscussionId;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
   private final ConnectionConfig connection;
@@ -36,19 +35,19 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
     linesPerFoldRegionTarget = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
-        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine())
-            .mapToObj(i -> new AbstractMap.SimpleEntry<>(i, x))
+        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
+            .mapToObj(i -> new SimpleEntry<>(i, x))
             .collect(Collectors.toList()))
         .flatMap(Collection::stream)
-        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey));
+        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
 
     linesPerFoldRegionSource = comments.stream()
         .filter(MergeRequestDiscussion::isSourceDiscussion)
-        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine())
-            .mapToObj(i -> new AbstractMap.SimpleEntry<>(i, x))
+        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
+            .mapToObj(i -> new SimpleEntry<>(i, x))
             .collect(Collectors.toList()))
         .flatMap(Collection::stream)
-        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey));
+        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
 
     this.connection = connection;
   }
@@ -74,29 +73,24 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     }
 
     if (linesPerFoldRegionTarget.containsKey(pos.line) && !isSource) {
-      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionTarget.get(pos.line), false);
+      createPopup(editorMouseEvent, editor, linesPerFoldRegionTarget.get(pos.line));
     } else if (linesPerFoldRegionSource.containsKey(pos.line) && isSource) {
-      createPopup(editorMouseEvent, editor, pos, linesPerFoldRegionSource.get(pos.line), true);
+      createPopup(editorMouseEvent, editor, linesPerFoldRegionSource.get(pos.line));
     }
   }
 
-  private void createPopup(
-      EditorMouseEvent e,
-      Editor editor,
-      LogicalPosition pos,
-      List<AbstractMap.SimpleEntry<Integer, MergeRequestDiscussion>> mergeRequestDiscussion,
-      boolean isSource
-  ) {
+  private void createPopup(EditorMouseEvent e, Editor editor, List<MergeRequestDiscussion> mergeRequestDiscussion) {
     //already active
-    if (currentActivePopup != null && currentActivePopup.isVisible() && currentActiveLine == pos.line && currentActiveIsSource == isSource) {
+    if (currentActivePopup != null && currentActivePopup.isVisible() &&
+        mergeRequestDiscussion.stream().anyMatch(x -> x.getDiscussionId().equals(currentActiveDiscussionId))
+    ) {
       return;
     } else if (currentActivePopup != null) {
       //turn off
       currentActivePopup.cancel();
     }
 
-    currentActiveIsSource = isSource;
-    currentActiveLine = pos.line;
+    currentActiveDiscussionId = mergeRequestDiscussion.get(0).getDiscussionId();
 
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
 

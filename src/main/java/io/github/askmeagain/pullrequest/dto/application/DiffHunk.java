@@ -18,14 +18,14 @@ public class DiffHunk {
 
   public DiffHunk(String hunk) {
 
-    var positionPattern = Pattern.compile("@@ (.*) @@");
+    var positionPattern = Pattern.compile("@@ (.*?) @@");
 
     var matcher = positionPattern.matcher(hunk);
     if (matcher.find()) {
 
       //first hunk
-      var group = matcher.group(0);
-      var sourceTarget = group.replaceAll("@", "").trim().split(" ");
+      var group = matcher.group(matcher.groupCount());
+      var sourceTarget = group.split(" ");
       var splitTarget = sourceTarget[0].split(",");
       var splitSource = sourceTarget[1].split(",");
 
@@ -38,8 +38,8 @@ public class DiffHunk {
       var splitTarget2 = sourceTarget2[0].split(",");
       var splitSource2 = sourceTarget2[1].split(",");
 
-      lastLineTarget = Integer.parseInt(splitTarget2[0]) * -1 + Integer.parseInt(splitTarget2[1]) - 1;
-      lastLineSource = Integer.parseInt(splitSource2[0]) + Integer.parseInt(splitSource2[1]) - 1;
+      lastLineTarget = Integer.parseInt(splitTarget2[0]) * -1 + Integer.parseInt(splitTarget2[splitTarget2.length - 1]) - 1;
+      lastLineSource = Integer.parseInt(splitSource2[0]) + Integer.parseInt(splitSource2[splitSource2.length - 1]) - 1;
     }
 
     var namePattern = Pattern.compile("a/(.*?) b/(.*?)\n");

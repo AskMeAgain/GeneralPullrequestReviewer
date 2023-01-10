@@ -69,9 +69,8 @@ public class DiffWindowExtension extends DiffExtension {
     var reviewDiscussion = new ArrayList<>(request.getUserData(fileKey).getReviewDiscussions());
 
     for (var discussion : reviewDiscussion) {
-      var line = discussion.getLine();
-      var startOffset = editor.getDocument().getLineStartOffset(line);
-      var endOffset = editor.getDocument().getLineEndOffset(line);
+      var startOffset = editor.getDocument().getLineStartOffset(discussion.getStartLine());
+      var endOffset = editor.getDocument().getLineEndOffset(discussion.getEndLine());
       var markupModel = editor.getMarkupModel();
 
       markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
