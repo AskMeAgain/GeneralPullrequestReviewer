@@ -102,7 +102,24 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
             editor.getUserData(TransferKey.MergeRequestId),
             discId,
             text
-        ));
+        ),
+        (text, discId, noteId) -> vcsService.editComment(
+            connection,
+            editor.getUserData(TransferKey.ProjectId),
+            editor.getUserData(TransferKey.MergeRequestId),
+            discId,
+            String.valueOf(noteId),
+            text
+        ),
+        (discId, noteId) ->
+            vcsService.deleteComment(
+                connection,
+                editor.getUserData(TransferKey.ProjectId),
+                editor.getUserData(TransferKey.MergeRequestId),
+                discId,
+                String.valueOf(noteId)
+            )
+    );
 
     currentActivePopup.showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
   }

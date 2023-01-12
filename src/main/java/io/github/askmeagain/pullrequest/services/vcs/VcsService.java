@@ -10,6 +10,10 @@ public interface VcsService {
 
   void addCommentToThread(String projectId, ConnectionConfig connectionName, String mergeRequestId, String discussionId, String body);
 
+  void editComment(ConnectionConfig connectionName, String projectId, String mergeRequestId, String discussionId, String note_id, String body);
+
+  void deleteComment(ConnectionConfig connectionName, String projectId, String mergeRequestId, String discussionId, String note_id);
+
   List<String> getFilesOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId);
 
   List<MergeRequestDiscussion> getCommentsOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId, String file);

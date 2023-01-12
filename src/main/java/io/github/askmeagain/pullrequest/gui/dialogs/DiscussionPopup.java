@@ -4,6 +4,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.FormBuilder;
+import io.github.askmeagain.pullrequest.TriConsumer;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,9 +15,14 @@ import java.util.function.BiConsumer;
 
 public class DiscussionPopup {
 
-  public static JBPopup create(List<MergeRequestDiscussion> discussions, BiConsumer<String, String> onSend) {
+  public static JBPopup create(
+      List<MergeRequestDiscussion> discussions,
+      BiConsumer<String, String> onSend,
+      TriConsumer<String, String, Integer> onEditComment,
+      BiConsumer<String, Integer> onDeleteComment
+  ) {
 
-    //INTENDED use jTabbedPane here because of scroll_tab_layout hidding title
+    //INTENDED use jTabbedPane here because of scroll_tab_layout hiding title
     var tabPanel = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
     var popup = JBPopupFactory.getInstance()
@@ -25,7 +31,7 @@ public class DiscussionPopup {
         .createPopup();
 
     for (MergeRequestDiscussion discussion : discussions) {
-      var discussionPanel = createPopup(discussion, popup, onSend);
+      var discussionPanel = createPopup(discussion, popup, onSend, onEditComment, onDeleteComment);
       tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
     }
 
@@ -33,11 +39,17 @@ public class DiscussionPopup {
   }
 
   @NotNull
-  private static JPanel createPopup(MergeRequestDiscussion discussion, JBPopup popup, BiConsumer<String, String> onSend) {
+  private static JPanel createPopup(
+      MergeRequestDiscussion discussion,
+      JBPopup popup,
+      BiConsumer<String, String> onSend,
+      TriConsumer<String, String, Integer> onEditComment,
+      BiConsumer<String, Integer> onDeleteComment
+  ) {
     var textArea = new JTextArea();
     var sendButton = new JButton("Send");
 
-    var existingCommentsPanel = createNewCommentChainPanel(discussion);
+    var existingCommentsPanel = createNewCommentChainPanel(discussion, textArea, onEditComment, onDeleteComment);
 
     var sendTextField = new JBScrollPane(textArea);
 
@@ -59,11 +71,23 @@ public class DiscussionPopup {
     return dialogPanel;
   }
 
-  private static JBScrollPane createNewCommentChainPanel(MergeRequestDiscussion discussion) {
+  private static JBScrollPane createNewCommentChainPanel(
+      MergeRequestDiscussion discussion,
+      JTextArea textArea,
+      TriConsumer<String, String, Integer> onEditComment,
+      BiConsumer<String, Integer> onDeleteComment
+  ) {
     var panelBuilder = FormBuilder.createFormBuilder();
 
     for (var i = 0; i < discussion.getReviewComments().size(); i++) {
-      var label = getTextField(discussion.getReviewComments().get(i).toString(), discussion.getDiscussionId());
+      var label = getTextField(
+          textArea,
+          discussion.getReviewComments().get(i).toString(),
+          discussion.getReviewComments().get(i).getNoteId(),
+          discussion.getDiscussionId(),
+          onEditComment,
+          onDeleteComment
+      );
       panelBuilder = panelBuilder.addSeparator().addComponent(label);
     }
 
@@ -74,7 +98,14 @@ public class DiscussionPopup {
   }
 
   @NotNull
-  private static JPanel getTextField(String comment, String discussionId) {
+  private static JPanel getTextField(
+      JTextArea textArea,
+      String comment,
+      Integer noteId,
+      String discussionId,
+      TriConsumer<String, String, Integer> onEditComment,
+      BiConsumer<String, Integer> onDeleteComment
+  ) {
     var fakeLabel = new JTextField(comment);
     fakeLabel.setEditable(false);
     fakeLabel.setBorder(null);
@@ -86,15 +117,15 @@ public class DiscussionPopup {
     var preferredSize = new Dimension(30, 30);
 
     var e = new JButton("E");
-    e.addActionListener(l -> System.out.println("Open Edit "));
+    e.addActionListener(l -> onEditComment.consume(textArea.getText(), discussionId, noteId));
     e.setPreferredSize(preferredSize);
+    panel.add(e);
 
     var ee = new JButton("X");
-    ee.addActionListener(l -> System.out.println("Delete comment"));
+    ee.addActionListener(l -> onDeleteComment.accept(discussionId, noteId));
     ee.setPreferredSize(preferredSize);
-
-    panel.add(e);
     panel.add(ee);
+
     return panel;
   }
 }

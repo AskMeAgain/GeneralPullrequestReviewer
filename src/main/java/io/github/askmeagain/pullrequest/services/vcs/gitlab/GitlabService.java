@@ -90,6 +90,29 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
+  public void editComment(
+      ConnectionConfig connection,
+      String projectId,
+      String mergeRequestId,
+      String discussionId,
+      String note_id,
+      String body
+  ) {
+    getOrCreateApi(connection).editComment(projectId, mergeRequestId, discussionId, note_id, body);
+  }
+
+  @Override
+  public void deleteComment(
+      ConnectionConfig connection,
+      String projectId,
+      String mergeRequestId,
+      String discussionId,
+      String note_id
+  ) {
+    getOrCreateApi(connection).deleteComment(projectId, mergeRequestId, discussionId, note_id);
+  }
+
+  @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     if (Boolean.parseBoolean(connection.getConfigs().get("legacy_gitlab"))) {
       return getOrCreateApi(connection)
@@ -137,6 +160,7 @@ public final class GitlabService implements VcsService {
               .endLine(isNotSource ? end.getOld_line() - 1 : end.getNew_line() - 1)
               .reviewComments(discussion.getNotes().stream()
                   .map(note -> ReviewComment.builder()
+                      .noteId(note.getId())
                       .text(note.getBody())
                       .author(note.getAuthor().getName())
                       .build())

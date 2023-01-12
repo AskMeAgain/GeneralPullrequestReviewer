@@ -42,6 +42,14 @@ public final class TestService implements VcsService {
   }
 
   @Override
+  public void editComment(ConnectionConfig connectionName, String projectId, String mergeRequestId, String discussionId, String note_id, String body) {
+  }
+
+  @Override
+  public void deleteComment(ConnectionConfig connectionName, String projectId, String mergeRequestId, String discussionId, String note_id) {
+  }
+
+  @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connectionName, String mergeRequestId) {
     return List.of("File1.txt", "File2.txt");
   }

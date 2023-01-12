@@ -76,4 +76,21 @@ public interface GitlabApi {
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId
   );
+
+  @RequestLine("PUT /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes/{noteId}?body={body}")
+  void editComment(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("discId") String discussionId,
+      @Param("noteId") String noteId,
+      @Param("body") String body
+  );
+
+  @RequestLine("DELETE /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes/{noteId}")
+  void deleteComment(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("discId") String discussionId,
+      @Param("noteId") String noteId
+  );
 }
