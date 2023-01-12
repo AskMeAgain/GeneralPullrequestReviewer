@@ -66,4 +66,18 @@ public interface GithubApi {
       @Param("projectId") String projectId,
       @Param("mergeRequestId") String mergeRequestId
   );
+
+  @Headers("Content-Type: application/json")
+  @RequestLine("PATCH /{projectId}/pulls/comments/{commentId}")
+  void editComment(
+      @Param("projectId") String projectId,
+      @Param("commentId") String commentId,
+      GithubAddCommentToDiscussionRequest body
+  );
+
+  @RequestLine("DELETE /{projectId}/pulls/comments/{commentId}")
+  void deleteComment(
+      @Param("projectId") String projectId,
+      @Param("commentId") String commentId
+  );
 }

@@ -11,8 +11,7 @@ import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy.Change;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussion.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.Reviewer;
@@ -150,8 +149,21 @@ public final class GitlabService implements VcsService {
           }
 
           var isNotSource = n.getPosition().getOld_line() != null;
-          var start = n.getPosition().getLine_range().getStart();
-          var end = n.getPosition().getLine_range().getEnd();
+          var start = Optional.of(n.getPosition())
+              .map(Position::getLine_range)
+              .map(LineRange::getStart)
+              .orElse(Start.builder()
+                  .old_line(n.getPosition().getOld_line())
+                  .new_line(n.getPosition().getNew_line())
+                  .build());
+
+          var end = Optional.of(n.getPosition())
+              .map(Position::getLine_range)
+              .map(LineRange::getEnd)
+              .orElse(End.builder()
+                  .old_line(n.getPosition().getOld_line())
+                  .new_line(n.getPosition().getNew_line())
+                  .build());
 
           return MergeRequestDiscussion.builder()
               .discussionId(discussion.getId())

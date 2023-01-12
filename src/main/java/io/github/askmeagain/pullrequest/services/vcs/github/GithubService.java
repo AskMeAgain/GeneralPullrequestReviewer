@@ -17,7 +17,6 @@ import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,12 +92,18 @@ public final class GithubService implements VcsService {
 
   @Override
   public void editComment(ConnectionConfig connectionName, String projectId, String mergeRequestId, String discussionId, String note_id, String body) {
-    throw new NotImplementedException();
+    getOrCreateApi(connectionName).editComment(
+        projectId,
+        discussionId,
+        GithubAddCommentToDiscussionRequest.builder()
+            .body(body)
+            .build()
+    );
   }
 
   @Override
   public void deleteComment(ConnectionConfig connectionName, String projectId, String mergeRequestId, String discussionId, String note_id) {
-    throw new NotImplementedException();
+    getOrCreateApi(connectionName).deleteComment(projectId, discussionId);
   }
 
   @Override
