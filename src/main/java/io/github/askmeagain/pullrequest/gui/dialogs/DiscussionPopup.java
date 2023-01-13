@@ -34,8 +34,8 @@ public class DiscussionPopup {
       var discussionPanel = createPopup(
           discussion,
           onSend.andThen((a, b) -> popup.cancel()),
-          onEditComment.andThen((a, b, c) -> popup.cancel()),
-          onDeleteComment.andThen((a, b) -> popup.cancel())
+          onEditComment,
+          onDeleteComment
       );
       tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
     }
@@ -69,7 +69,7 @@ public class DiscussionPopup {
 
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText(), discussion.getDiscussionId());
-      //popup.cancel();
+
     });
 
     return dialogPanel;
@@ -92,7 +92,7 @@ public class DiscussionPopup {
           onEditComment,
           onDeleteComment
       );
-      panelBuilder = panelBuilder.addSeparator().addComponent(label);
+      panelBuilder = panelBuilder.addComponent(label);
     }
 
     var panel = panelBuilder.addComponentFillVertically(new JPanel(), 10)
@@ -121,12 +121,19 @@ public class DiscussionPopup {
     var preferredSize = new Dimension(30, 30);
 
     var e = new JButton("E");
-    e.addActionListener(l -> onEditComment.consume(textArea.getText(), discussionId, noteId));
+    e.addActionListener(l -> {
+      onEditComment.consume(textArea.getText(), discussionId, noteId);
+      fakeLabel.setText(textArea.getText());
+      textArea.setText("");
+    });
     e.setPreferredSize(preferredSize);
     panel.add(e);
 
     var ee = new JButton("X");
-    ee.addActionListener(l -> onDeleteComment.accept(discussionId, noteId));
+    ee.addActionListener(l -> {
+      onDeleteComment.accept(discussionId, noteId);
+      panel.getParent().remove(panel);
+    });
     ee.setPreferredSize(preferredSize);
     panel.add(ee);
 
