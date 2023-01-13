@@ -69,7 +69,6 @@ public class DiscussionPopup {
 
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText(), discussion.getDiscussionId());
-
     });
 
     return dialogPanel;
@@ -120,22 +119,22 @@ public class DiscussionPopup {
     panel.add(fakeLabel);
     var preferredSize = new Dimension(30, 30);
 
-    var e = new JButton("E");
-    e.addActionListener(l -> {
+    var editButton = new JButton("E");
+    editButton.addActionListener(l -> {
       onEditComment.consume(textArea.getText(), discussionId, noteId);
       fakeLabel.setText(textArea.getText());
       textArea.setText("");
     });
-    e.setPreferredSize(preferredSize);
-    panel.add(e);
+    editButton.setPreferredSize(preferredSize);
+    panel.add(editButton);
 
-    var ee = new JButton("X");
-    ee.addActionListener(l -> {
+    var deleteButton = new JButton("X");
+    deleteButton.addActionListener(l -> {
       onDeleteComment.accept(discussionId, noteId);
       panel.getParent().remove(panel);
     });
-    ee.setPreferredSize(preferredSize);
-    panel.add(ee);
+    deleteButton.setPreferredSize(preferredSize);
+    panel.add(deleteButton);
 
     return panel;
   }
