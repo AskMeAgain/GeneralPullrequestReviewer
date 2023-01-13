@@ -23,4 +23,6 @@ public interface VcsService {
   void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment);
 
   void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId);
+
+  ProjectResponse getProject(ConnectionConfig connection, String projectId);
 }

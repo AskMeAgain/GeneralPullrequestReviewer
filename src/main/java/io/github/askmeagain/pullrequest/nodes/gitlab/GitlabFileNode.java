@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String filePath;
   private final String mergeRequestId;
   private final ConnectionConfig connection;
-  private final GitlabService gitlabService = GitlabService.getInstance();
+  private final VcsService gitlabService = GitlabService.getInstance();
   private final String projectId;
 
   public void openFile() {

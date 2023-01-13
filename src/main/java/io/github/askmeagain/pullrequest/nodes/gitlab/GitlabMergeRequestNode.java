@@ -5,6 +5,7 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
 
@@ -32,18 +33,19 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   private final List<String> reviewerUrls;
 
   public GitlabMergeRequestNode(MergeRequest mergeRequest, ConnectionConfig connectionConfig, String projectId) {
-    display = mergeRequest.getName();
-    mergeRequestId = mergeRequest.getId();
     this.reviewerUrls = mergeRequest.getReviewer();
     this.projectId = projectId;
     this.mergeRequest = mergeRequest;
     this.connection = connectionConfig;
+
+    display = mergeRequest.getName();
+    mergeRequestId = mergeRequest.getId();
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
     canBeMerged = mergeRequest.getApproved();
   }
 
-  private final GitlabService gitlabService = GitlabService.getInstance();
+  private final VcsService gitlabService = GitlabService.getInstance();
 
   @Override
   public String toString() {

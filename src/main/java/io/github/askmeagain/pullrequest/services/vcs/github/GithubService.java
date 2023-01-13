@@ -213,6 +213,10 @@ public final class GithubService implements VcsService {
     getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId);
   }
 
+  public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
+    throw new UnsupportedOperationException("Unsupported rest call");
+  }
+
   private String getToken(ConnectionConfig connection) {
     return passwordService.getPassword(connection.getName());
   }

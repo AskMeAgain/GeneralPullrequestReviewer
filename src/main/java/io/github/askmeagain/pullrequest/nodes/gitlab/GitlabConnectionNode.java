@@ -4,6 +4,7 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +16,7 @@ public class GitlabConnectionNode extends BaseTreeNode implements ConnectionMark
 
   private final ConnectionConfig connectionConfig;
 
-  private final GitlabService gitlabService = GitlabService.getInstance();
+  private final VcsService gitlabService = GitlabService.getInstance();
 
   @Override
   public String toString() {

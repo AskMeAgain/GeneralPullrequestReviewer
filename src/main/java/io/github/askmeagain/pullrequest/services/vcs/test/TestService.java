@@ -114,4 +114,9 @@ public final class TestService implements VcsService {
   public void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId) {
     //Do nothing
   }
+
+  @Override
+  public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
+    throw new UnsupportedOperationException("unsupported");
+  }
 }

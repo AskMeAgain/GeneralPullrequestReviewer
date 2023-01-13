@@ -30,8 +30,13 @@ public class DiscussionPopup {
         .setRequestFocus(true)
         .createPopup();
 
-    for (MergeRequestDiscussion discussion : discussions) {
-      var discussionPanel = createPopup(discussion, popup, onSend, onEditComment, onDeleteComment);
+    for (var discussion : discussions) {
+      var discussionPanel = createPopup(
+          discussion,
+          onSend.andThen((a, b) -> popup.cancel()),
+          onEditComment.andThen((a, b, c) -> popup.cancel()),
+          onDeleteComment.andThen((a, b) -> popup.cancel())
+      );
       tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
     }
 
@@ -41,7 +46,6 @@ public class DiscussionPopup {
   @NotNull
   private static JPanel createPopup(
       MergeRequestDiscussion discussion,
-      JBPopup popup,
       BiConsumer<String, String> onSend,
       TriConsumer<String, String, Integer> onEditComment,
       BiConsumer<String, Integer> onDeleteComment
@@ -65,7 +69,7 @@ public class DiscussionPopup {
 
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText(), discussion.getDiscussionId());
-      popup.cancel();
+      //popup.cancel();
     });
 
     return dialogPanel;

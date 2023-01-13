@@ -15,10 +15,10 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.Reviewer;
-import io.github.askmeagain.pullrequest.dto.gitlab.project.GitlabProjectResponse;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
+import io.github.askmeagain.pullrequest.services.vcs.VcsServiceProgressionProxy;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -35,8 +35,8 @@ public final class GitlabService implements VcsService {
 
   private final PasswordService passwordService = PasswordService.getInstance();
 
-  public static GitlabService getInstance() {
-    return ApplicationManager.getApplication().getService(GitlabService.class);
+  public static VcsService getInstance() {
+    return new VcsServiceProgressionProxy(ApplicationManager.getApplication().getService(GitlabService.class));
   }
 
   private GitlabApi getOrCreateApi(ConnectionConfig connection) {
@@ -216,8 +216,11 @@ public final class GitlabService implements VcsService {
     getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId);
   }
 
-  public GitlabProjectResponse getProject(ConnectionConfig connection, String projectId) {
-    return getOrCreateApi(connection).getProject(projectId);
+  public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
+    var response = getOrCreateApi(connection).getProject(projectId);
+    return ProjectResponse.builder()
+        .name(response.getName())
+        .build();
   }
 
   @SneakyThrows
@@ -237,4 +240,5 @@ public final class GitlabService implements VcsService {
   private String getToken(ConnectionConfig connection) {
     return passwordService.getPassword(connection.getName());
   }
+
 }
