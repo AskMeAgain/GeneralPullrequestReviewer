@@ -1,10 +1,10 @@
-package io.github.askmeagain.pullrequest.settings.integrations.test;
+package io.github.askmeagain.pullrequest.settings.test;
 
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
-import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
+import io.github.askmeagain.pullrequest.settings.IntegrationFactory;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;

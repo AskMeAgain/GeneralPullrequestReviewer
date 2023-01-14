@@ -172,7 +172,7 @@ public final class GitlabService implements VcsService {
               .endLine(isNotSource ? end.getOld_line() - 1 : end.getNew_line() - 1)
               .reviewComments(discussion.getNotes().stream()
                   .map(note -> ReviewComment.builder()
-                      .noteId(note.getId())
+                      .noteId(note.getId() + "")
                       .text(note.getBody())
                       .author(note.getAuthor().getName())
                       .build())

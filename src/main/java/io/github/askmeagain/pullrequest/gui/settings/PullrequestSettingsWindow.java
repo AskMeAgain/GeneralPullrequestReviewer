@@ -8,10 +8,10 @@ import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.StateService;
-import io.github.askmeagain.pullrequest.settings.integrations.IntegrationFactory;
-import io.github.askmeagain.pullrequest.settings.integrations.github.GithubIntegrationPanelFactory;
-import io.github.askmeagain.pullrequest.settings.integrations.gitlab.GitlabIntegrationPanelFactory;
-import io.github.askmeagain.pullrequest.settings.integrations.test.TestIntegrationPanelFactory;
+import io.github.askmeagain.pullrequest.settings.IntegrationFactory;
+import io.github.askmeagain.pullrequest.settings.github.GithubIntegrationPanelFactory;
+import io.github.askmeagain.pullrequest.settings.gitlab.GitlabIntegrationPanelFactory;
+import io.github.askmeagain.pullrequest.settings.test.TestIntegrationPanelFactory;
 import lombok.Getter;
 
 import javax.swing.*;

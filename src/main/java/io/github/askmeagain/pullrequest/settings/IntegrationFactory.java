@@ -1,4 +1,4 @@
-package io.github.askmeagain.pullrequest.settings.integrations;
+package io.github.askmeagain.pullrequest.settings;
 
 import com.intellij.icons.AllIcons;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;

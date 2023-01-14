@@ -10,7 +10,7 @@ public class ReviewComment {
   String text;
   String author;
   String discussionId;
-  Integer noteId;
+  String noteId;
 
   @Override
   public String toString() {

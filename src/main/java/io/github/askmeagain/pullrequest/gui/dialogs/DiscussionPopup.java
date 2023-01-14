@@ -18,8 +18,8 @@ public class DiscussionPopup {
   public static JBPopup create(
       List<MergeRequestDiscussion> discussions,
       BiConsumer<String, String> onSend,
-      TriConsumer<String, String, Integer> onEditComment,
-      BiConsumer<String, Integer> onDeleteComment
+      TriConsumer<String, String, String> onEditComment,
+      BiConsumer<String, String> onDeleteComment
   ) {
 
     //INTENDED use jTabbedPane here because of scroll_tab_layout hiding title
@@ -47,8 +47,8 @@ public class DiscussionPopup {
   private static JPanel createPopup(
       MergeRequestDiscussion discussion,
       BiConsumer<String, String> onSend,
-      TriConsumer<String, String, Integer> onEditComment,
-      BiConsumer<String, Integer> onDeleteComment
+      TriConsumer<String, String, String> onEditComment,
+      BiConsumer<String, String> onDeleteComment
   ) {
     var textArea = new JTextArea();
     var sendButton = new JButton("Send");
@@ -75,8 +75,8 @@ public class DiscussionPopup {
   private static JBScrollPane createNewCommentChainPanel(
       MergeRequestDiscussion discussion,
       JTextArea textArea,
-      TriConsumer<String, String, Integer> onEditComment,
-      BiConsumer<String, Integer> onDeleteComment
+      TriConsumer<String, String, String> onEditComment,
+      BiConsumer<String, String> onDeleteComment
   ) {
     var panelBuilder = FormBuilder.createFormBuilder();
 
@@ -102,10 +102,10 @@ public class DiscussionPopup {
   private static JPanel getTextField(
       JTextArea textArea,
       String comment,
-      Integer noteId,
+      String noteId,
       String discussionId,
-      TriConsumer<String, String, Integer> onEditComment,
-      BiConsumer<String, Integer> onDeleteComment
+      TriConsumer<String, String, String> onEditComment,
+      BiConsumer<String, String> onDeleteComment
   ) {
     var fakeLabel = new JTextField(comment);
     fakeLabel.setEditable(false);
