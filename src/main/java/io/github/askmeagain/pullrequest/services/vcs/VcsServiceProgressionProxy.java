@@ -52,7 +52,7 @@ public class VcsServiceProgressionProxy implements VcsService {
 
   @Override
   public FileResponse getFileOfBranch(String projectId, ConnectionConfig connectionName, String branch, String filePath) {
-    return withProgress(() -> vcsService.getFileOfBranch(projectId, connectionName, branch, filePath), "Fetching files of branch");
+    return withProgressWithoutDebug(() -> vcsService.getFileOfBranch(projectId, connectionName, branch, filePath), "Fetching files of branch");
   }
 
   @Override
@@ -91,6 +91,19 @@ public class VcsServiceProgressionProxy implements VcsService {
       );
     } catch (Exception e) {
       JOptionPane.showMessageDialog(null, e.getMessage());
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <T> T withProgressWithoutDebug(ThrowableComputable<T, Exception> runnable, String title) {
+    try {
+      return ProgressManager.getInstance().runProcessWithProgressSynchronously(
+          runnable,
+          title,
+          false,
+          null
+      );
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
