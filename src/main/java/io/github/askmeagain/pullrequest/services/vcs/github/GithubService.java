@@ -15,6 +15,7 @@ import io.github.askmeagain.pullrequest.dto.github.mergerequest.Assignee;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
+import io.github.askmeagain.pullrequest.services.vcs.VcsServiceProgressionProxy;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -31,8 +32,8 @@ public final class GithubService implements VcsService {
 
   private final PasswordService passwordService = PasswordService.getInstance();
 
-  public static GithubService getInstance() {
-    return ApplicationManager.getApplication().getService(GithubService.class);
+  public static VcsService getInstance() {
+    return new VcsServiceProgressionProxy(ApplicationManager.getApplication().getService(GithubService.class));
   }
 
   private GithubApi getOrCreateApi(ConnectionConfig connection) {
@@ -192,7 +193,7 @@ public final class GithubService implements VcsService {
             .commit_id(comment.getCommitId())
             .body(comment.getText())
             .line(comment.getLineEnd() + 1)
-            .start_line(startLine)
+            .start_line(startLine + 1)
             .side(comment.isSourceComment() ? "LEFT" : "RIGHT")
             .path(comment.isSourceComment() ? comment.getOldFileName() : comment.getNewFileName())
             .build(),

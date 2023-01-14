@@ -6,6 +6,7 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String filePath;
   private final String mergeRequestId;
   private final ConnectionConfig connection;
-  private final GithubService githubService = GithubService.getInstance();
+  private final VcsService githubService = GithubService.getInstance();
   private final String projectId;
   private final DiffHunk fileHunk;
 

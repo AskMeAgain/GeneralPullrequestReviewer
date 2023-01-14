@@ -223,6 +223,11 @@ public final class GitlabService implements VcsService {
         .build();
   }
 
+  @Override
+  public String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    throw new UnsupportedOperationException("unsupported");
+  }
+
   @SneakyThrows
   private List<GitlabDiscussionResponse> getDiscussionsOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     return getOrCreateApi(connection).getDiscussions(projectId, mergeRequestId);

@@ -6,6 +6,7 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
+import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +52,7 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     canBeMerged = mergeRequest.getApproved();
   }
 
-  private final GithubService githubService = GithubService.getInstance();
+  private final VcsService githubService = GithubService.getInstance();
 
   @Override
   public String toString() {

@@ -119,4 +119,9 @@ public final class TestService implements VcsService {
   public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
     throw new UnsupportedOperationException("unsupported");
   }
+
+  @Override
+  public String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    throw new UnsupportedOperationException("unsupported");
+  }
 }

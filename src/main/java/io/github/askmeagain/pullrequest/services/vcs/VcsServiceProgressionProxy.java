@@ -76,6 +76,11 @@ public class VcsServiceProgressionProxy implements VcsService {
     return withProgress(() -> vcsService.getProject(connection, projectId), "Fetching project information");
   }
 
+  @Override
+  public String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    return withProgress(() -> vcsService.getDiffHunk(projectId, connection, mergeRequestId), "Fetching diff hunk");
+  }
+
   private <T> T withProgress(ThrowableComputable<T, Exception> runnable, String title) {
     try {
       return ProgressManager.getInstance().runProcessWithProgressSynchronously(

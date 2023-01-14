@@ -67,9 +67,7 @@ public class DiscussionPopup {
     sendTextField.setPreferredSize(new Dimension(400, 100));
     existingCommentsPanel.setPreferredSize(new Dimension(400, 200));
 
-    sendButton.addActionListener(actionEvent -> {
-      onSend.accept(textArea.getText(), discussion.getDiscussionId());
-    });
+    sendButton.addActionListener(actionEvent -> onSend.accept(textArea.getText(), discussion.getDiscussionId()));
 
     return dialogPanel;
   }
