@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
-
+  @Getter
+  private final String url;
   private final String sourceBranch;
   private final String targetBranch;
   private final String commitId;

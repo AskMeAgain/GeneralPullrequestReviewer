@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
+  @Getter
+  private final String url;
   private final String sourceBranch;
   private final String targetBranch;
   @Getter

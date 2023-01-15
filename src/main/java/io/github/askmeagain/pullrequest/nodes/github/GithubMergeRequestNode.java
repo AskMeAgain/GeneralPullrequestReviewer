@@ -19,9 +19,8 @@ import java.util.stream.Collectors;
 
 
 public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
-
   @Getter
-  private final String mergeRequestUrl;
+  private final String url;
   private final String display;
   @Getter
   private final String mergeRequestId;

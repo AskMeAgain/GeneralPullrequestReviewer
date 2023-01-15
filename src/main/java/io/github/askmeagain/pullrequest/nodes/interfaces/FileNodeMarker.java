@@ -1,6 +1,6 @@
 package io.github.askmeagain.pullrequest.nodes.interfaces;
 
-public interface FileNodeMarker {
+public interface FileNodeMarker extends OpenUrlMarker {
 
   void openFile();
 }

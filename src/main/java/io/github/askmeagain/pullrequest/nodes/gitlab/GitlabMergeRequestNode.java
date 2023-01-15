@@ -15,9 +15,8 @@ import java.util.function.Function;
 
 public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
 
-
   @Getter
-  private final String mergeRequestUrl;
+  private final String url;
   private final String display;
   @Getter
   private final String mergeRequestId;
@@ -40,7 +39,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
     this.projectId = projectId;
     this.mergeRequest = mergeRequest;
     this.connection = connectionConfig;
-    this.mergeRequestUrl = mergeRequest.getUrl();
+    this.url = mergeRequest.getUrl();
 
     display = mergeRequest.getName();
     mergeRequestId = mergeRequest.getId();
@@ -77,6 +76,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
 
     removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GitlabFileNode::getFilePath);
     addNewNodeFromLists(filesOfPr, this.getChilds(GitlabFileNode::getFilePath), file -> new GitlabFileNode(
+        "TODO",
         sourceBranch,
         targetBranch,
         file,

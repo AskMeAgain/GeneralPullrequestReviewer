@@ -1,4 +1,6 @@
 package io.github.askmeagain.pullrequest.nodes.interfaces;
 
-public interface DiscussionNodeMarker extends OpenUrlMarker {
+public interface OpenUrlMarker {
+
+  String getUrl();
 }

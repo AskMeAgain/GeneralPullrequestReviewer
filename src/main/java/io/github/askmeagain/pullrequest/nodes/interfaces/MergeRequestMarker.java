@@ -2,7 +2,7 @@ package io.github.askmeagain.pullrequest.nodes.interfaces;
 
 import java.util.List;
 
-public interface MergeRequestMarker {
+public interface MergeRequestMarker extends OpenUrlMarker {
 
   String getSourceBranch();
 
@@ -11,6 +11,4 @@ public interface MergeRequestMarker {
   void approveMergeRequest();
 
   List<String> getReviewerUrls();
-
-  String getMergeRequestUrl();
 }

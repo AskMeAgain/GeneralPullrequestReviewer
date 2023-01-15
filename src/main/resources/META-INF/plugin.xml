@@ -34,7 +34,7 @@
         <group id="io.github.askmeagain.pullrequest.group.pullrequests.contextMenu"
                text="Context Menu"
                popup="false">
-            <action class="io.github.askmeagain.pullrequest.actions.OpenMergeRequestInBrowserAction"
+            <action class="io.github.askmeagain.pullrequest.actions.OpenUrlInBrowserAction"
                     text="Open In Browser"/>
             <action class="io.github.askmeagain.pullrequest.actions.CheckoutMergeRequestAction"
                     text="Checkout"/>

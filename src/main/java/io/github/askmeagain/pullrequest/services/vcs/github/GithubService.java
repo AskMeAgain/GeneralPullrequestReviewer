@@ -62,7 +62,7 @@ public final class GithubService implements VcsService {
     return getOrCreateApi(connectionName).getMergeRequests(projectId).stream()
         .map(mr -> MergeRequest.builder()
             //TODO switch to reviewers
-            .url(mr.getUrl())
+            .url(mr.getHtml_url())
             .commitSha(mr.getHead().getSha())
             .reviewer(mr.getAssignees().stream().map(Assignee::getAvatar_url).collect(Collectors.toList()))
             .targetBranch(mr.getBase().getRef())

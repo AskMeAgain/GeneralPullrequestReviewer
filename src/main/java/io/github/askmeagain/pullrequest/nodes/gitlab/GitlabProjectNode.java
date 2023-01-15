@@ -4,6 +4,7 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.OpenUrlMarker;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
@@ -13,7 +14,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GitlabProjectNode extends BaseTreeNode {
+public class GitlabProjectNode extends BaseTreeNode implements OpenUrlMarker {
+  @Getter
+  private final String url;
   @Getter
   private final String projectId;
   private final ConnectionConfig connectionConfig;
