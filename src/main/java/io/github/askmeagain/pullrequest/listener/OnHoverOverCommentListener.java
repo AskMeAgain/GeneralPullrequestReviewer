@@ -4,7 +4,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
-import com.intellij.openapi.ui.popup.JBPopup;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
@@ -25,7 +24,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
   private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
   private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
-  private JBPopup currentActivePopup;
+  private DiscussionPopup currentActivePopup;
 
   private String currentActiveDiscussionId;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
@@ -81,20 +80,20 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
   private void createPopup(EditorMouseEvent e, Editor editor, List<MergeRequestDiscussion> mergeRequestDiscussion) {
     //already active
-    if (currentActivePopup != null && currentActivePopup.isVisible() &&
+    if (currentActivePopup != null && currentActivePopup.getPopup().isVisible() &&
         mergeRequestDiscussion.stream().anyMatch(x -> x.getDiscussionId().equals(currentActiveDiscussionId))
     ) {
       return;
     } else if (currentActivePopup != null) {
       //turn off
-      currentActivePopup.cancel();
+      currentActivePopup.getPopup().cancel();
     }
 
     currentActiveDiscussionId = mergeRequestDiscussion.get(0).getDiscussionId();
 
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
 
-    currentActivePopup = DiscussionPopup.create(
+    currentActivePopup = new DiscussionPopup(
         mergeRequestDiscussion,
         (text, discId) -> vcsService.addCommentToThread(
             editor.getUserData(TransferKey.ProjectId),
@@ -120,6 +119,6 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
         )
     );
 
-    currentActivePopup.showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
+    currentActivePopup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
   }
 }
