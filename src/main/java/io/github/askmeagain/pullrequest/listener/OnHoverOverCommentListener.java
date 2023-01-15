@@ -119,6 +119,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
         )
     );
 
+    currentActivePopup.create();
     currentActivePopup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
   }
 }
