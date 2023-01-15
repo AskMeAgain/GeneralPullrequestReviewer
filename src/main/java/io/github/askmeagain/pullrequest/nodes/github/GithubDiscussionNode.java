@@ -15,6 +15,11 @@ public class GithubDiscussionNode extends BaseTreeNode implements DiscussionNode
   private final String url;
   private final MergeRequestDiscussion githubDiscussions;
 
+  public GithubDiscussionNode(MergeRequestDiscussion mergeRequestDiscussion) {
+    this.url = mergeRequestDiscussion.getUrl();
+    this.githubDiscussions = mergeRequestDiscussion;
+  }
+
   @Override
   public String toString() {
     return "Discussion: " + githubDiscussions.getDiscussionId();

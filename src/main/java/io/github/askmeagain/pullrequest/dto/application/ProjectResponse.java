@@ -6,5 +6,7 @@ import lombok.Value;
 @Value
 @Builder
 public class ProjectResponse {
-  public String name;
+  String name;
+  String url;
+  String projectId;
 }

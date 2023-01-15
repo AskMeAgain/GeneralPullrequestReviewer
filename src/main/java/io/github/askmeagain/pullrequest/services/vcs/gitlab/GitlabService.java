@@ -220,6 +220,8 @@ public final class GitlabService implements VcsService {
   public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
     var response = getOrCreateApi(connection).getProject(projectId);
     return ProjectResponse.builder()
+        .url(response.getWeb_url())
+        .projectId(response.getId() + "")
         .name(response.getName())
         .build();
   }

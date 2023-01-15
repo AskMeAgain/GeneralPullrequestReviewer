@@ -132,6 +132,7 @@ public final class GithubService implements VcsService {
         .filter(x -> x.getPath().equals(filePath))
         .filter(x -> x.getIn_reply_to_id() == null)
         .map(discussion -> MergeRequestDiscussion.builder()
+            .url(discussion.getHtml_url())
             .startLine(discussion.getStart_line() - 1)
             .endLine(discussion.getLine() - 1)
             .isSourceDiscussion(discussion.getSide().equals("LEFT"))
@@ -217,7 +218,12 @@ public final class GithubService implements VcsService {
   }
 
   public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
-    throw new UnsupportedOperationException("Unsupported rest call");
+    var response = getOrCreateApi(connection).getProject(projectId);
+    return ProjectResponse.builder()
+        .projectId(response.getId() + "")
+        .url(response.getHtml_url())
+        .name(response.getName())
+        .build();
   }
 
   private String getToken(ConnectionConfig connection) {

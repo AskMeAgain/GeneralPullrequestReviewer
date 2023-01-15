@@ -45,10 +45,9 @@ public class GitlabConnectionNode extends BaseTreeNode implements ConnectionMark
         .split(","));
 
     removeOrRefreshNodes(projectList, this.getChilds(Function.identity()), GitlabProjectNode::getProjectId);
-    addNewNodeFromLists(projectList, getChilds(GitlabProjectNode::getProjectId), project -> new GitlabProjectNode(
-        project,
+    addNewNodeFromLists(projectList, getChilds(GitlabProjectNode::getProjectId), projectId -> new GitlabProjectNode(
         connectionConfig,
-        gitlabService.getProject(connectionConfig, project).getName()
+        gitlabService.getProject(connectionConfig, projectId)
     ));
   }
 

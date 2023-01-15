@@ -10,6 +10,9 @@ import java.util.List;
 
 
 public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
+
+  @Getter
+  private final String url = "http://google.de";
   @Getter
   private final String mergeRequestUrl;
   private final String display;

@@ -4,6 +4,7 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -11,6 +12,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 @RequiredArgsConstructor
 public class TestDiscussionNode extends BaseTreeNode implements DiscussionNodeMarker {
 
+  @Getter
+  private final String url = "http://google.de";
   private final MergeRequestDiscussion discussion;
 
   @Override

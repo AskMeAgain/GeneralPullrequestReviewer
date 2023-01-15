@@ -10,6 +10,7 @@ import io.github.askmeagain.pullrequest.dto.github.discussionnote.GithubAddComme
 import io.github.askmeagain.pullrequest.dto.github.discussions.GithubDiscussionResponse;
 import io.github.askmeagain.pullrequest.dto.github.file.GithubFileContentResponse;
 import io.github.askmeagain.pullrequest.dto.github.mergerequest.GithubMergeRequestResponse;
+import io.github.askmeagain.pullrequest.dto.github.project.GithubProjectResponse;
 
 import java.util.List;
 
@@ -80,4 +81,7 @@ public interface GithubApi {
       @Param("projectId") String projectId,
       @Param("commentId") String commentId
   );
+
+  @RequestLine("GET /{projectId}/")
+  GithubProjectResponse getProject(@Param("projectId") String projectId);
 }

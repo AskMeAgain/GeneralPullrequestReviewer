@@ -2,9 +2,10 @@ package io.github.askmeagain.pullrequest.nodes.github;
 
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequest;
+import io.github.askmeagain.pullrequest.dto.application.ProjectResponse;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.FakeNode;
-import io.github.askmeagain.pullrequest.nodes.interfaces.OpenUrlMarker;
+import io.github.askmeagain.pullrequest.nodes.interfaces.ProjectMarker;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GithubProjectNode extends BaseTreeNode implements OpenUrlMarker {
+public class GithubProjectNode extends BaseTreeNode implements ProjectMarker {
   @Getter
   private final String url;
   @Getter
@@ -22,6 +23,13 @@ public class GithubProjectNode extends BaseTreeNode implements OpenUrlMarker {
   private final ConnectionConfig connectionConfig;
   private final String projectName;
   private final VcsService githubService = GithubService.getInstance();
+
+  public GithubProjectNode(ConnectionConfig connectionConfig, ProjectResponse projectResponse) {
+    this.url = projectResponse.getUrl();
+    this.projectId = projectResponse.getProjectId();
+    this.projectName = projectResponse.getName();
+    this.connectionConfig = connectionConfig;
+  }
 
   @Override
   public String toString() {

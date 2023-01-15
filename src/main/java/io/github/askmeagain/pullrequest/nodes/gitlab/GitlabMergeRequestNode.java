@@ -76,7 +76,6 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
 
     removeOrRefreshNodes(filesOfPr, this.getChilds(Function.identity()), GitlabFileNode::getFilePath);
     addNewNodeFromLists(filesOfPr, this.getChilds(GitlabFileNode::getFilePath), file -> new GitlabFileNode(
-        "TODO",
         sourceBranch,
         targetBranch,
         file,
