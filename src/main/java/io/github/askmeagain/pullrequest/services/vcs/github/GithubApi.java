@@ -82,6 +82,6 @@ public interface GithubApi {
       @Param("commentId") String commentId
   );
 
-  @RequestLine("GET /{projectId}/")
+  @RequestLine("GET /{projectId}")
   GithubProjectResponse getProject(@Param("projectId") String projectId);
 }

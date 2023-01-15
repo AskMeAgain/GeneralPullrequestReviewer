@@ -46,8 +46,8 @@ public class GithubConnectionNode extends BaseTreeNode implements ConnectionMark
         .get("repoName")
         .split(","));
 
-    removeOrRefreshNodes(projectList, this.getChilds(Function.identity()), GithubProjectNode::getProjectId);
-    addNewNodeFromLists(projectList, getChilds(GithubProjectNode::getProjectId), projectId -> new GithubProjectNode(
+    removeOrRefreshNodes(projectList, this.getChilds(Function.identity()), GithubProjectNode::getProjectName);
+    addNewNodeFromLists(projectList, getChilds(GithubProjectNode::getProjectName), projectId -> new GithubProjectNode(
         connection,
         githubService.getProject(connection, projectId)
     ));

@@ -18,22 +18,20 @@ import java.util.stream.Collectors;
 public class GithubProjectNode extends BaseTreeNode implements ProjectMarker {
   @Getter
   private final String url;
-  @Getter
-  private final String projectId;
   private final ConnectionConfig connectionConfig;
+  @Getter
   private final String projectName;
   private final VcsService githubService = GithubService.getInstance();
 
   public GithubProjectNode(ConnectionConfig connectionConfig, ProjectResponse projectResponse) {
     this.url = projectResponse.getUrl();
-    this.projectId = projectResponse.getProjectId();
     this.projectName = projectResponse.getName();
     this.connectionConfig = connectionConfig;
   }
 
   @Override
   public String toString() {
-    return String.format("%s (%s)", projectName, projectId);
+    return String.format("%s", projectName);
   }
 
   @Override
@@ -54,7 +52,7 @@ public class GithubProjectNode extends BaseTreeNode implements ProjectMarker {
   public void beforeExpanded() {
     removeFakeNode();
 
-    var mergeRequests = githubService.getMergeRequests(projectId, connectionConfig);
+    var mergeRequests = githubService.getMergeRequests(projectName, connectionConfig);
 
     var mergeRequestIds = mergeRequests.stream()
         .map(MergeRequest::getId)
@@ -67,6 +65,6 @@ public class GithubProjectNode extends BaseTreeNode implements ProjectMarker {
     );
 
     addNewNodeFromLists(mergeRequests, this.getChilds(GithubMergeRequestNode::getMergeRequest),
-        mr -> new GithubMergeRequestNode(mr, connectionConfig, projectId));
+        mr -> new GithubMergeRequestNode(mr, connectionConfig, projectName));
   }
 }
