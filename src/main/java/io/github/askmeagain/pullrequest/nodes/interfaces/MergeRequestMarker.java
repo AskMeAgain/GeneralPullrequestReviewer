@@ -11,4 +11,6 @@ public interface MergeRequestMarker {
   void approveMergeRequest();
 
   List<String> getReviewerUrls();
+
+  String getMergeRequestUrl();
 }

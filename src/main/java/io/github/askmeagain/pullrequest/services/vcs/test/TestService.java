@@ -23,6 +23,7 @@ public final class TestService implements VcsService {
             .name("The first test PR")
             .build(),
         MergeRequest.builder()
+            .url("www.google.de")
             .targetBranch("master")
             .sourceBranch("target2")
             .id("2")

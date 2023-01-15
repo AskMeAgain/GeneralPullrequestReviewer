@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
 
+  @Getter
+  private final String mergeRequestUrl;
   private final String display;
   @Getter
   private final String mergeRequestId;
@@ -47,6 +49,7 @@ public class GithubMergeRequestNode extends BaseTreeNode implements MergeRequest
     this.mergeRequest = mergeRequest;
     this.connection = connectionConfig;
     this.reviewerUrls = mergeRequest.getReviewer();
+    this.mergeRequestUrl = mergeRequest.getUrl();
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
     canBeMerged = mergeRequest.getApproved();

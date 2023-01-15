@@ -60,14 +60,15 @@ public final class GithubService implements VcsService {
   @Override
   public List<MergeRequest> getMergeRequests(String projectId, ConnectionConfig connectionName) {
     return getOrCreateApi(connectionName).getMergeRequests(projectId).stream()
-        .map(x -> MergeRequest.builder()
+        .map(mr -> MergeRequest.builder()
             //TODO switch to reviewers
-            .commitSha(x.getHead().getSha())
-            .reviewer(x.getAssignees().stream().map(Assignee::getAvatar_url).collect(Collectors.toList()))
-            .targetBranch(x.getBase().getRef())
-            .sourceBranch(x.getHead().getRef())
-            .id(x.getNumber() + "")
-            .name(x.getTitle())
+            .url(mr.getUrl())
+            .commitSha(mr.getHead().getSha())
+            .reviewer(mr.getAssignees().stream().map(Assignee::getAvatar_url).collect(Collectors.toList()))
+            .targetBranch(mr.getBase().getRef())
+            .sourceBranch(mr.getHead().getRef())
+            .id(mr.getNumber() + "")
+            .name(mr.getTitle())
             .approved(true)
             .build())
         .collect(Collectors.toList());

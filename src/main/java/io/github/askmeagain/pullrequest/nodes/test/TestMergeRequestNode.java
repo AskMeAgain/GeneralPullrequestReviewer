@@ -10,7 +10,8 @@ import java.util.List;
 
 
 public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMarker {
-
+  @Getter
+  private final String mergeRequestUrl;
   private final String display;
   @Getter
   private final String mergeRequestId;
@@ -22,6 +23,7 @@ public class TestMergeRequestNode extends BaseTreeNode implements MergeRequestMa
     mergeRequestId = mergeRequest.getId();
     sourceBranch = mergeRequest.getSourceBranch();
     targetBranch = mergeRequest.getTargetBranch();
+    this.mergeRequestUrl = mergeRequest.getUrl();
   }
 
   private final TestService testService = TestService.getInstance();

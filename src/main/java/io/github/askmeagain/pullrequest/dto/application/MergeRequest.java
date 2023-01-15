@@ -11,6 +11,7 @@ public class MergeRequest {
 
   String name;
   String id;
+  String url;
 
   String sourceBranch;
   String targetBranch;
