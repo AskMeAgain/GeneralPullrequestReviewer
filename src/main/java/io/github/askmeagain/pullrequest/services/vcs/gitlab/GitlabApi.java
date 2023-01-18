@@ -62,6 +62,9 @@ public interface GitlabApi {
   @RequestLine("GET /projects/{projectId}")
   GitlabProjectResponse getProject(@Param("projectId") String projectId);
 
+  @RequestLine("GET /projects/{projectId}?private_token={token}")
+  void ping(@Param("projectId") String projectId, @Param("token") String token);
+
   @Headers("Content-Type: application/json")
   @RequestLine("POST /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}/notes")
   void addCommentToThread(

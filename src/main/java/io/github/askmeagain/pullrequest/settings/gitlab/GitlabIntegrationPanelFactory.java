@@ -1,11 +1,13 @@
 package io.github.askmeagain.pullrequest.settings.gitlab;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBPasswordField;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.PasswordService;
+import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import io.github.askmeagain.pullrequest.settings.IntegrationFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +23,9 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField gitlabProjects = new JBTextField();
   private final JCheckBox legacyGitlab = new JCheckBox();
   private final JButton delete = new JButton("Delete Connection");
+  private final JButton test = new JButton("Test");
   private final ConnectionConfig connectionConfig;
+  private final GitlabService gitlabService = ApplicationManager.getApplication().getService(GitlabService.class);
 
   private final ActionListener onDelete;
 
@@ -34,6 +38,14 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
     legacyGitlab.setSelected(Boolean.parseBoolean(connectionConfig.getConfigs().get("legacy_gitlab")));
     gitlabApiToken.setText(passwordService.getPassword(connectionConfig.getName()));
 
+    test.addActionListener(l -> {
+      try {
+        gitlabService.ping(getConfig(), gitlabProjects.getText().split(",")[0], new String(gitlabApiToken.getPassword()));
+        JOptionPane.showMessageDialog(null, "Successful");
+      } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Could not connect");
+      }
+    });
     delete.addActionListener(onDelete);
 
     var projectsLabel = getHelpLabel("Projects", "Comma separated list of projects");
@@ -45,7 +57,7 @@ public class GitlabIntegrationPanelFactory implements IntegrationFactory {
         .addLabeledComponent(urlLabel, gitlabUrl, 1, false)
         .addLabeledComponent(projectsLabel, gitlabProjects, 1, false)
         .addLabeledComponent("Legacy gitlab", legacyGitlab, 1, false)
-        .addComponent(delete)
+        .addLabeledComponent(test, delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
     panel.setName(connectionConfig.getName());

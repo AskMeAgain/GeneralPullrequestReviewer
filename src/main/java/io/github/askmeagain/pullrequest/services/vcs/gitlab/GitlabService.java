@@ -249,4 +249,8 @@ public final class GitlabService implements VcsService {
     return passwordService.getPassword(connection.getName());
   }
 
+  public void ping(ConnectionConfig connection, String projectId, String pw) {
+    getOrCreateApi(connection).ping(projectId, pw);
+  }
+
 }
