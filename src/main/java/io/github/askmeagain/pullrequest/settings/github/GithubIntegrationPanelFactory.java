@@ -1,11 +1,13 @@
 package io.github.askmeagain.pullrequest.settings.github;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBPasswordField;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
 import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.VcsImplementation;
 import io.github.askmeagain.pullrequest.services.PasswordService;
+import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import io.github.askmeagain.pullrequest.settings.IntegrationFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -22,11 +24,15 @@ public class GithubIntegrationPanelFactory implements IntegrationFactory {
   private final JBTextField repoName = new JBTextField();
   private final JBTextField userName = new JBTextField();
   private final JButton delete = new JButton("Delete Connection");
+  private final JButton test = new JButton("Test");
+
   private final ConnectionConfig connectionConfig;
 
   private final ActionListener onDelete;
 
   private final PasswordService passwordService = PasswordService.getInstance();
+  private final GithubService githubService = ApplicationManager.getApplication().getService(GithubService.class);
+
 
   public JPanel create() {
     name.setText(connectionConfig.getName());
@@ -42,6 +48,15 @@ public class GithubIntegrationPanelFactory implements IntegrationFactory {
     githubApiToken.setText(passwordService.getPassword(connectionConfig.getName()));
 
     delete.addActionListener(onDelete);
+    test.addActionListener(l -> {
+      try {
+        //TODO
+        //githubService.ping(getConfig(), gitlabProjects.getText().split(",")[0], new String(gitlabApiToken.getPassword()));
+        JOptionPane.showMessageDialog(null, "Successful");
+      } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Could not connect");
+      }
+    });
 
     var repoLabel = getHelpLabel("Repo Name", "Comma separated list of repo names of the same user");
     var usernameLabel = getHelpLabel("User Name", "Username in the repo url");
