@@ -6,6 +6,7 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.services.PopupService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
@@ -102,6 +103,11 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     super.refresh();
     var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
+
+    var popupService = PopupService.getInstance();
+    if (popupService.getActive().getId().equals(mergeRequestId)) {
+      popupService.getActive().refresh();
+    }
   }
 
   private void loadComments(List<MergeRequestDiscussion> comments) {

@@ -26,6 +26,8 @@ public class DiscussionPopup {
   private final JTextArea textArea = new JTextArea();
   private final JButton sendButton = new JButton("Send");
   private JTabbedPane tabPanel;
+  @Getter
+  private String id;
 
   @Getter
   private JBPopup popup;
@@ -49,6 +51,8 @@ public class DiscussionPopup {
   private JPanel createPopup(MergeRequestDiscussion discussion) {
     var commentScrollPane = new JBScrollPane(createNewCommentChainPanel(discussion));
     var sendTextField = new JBScrollPane(textArea);
+
+    id = discussion.getDiscussionId();
 
     var dialogPanel = FormBuilder.createFormBuilder()
         .addComponent(commentScrollPane)
@@ -82,6 +86,10 @@ public class DiscussionPopup {
     }
 
     return panelBuilder.addComponentFillVertically(new JPanel(), 10).getPanel();
+  }
+
+  public void refresh() {
+    //refresh
   }
 
   @NotNull

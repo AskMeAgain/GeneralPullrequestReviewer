@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.services.PopupService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
@@ -89,6 +90,11 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     super.refresh();
     var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
+
+    var popupService = PopupService.getInstance();
+    if (popupService.getActive().getId().equals(mergeRequestId)) {
+      popupService.getActive().refresh();
+    }
   }
 
   private void loadComments(List<MergeRequestDiscussion> comments) {

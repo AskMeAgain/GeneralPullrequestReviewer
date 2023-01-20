@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.services.DataRequestService;
+import io.github.askmeagain.pullrequest.services.PopupService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -120,6 +121,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     );
 
     currentActivePopup.create();
+    PopupService.getInstance().registerPopup(currentActivePopup);
     currentActivePopup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
   }
 }
