@@ -217,6 +217,21 @@ public final class GithubService implements VcsService {
     getOrCreateApi(connection).approveMergeRequest(projectId, mergeRequestId);
   }
 
+  public void ping(ConnectionConfig connection, String token) {
+    var url = String.format("%s%s",
+        connection.getConfigs().get("githubUrl"),
+        connection.getConfigs().get("userName")
+    );
+
+    var api = Feign.builder()
+        .requestInterceptor(template -> template.header("Authorization", "Bearer " + token))
+        .client(new OkHttpClient())
+        .encoder(new JacksonEncoder())
+        .decoder(new JacksonDecoder())
+        .target(GithubApi.class, url);
+    api.getProject(connection.getConfigs().get("repoName"));
+  }
+
   public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
     var response = getOrCreateApi(connection).getProject(projectId);
     return ProjectResponse.builder()

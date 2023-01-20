@@ -50,8 +50,7 @@ public class GithubIntegrationPanelFactory implements IntegrationFactory {
     delete.addActionListener(onDelete);
     test.addActionListener(l -> {
       try {
-        //TODO
-        //githubService.ping(getConfig(), gitlabProjects.getText().split(",")[0], new String(gitlabApiToken.getPassword()));
+        githubService.ping(getConfig(), new String(githubApiToken.getPassword()));
         JOptionPane.showMessageDialog(null, "Successful");
       } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Could not connect");
@@ -68,7 +67,7 @@ public class GithubIntegrationPanelFactory implements IntegrationFactory {
         .addLabeledComponent(urlLabel, githubUrl, 1, false)
         .addLabeledComponent(usernameLabel, userName, 1, false)
         .addLabeledComponent(repoLabel, repoName, 1, false)
-        .addComponent(delete)
+        .addLabeledComponent(test, delete)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
     panel.setName(connectionConfig.getName());
