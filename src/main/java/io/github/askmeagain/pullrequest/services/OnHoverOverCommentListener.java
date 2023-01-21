@@ -1,5 +1,7 @@
-package io.github.askmeagain.pullrequest.listener;
+package io.github.askmeagain.pullrequest.services;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
@@ -8,8 +10,6 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
-import io.github.askmeagain.pullrequest.services.DataRequestService;
-import io.github.askmeagain.pullrequest.services.PopupService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -21,18 +21,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
+@Service
+public final class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
-  private final Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
+  public static OnHoverOverCommentListener getInstance() {
+    return ApplicationManager.getApplication().getService(OnHoverOverCommentListener.class);
+  }
+
+  private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
+  private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
   private DiscussionPopup currentActivePopup;
 
   private String currentActiveDiscussionId;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
-  private final ConnectionConfig connection;
+  private ConnectionConfig connection;
 
-  public OnHoverOverCommentListener(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
+  public void setDiscussionData(List<MergeRequestDiscussion> comments) {
     linesPerFoldRegionTarget = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
         .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
@@ -48,8 +53,11 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
             .collect(Collectors.toList()))
         .flatMap(Collection::stream)
         .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
+  }
 
+  public void setData(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
     this.connection = connection;
+    setDiscussionData(comments);
   }
 
   @Override

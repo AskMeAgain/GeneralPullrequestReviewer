@@ -5,7 +5,7 @@ import com.intellij.diff.DiffExtension;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.simple.SimpleDiffViewer;
-import io.github.askmeagain.pullrequest.gui.dialogs.DiffView;
+import io.github.askmeagain.pullrequest.gui.dialogs.DiffEditor;
 import io.github.askmeagain.pullrequest.services.EditorService;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class DiffWindowExtension extends DiffExtension {
     var sourceEditor = ((SimpleDiffViewer) viewer).getEditor1();
     var targetEditor = ((SimpleDiffViewer) viewer).getEditor2();
 
-    var diffViewer = new DiffView(request, sourceEditor, targetEditor);
+    var diffViewer = new DiffEditor(request, sourceEditor, targetEditor);
 
     EditorService.getInstance().register(diffViewer);
 
