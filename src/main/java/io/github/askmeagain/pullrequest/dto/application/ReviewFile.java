@@ -11,6 +11,7 @@ import java.util.List;
 public class ReviewFile {
 
   String fileName;
+  String branch;
   String fileContent;
   @Singular
   List<MergeRequestDiscussion> reviewDiscussions;

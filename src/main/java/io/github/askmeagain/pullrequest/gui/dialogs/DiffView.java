@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class DiffView {
@@ -106,7 +107,11 @@ public class DiffView {
 
   public void refresh(List<MergeRequestDiscussion> comments) {
     //TODO refresh listener
-    createInternal(sourceEditor, listener, comments);
-    createInternal(targetEditor, listener, comments);
+
+    var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
+    var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
+
+    createInternal(sourceEditor, listener, sourceComments);
+    createInternal(targetEditor, listener, targetComments);
   }
 }

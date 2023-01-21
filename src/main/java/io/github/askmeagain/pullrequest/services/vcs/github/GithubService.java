@@ -124,7 +124,7 @@ public final class GithubService implements VcsService {
   ) {
     var discussions = getOrCreateApi(connectionName).getDiscussions(projectId, mergeRequestId);
 
-    var map = discussions.stream()
+    var replyMap = discussions.stream()
         .filter(x -> x.getIn_reply_to_id() != null)
         .collect(Collectors.groupingBy(GithubDiscussionResponse::getIn_reply_to_id));
 
@@ -133,7 +133,7 @@ public final class GithubService implements VcsService {
         .filter(x -> x.getIn_reply_to_id() == null)
         .map(discussion -> MergeRequestDiscussion.builder()
             .url(discussion.getHtml_url())
-            .startLine(discussion.getStart_line() - 1)
+            .startLine((discussion.getStart_line() == null ? discussion.getLine() : discussion.getStart_line()) - 1)
             .endLine(discussion.getLine() - 1)
             .isSourceDiscussion(discussion.getSide().equals("LEFT"))
             .discussionId(discussion.getId() + "")
@@ -142,7 +142,7 @@ public final class GithubService implements VcsService {
                 .discussionId(discussion.getId() + "")
                 .author(discussion.getUser().getLogin())
                 .build())
-            .reviewComments(map.getOrDefault(discussion.getId() + "", Collections.emptyList()).stream()
+            .reviewComments(replyMap.getOrDefault(discussion.getId() + "", Collections.emptyList()).stream()
                 .map(review -> ReviewComment.builder()
                     .text(review.getBody())
                     .discussionId(review.getIn_reply_to_id())
