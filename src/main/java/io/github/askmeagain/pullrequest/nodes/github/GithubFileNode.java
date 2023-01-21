@@ -106,7 +106,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
 
     var popupService = PopupService.getInstance();
     if (popupService.getActive().getId().equals(mergeRequestId)) {
-      popupService.getActive().refresh();
+      popupService.getActive().refresh(discussions);
     }
   }
 

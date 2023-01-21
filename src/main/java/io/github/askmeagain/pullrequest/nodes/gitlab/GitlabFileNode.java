@@ -7,8 +7,10 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
+import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.services.EditorService;
 import io.github.askmeagain.pullrequest.services.PopupService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
@@ -92,15 +94,23 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     loadComments(comments);
 
     var popupService = PopupService.getInstance();
-    if (popupService.getActive().getId().equals(mergeRequestId)) {
-      popupService.getActive().refresh();
+    if (popupService.getActive().map(DiscussionPopup::getId).map(x -> x.equals(mergeRequestId)).orElse(false)) {
+      popupService.getActive().get().refresh(comments);
+    }
+
+    var editorService = EditorService.getInstance();
+    if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {
+      editorService.getDiffView().get().refresh(comments);
     }
   }
 
   private void loadComments(List<MergeRequestDiscussion> comments) {
     removeAllChildren();
-    comments.stream()
-        .map(GitlabDiscussionNode::new)
+
+    var discussions = comments.stream()
+        .map(GitlabDiscussionNode::new).collect(Collectors.toList());
+
+    discussions.stream()
         .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
   }
@@ -109,6 +119,4 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   public String toString() {
     return Path.of(filePath).getFileName().toString();
   }
-
 }
-

@@ -47,6 +47,15 @@ public class DiscussionPopup {
     }
   }
 
+  public void refresh(List<MergeRequestDiscussion> discussions) {
+    //TODO make this safer
+    for (int i = 0; i < tabPanel.getTabCount(); i++) {
+      var commentScrollPane = (JBScrollPane) tabPanel.getComponentAt(i);
+      var newPanel = createNewCommentChainPanel(discussions.get(i));
+      commentScrollPane.setViewportView(newPanel);
+    }
+  }
+
   @NotNull
   private JPanel createPopup(MergeRequestDiscussion discussion) {
     var commentScrollPane = new JBScrollPane(createNewCommentChainPanel(discussion));
@@ -69,14 +78,6 @@ public class DiscussionPopup {
     return dialogPanel;
   }
 
-  public void refreshCommentList() {
-    for (int i = 0; i < tabPanel.getTabCount(); i++) {
-      var commentScrollPane = (JBScrollPane) tabPanel.getComponentAt(i);
-      var newPanel = createNewCommentChainPanel(discussions.get(i));
-      commentScrollPane.setViewportView(newPanel);
-    }
-  }
-
   private JPanel createNewCommentChainPanel(MergeRequestDiscussion discussion) {
     var panelBuilder = FormBuilder.createFormBuilder();
 
@@ -86,10 +87,6 @@ public class DiscussionPopup {
     }
 
     return panelBuilder.addComponentFillVertically(new JPanel(), 10).getPanel();
-  }
-
-  public void refresh() {
-    //refresh
   }
 
   @NotNull

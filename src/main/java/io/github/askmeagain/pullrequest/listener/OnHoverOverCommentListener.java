@@ -88,6 +88,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     } else if (currentActivePopup != null) {
       //turn off
       currentActivePopup.getPopup().cancel();
+      PopupService.getInstance().registerPopup(null);
     }
 
     currentActiveDiscussionId = mergeRequestDiscussion.get(0).getDiscussionId();
