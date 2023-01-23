@@ -206,6 +206,10 @@ public final class GitlabService implements VcsService {
   public void addMergeRequestComment(String projectId, ConnectionConfig connection, String mergeRequestId, CommentRequest comment) {
     var diffVersion = getOrCreateApi(connection).getDiffVersion(projectId, mergeRequestId).get(0);
 
+    var hunk = comment.getHunk();
+
+    //TODO
+
     var request = GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
         .position(Position.builder()
