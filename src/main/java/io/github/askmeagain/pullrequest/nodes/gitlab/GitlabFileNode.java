@@ -3,10 +3,7 @@ package io.github.askmeagain.pullrequest.nodes.gitlab;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
-import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
-import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
-import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
-import io.github.askmeagain.pullrequest.dto.application.TransferKey;
+import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
@@ -32,6 +29,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private final ConnectionConfig connection;
   private final VcsService gitlabService = GitlabService.getInstance();
   private final String projectId;
+  private final DiffHunk fileHunk;
 
   public void openFile() {
     var sourceFile = gitlabService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
@@ -73,6 +71,8 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     request.putUserData(TransferKey.ProjectId, projectId);
     request.putUserData(TransferKey.Connection, connection);
     request.putUserData(TransferKey.MergeRequestId, mergeRequestId);
+
+    request.putUserData(TransferKey.FileHunk, fileHunk);
 
     var projectId = getActiveProject();
 

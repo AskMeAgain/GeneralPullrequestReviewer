@@ -59,6 +59,12 @@ public interface GitlabApi {
       @Param("mergeRequestId") String mergeRequestId
   );
 
+  @RequestLine("GET /projects/{projectId}/merge_requests/{mergeRequestId}/diff")
+  String getDiff(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId
+  );
+
   @RequestLine("GET /projects/{projectId}")
   GitlabProjectResponse getProject(@Param("projectId") String projectId);
 

@@ -25,6 +25,7 @@ public class DiscussionPopup {
   private final BiConsumer<String, String> onDeleteComment;
   private final JTextArea textArea = new JTextArea();
   private final JButton sendButton = new JButton("Send");
+  private final JButton refreshButton = new JButton("Refresh");
   private JTabbedPane tabPanel;
   @Getter
   private String id;
@@ -66,7 +67,7 @@ public class DiscussionPopup {
     var dialogPanel = FormBuilder.createFormBuilder()
         .addComponent(commentScrollPane)
         .addComponent(sendTextField)
-        .addComponent(sendButton)
+        .addLabeledComponent(sendButton, refreshButton)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 

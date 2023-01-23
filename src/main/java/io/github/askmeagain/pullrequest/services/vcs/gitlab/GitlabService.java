@@ -21,6 +21,7 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsServiceProgressionProxy;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -115,9 +116,7 @@ public final class GitlabService implements VcsService {
   @Override
   public List<String> getFilesOfPr(String projectId, ConnectionConfig connection, String mergeRequestId) {
     if (Boolean.parseBoolean(connection.getConfigs().get("legacy_gitlab"))) {
-      return getOrCreateApi(connection)
-          .getMergerequestDiffLegacy(projectId, mergeRequestId)
-          .getChanges()
+      return getDiffLegacy(projectId, connection, mergeRequestId)
           .stream()
           .map(Change::getNew_path)
           .collect(Collectors.toList());
@@ -128,6 +127,13 @@ public final class GitlabService implements VcsService {
         .stream()
         .map(GitlabMergeRequestFileDiff::getNew_path)
         .collect(Collectors.toList());
+  }
+
+  @NotNull
+  public List<Change> getDiffLegacy(String projectId, ConnectionConfig connection, String mergeRequestId) {
+    return getOrCreateApi(connection)
+        .getMergerequestDiffLegacy(projectId, mergeRequestId)
+        .getChanges();
   }
 
   @Override
@@ -203,10 +209,10 @@ public final class GitlabService implements VcsService {
     var request = GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
         .position(Position.builder()
-            .position_type("text")
             .base_sha(diffVersion.getBase_commit_sha())
-            .head_sha(diffVersion.getHead_commit_sha())
             .start_sha(diffVersion.getStart_commit_sha())
+            .head_sha(diffVersion.getHead_commit_sha())
+            .position_type("text")
             .new_path(comment.getNewFileName())
             .old_path(comment.getOldFileName())
             .old_line(comment.isSourceComment() ? comment.getLineEnd() + 1 : null)
