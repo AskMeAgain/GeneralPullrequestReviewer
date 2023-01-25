@@ -49,4 +49,8 @@ public class DiffHunk {
       targetFileName = nameMatcher.group(2);
     }
   }
+
+  public boolean isInHunk(Integer lineEnd) {
+    return false;
+  }
 }

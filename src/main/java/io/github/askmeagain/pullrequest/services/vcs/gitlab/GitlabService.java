@@ -208,7 +208,21 @@ public final class GitlabService implements VcsService {
 
     var hunk = comment.getHunk();
 
-    //TODO
+
+    Integer old_line = null;
+    Integer new_line = null;
+
+    if (comment.isSourceComment()) {
+      new_line = comment.getLineEnd();
+      if (!hunk.isInHunk(comment.getLineEnd())) {
+        old_line = comment.getLineEnd();
+      }
+    } else {
+      old_line = comment.getLineEnd();
+      if (!hunk.isInHunk(comment.getLineEnd())) {
+        new_line = comment.getLineEnd();
+      }
+    }
 
     var request = GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
@@ -219,8 +233,8 @@ public final class GitlabService implements VcsService {
             .position_type("text")
             .new_path(comment.getNewFileName())
             .old_path(comment.getOldFileName())
-            .old_line(comment.isSourceComment() ? comment.getLineEnd() + 1 : null)
-            .new_line(comment.isSourceComment() ? null : comment.getLineEnd() + 1)
+            .old_line(old_line)
+            .new_line(new_line)
             .build())
         .build();
 
