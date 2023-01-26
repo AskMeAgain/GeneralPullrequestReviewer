@@ -10,9 +10,7 @@ import io.github.askmeagain.pullrequest.nodes.FakeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -90,21 +88,15 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
         mergeRequestId,
         connection,
         projectId,
-        diffHunks.getOrDefault(file, diffHunks.get(file))
+        diffHunks.get(file)
     ));
   }
 
   private Map<String, DiffHunk> fileHunk(List<Change> changes) {
-    var hunk = changes.stream()
-        .map(Change::getDiff)
-        .collect(Collectors.joining("\n"));
-
-    return Arrays.stream(hunk.split("diff --git"))
-        .filter(StringUtils::isNotBlank)
-        .map(DiffHunk::new)
-        .collect(Collectors.toMap(diffHunk -> diffHunk.getSourceFileName() == null
-            ? diffHunk.getSourceFileName()
-            : diffHunk.getTargetFileName(), Function.identity()));
+    return changes.stream()
+        .collect(Collectors.toMap(diffHunk -> diffHunk.getNew_path() == null
+            ? diffHunk.getOld_path()
+            : diffHunk.getNew_path(), x -> new DiffHunk(x.getDiff())));
   }
 
   @Override

@@ -3,6 +3,8 @@ package io.github.askmeagain.pullrequest.dto.application;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Getter
@@ -15,6 +17,9 @@ public class DiffHunk {
   private int lastLineSource;
   private int firstLineTarget;
   private int lastLineTarget;
+
+  private List<Integer> fromList = new ArrayList<>();
+  private List<Integer> toList = new ArrayList<>();
 
   public DiffHunk(String hunk) {
 

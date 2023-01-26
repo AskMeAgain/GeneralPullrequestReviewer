@@ -3,6 +3,7 @@ package io.github.askmeagain.pullrequest.services.vcs.gitlab;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import feign.Feign;
+import feign.FeignException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
@@ -15,6 +16,7 @@ import io.github.askmeagain.pullrequest.dto.gitlab.discussion.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.Reviewer;
+import io.github.askmeagain.pullrequest.dto.gitlab.versions.MergeRequestVersions;
 import io.github.askmeagain.pullrequest.services.PasswordService;
 import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
@@ -206,25 +208,27 @@ public final class GitlabService implements VcsService {
   public void addMergeRequestComment(String projectId, ConnectionConfig connection, String mergeRequestId, CommentRequest comment) {
     var diffVersion = getOrCreateApi(connection).getDiffVersion(projectId, mergeRequestId).get(0);
 
-    var hunk = comment.getHunk();
-
-
     Integer old_line = null;
     Integer new_line = null;
 
-    if (comment.isSourceComment()) {
-      new_line = comment.getLineEnd();
-      if (!hunk.isInHunk(comment.getLineEnd())) {
-        old_line = comment.getLineEnd();
+    try {
+      if (!comment.isSourceComment()) {
+        new_line = comment.getLineEnd() + 1;
+      } else {
+        old_line = comment.getLineEnd() + 1;
       }
-    } else {
-      old_line = comment.getLineEnd();
-      if (!hunk.isInHunk(comment.getLineEnd())) {
-        new_line = comment.getLineEnd();
-      }
+      var request = createRequest(comment, diffVersion, old_line, new_line);
+      getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId);
+    } catch (FeignException e) {
+      new_line = comment.getLineEnd() + 1;
+      old_line = comment.getLineEnd() + 1;
+      var request = createRequest(comment, diffVersion, old_line, new_line);
+      getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId);
     }
+  }
 
-    var request = GitlabMergeRequestCommentRequest.builder()
+  private static GitlabMergeRequestCommentRequest createRequest(CommentRequest comment, MergeRequestVersions diffVersion, Integer old_line, Integer new_line) {
+    return GitlabMergeRequestCommentRequest.builder()
         .body(comment.getText())
         .position(Position.builder()
             .base_sha(diffVersion.getBase_commit_sha())
@@ -237,8 +241,6 @@ public final class GitlabService implements VcsService {
             .new_line(new_line)
             .build())
         .build();
-
-    getOrCreateApi(connection).addMergeRequestComment(request, projectId, mergeRequestId);
   }
 
   public ProjectResponse getProject(ConnectionConfig connection, String projectId) {
