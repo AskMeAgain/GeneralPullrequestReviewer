@@ -1,6 +1,5 @@
 package io.github.askmeagain.pullrequest.gui.settings;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ColorPanel;
 import com.intellij.ui.components.JBTabbedPane;
@@ -11,7 +10,6 @@ import io.github.askmeagain.pullrequest.services.StateService;
 import io.github.askmeagain.pullrequest.settings.IntegrationFactory;
 import io.github.askmeagain.pullrequest.settings.github.GithubIntegrationPanelFactory;
 import io.github.askmeagain.pullrequest.settings.gitlab.GitlabIntegrationPanelFactory;
-import io.github.askmeagain.pullrequest.settings.test.TestIntegrationPanelFactory;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -39,10 +37,6 @@ public class PullrequestSettingsWindow {
 
   private static VcsImplementation[] getIntegrations() {
     var integrations = new ArrayList<>(List.of(VcsImplementation.GITLAB, VcsImplementation.GITHUB));
-
-    if (ApplicationManager.getApplication().isInternal()) {
-      integrations.add(VcsImplementation.TEST);
-    }
 
     return integrations.toArray(VcsImplementation[]::new);
   }
@@ -92,8 +86,6 @@ public class PullrequestSettingsWindow {
     switch (connectionConfig.getVcsImplementation()) {
       case GITLAB:
         return new GitlabIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
-      case TEST:
-        return new TestIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
       case GITHUB:
         return new GithubIntegrationPanelFactory(connectionConfig, deleteListener(connectionConfig));
     }

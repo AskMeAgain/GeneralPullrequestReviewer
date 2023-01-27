@@ -6,7 +6,6 @@ import io.github.askmeagain.pullrequest.nodes.github.GithubConnectionNode;
 import io.github.askmeagain.pullrequest.nodes.gitlab.GitlabConnectionNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.ConnectionMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
-import io.github.askmeagain.pullrequest.nodes.test.TestConnectionNode;
 import io.github.askmeagain.pullrequest.services.StateService;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -45,8 +44,6 @@ public class RootNode extends BaseTreeNode {
 
   private BaseTreeNode resolveNode(ConnectionConfig connectionConfig) {
     switch (connectionConfig.getVcsImplementation()) {
-      case TEST:
-        return new TestConnectionNode(connectionConfig);
       case GITLAB:
         return new GitlabConnectionNode(connectionConfig);
       case GITHUB:
