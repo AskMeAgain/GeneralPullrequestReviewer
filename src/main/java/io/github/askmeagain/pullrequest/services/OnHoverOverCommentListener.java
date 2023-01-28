@@ -29,7 +29,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
 
-  private Optional<DiscussionPopup> currentActivePopup;
+  private Optional<DiscussionPopup> currentActivePopup = Optional.empty();
   private String currentActiveDiscussionId;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 

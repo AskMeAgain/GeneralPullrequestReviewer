@@ -49,19 +49,19 @@ public class DiscussionPopup {
         .setRequestFocus(true)
         .createPopup();
 
+    refresh(discussions);
+  }
+
+  public void refresh(List<MergeRequestDiscussion> discussions) {
+    tabPanel.removeAll();
+
+    //TODO hide other discussions
     for (var discussion : discussions) {
       var discussionPanel = createPanel(discussion);
       tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
     }
-  }
 
-  public void refresh(List<MergeRequestDiscussion> discussions) {
-    //TODO make this safer
-    for (int i = 0; i < tabPanel.getTabCount(); i++) {
-      var commentScrollPane = (JBScrollPane) tabPanel.getComponentAt(i);
-      var newPanel = createNewCommentChainPanel(discussions.get(i));
-      commentScrollPane.setViewportView(newPanel);
-    }
+    tabPanel.repaint();
   }
 
   private JPanel createPanel(MergeRequestDiscussion discussion) {
