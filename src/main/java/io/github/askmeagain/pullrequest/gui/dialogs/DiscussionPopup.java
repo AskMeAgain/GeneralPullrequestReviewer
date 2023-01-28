@@ -26,18 +26,22 @@ public class DiscussionPopup {
   private final JButton sendButton = new JButton("Send");
   @Getter
   private String id;
+  private int line;
+  private boolean isSource;
   @Getter
   private final JBPopup popup;
 
   public DiscussionPopup(
+      int line,
       Runnable refresh,
       List<MergeRequestDiscussion> discussions,
       BiConsumer<String, String> onSend,
       TriConsumer<String, String, String> onEditComment,
       BiConsumer<String, String> onDeleteComment
   ) {
-    this.refresh = refresh;
+    this.line = line;
     this.onSend = onSend;
+    this.refresh = refresh;
     this.onEditComment = onEditComment;
     this.onDeleteComment = onDeleteComment;
 
@@ -49,18 +53,22 @@ public class DiscussionPopup {
         .setRequestFocus(true)
         .createPopup();
 
+    isSource = discussions.get(0).isSourceDiscussion();
+
     refresh(discussions);
   }
 
   public void refresh(List<MergeRequestDiscussion> discussions) {
     tabPanel.removeAll();
 
-    //TODO hide other discussions
-    for (var discussion : discussions) {
-      id = discussion.getDiscussionId();
-      var discussionPanel = createPanel(discussion);
-      tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
-    }
+    discussions.stream()
+        .filter(x -> x.isSourceDiscussion() == isSource)
+        .filter(x -> x.getStartLine() <= line && line <= x.getEndLine())
+        .forEach(discussion -> {
+          id = discussion.getDiscussionId();
+          var discussionPanel = createPanel(discussion);
+          tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
+        });
 
     tabPanel.repaint();
   }
@@ -81,6 +89,7 @@ public class DiscussionPopup {
 
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText(), discussion.getDiscussionId());
+      textArea.setText("");
       refresh.run();
     });
 

@@ -66,13 +66,13 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     }
 
     if (linesPerFoldRegionTarget.containsKey(pos.line) && !isSource) {
-      createPopup(editorMouseEvent, editor, linesPerFoldRegionTarget.get(pos.line));
+      createPopup(editorMouseEvent, editor, linesPerFoldRegionTarget.get(pos.line), pos.line);
     } else if (linesPerFoldRegionSource.containsKey(pos.line) && isSource) {
-      createPopup(editorMouseEvent, editor, linesPerFoldRegionSource.get(pos.line));
+      createPopup(editorMouseEvent, editor, linesPerFoldRegionSource.get(pos.line), pos.line);
     }
   }
 
-  private void createPopup(EditorMouseEvent e, Editor editor, List<MergeRequestDiscussion> mergeRequestDiscussion) {
+  private void createPopup(EditorMouseEvent e, Editor editor, List<MergeRequestDiscussion> mergeRequestDiscussion, int line) {
     //already active
     if (currentActivePopup.isPresent() && currentActivePopup.get().getPopup().isVisible() &&
         mergeRequestDiscussion.stream().anyMatch(x -> x.getDiscussionId().equals(currentActiveDiscussionId))
@@ -88,6 +88,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
 
     var popup = new DiscussionPopup(
+        line,
         fileNode::refresh,
         mergeRequestDiscussion,
         (text, discId) -> vcsService.addCommentToThread(
