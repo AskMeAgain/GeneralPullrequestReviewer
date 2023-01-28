@@ -16,6 +16,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -28,7 +29,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
 
-  private DiscussionPopup currentActivePopup;
+  private Optional<DiscussionPopup> currentActivePopup;
   private String currentActiveDiscussionId;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
@@ -36,7 +37,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     this.connection = connection;
     this.fileNode = fileNode;
 
-    setDiscussionData(comments);
+    setFoldLineData(comments);
   }
 
   @Override
@@ -68,13 +69,13 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
   private void createPopup(EditorMouseEvent e, Editor editor, List<MergeRequestDiscussion> mergeRequestDiscussion) {
     //already active
-    if (currentActivePopup != null && currentActivePopup.getPopup().isVisible() &&
+    if (currentActivePopup.isPresent() && currentActivePopup.get().getPopup().isVisible() &&
         mergeRequestDiscussion.stream().anyMatch(x -> x.getDiscussionId().equals(currentActiveDiscussionId))
     ) {
       return;
-    } else if (currentActivePopup != null) {
+    } else if (currentActivePopup.isPresent()) {
       //turn off
-      currentActivePopup.getPopup().cancel();
+      currentActivePopup.get().getPopup().cancel();
       PopupService.getInstance().registerPopup(null);
     }
 
@@ -82,7 +83,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
 
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
 
-    currentActivePopup = new DiscussionPopup(
+    var popup = new DiscussionPopup(
         fileNode::refresh,
         mergeRequestDiscussion,
         (text, discId) -> vcsService.addCommentToThread(
@@ -109,17 +110,19 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
         )
     );
 
-    currentActivePopup.create();
-    PopupService.getInstance().registerPopup(currentActivePopup);
-    currentActivePopup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
+
+    PopupService.getInstance().registerPopup(popup);
+    popup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
+
+    currentActivePopup = Optional.of(popup);
   }
 
-  public void refresh(List<MergeRequestDiscussion> comments) {
-    System.out.println("Refresh Listener");
-    setDiscussionData(comments);
+  public void refresh(List<MergeRequestDiscussion> discussions) {
+    setFoldLineData(discussions);
+    currentActivePopup.ifPresent(x -> x.refresh(discussions));
   }
 
-  private void setDiscussionData(List<MergeRequestDiscussion> comments) {
+  private void setFoldLineData(List<MergeRequestDiscussion> comments) {
     linesPerFoldRegionTarget = comments.stream()
         .filter(x -> !x.isSourceDiscussion())
         .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)

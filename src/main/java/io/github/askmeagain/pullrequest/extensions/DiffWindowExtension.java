@@ -19,7 +19,5 @@ public class DiffWindowExtension extends DiffExtension {
     var diffViewer = new DiffEditor(request, sourceEditor, targetEditor);
 
     EditorService.getInstance().register(diffViewer);
-
-    diffViewer.create();
   }
 }

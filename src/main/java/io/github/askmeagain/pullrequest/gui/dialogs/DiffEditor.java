@@ -15,7 +15,6 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewFile;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.services.OnHoverOverCommentListener;
 import io.github.askmeagain.pullrequest.services.StateService;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,23 +23,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class DiffEditor {
 
   private final DiffRequest request;
   private final EditorEx sourceEditor;
   private final EditorEx targetEditor;
-  private OnHoverOverCommentListener listener;
+  private final OnHoverOverCommentListener listener;
   private final List<RangeHighlighter> sourceRangeHighlighters = new ArrayList<>();
   private final List<RangeHighlighter> targetRangeHighlighters = new ArrayList<>();
+  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   public String getId() {
     return request.getUserData(TransferKey.DataContextKeyTarget).getFileName();
   }
 
   private static final TextAttributes EDITOR_ATTRIBUTES = new TextAttributes(JBColor.red, null, null, null, Font.BOLD);
-
-  private final PullrequestPluginState state = StateService.getInstance().getState();
 
   private final java.util.List<Key> keys = List.of(
       TransferKey.ProjectId,
@@ -52,7 +49,11 @@ public class DiffEditor {
       TransferKey.FileHunk
   );
 
-  public void create() {
+  public DiffEditor(DiffRequest request, EditorEx sourceEditor, EditorEx targetEditor) {
+    this.request = request;
+    this.sourceEditor = sourceEditor;
+    this.targetEditor = targetEditor;
+
     sourceEditor.putUserData(TransferKey.IsSource, true);
     targetEditor.putUserData(TransferKey.IsSource, false);
 
@@ -84,11 +85,6 @@ public class DiffEditor {
     setRangeHighlighter(editor, reviewDiscussion, rangeHighlighters);
   }
 
-  @NotNull
-  private TextAttributes getTextAttributes() {
-    return new TextAttributes(null, Color.decode(state.getMergeRequestCommentHint()), null, null, Font.PLAIN);
-  }
-
   private void setRangeHighlighter(EditorEx editor, List<MergeRequestDiscussion> reviewDiscussion, List<RangeHighlighter> highlighters) {
     var textAttributes = getTextAttributes();
 
@@ -100,6 +96,11 @@ public class DiffEditor {
       var highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
       highlighters.add(highlighter);
     }
+  }
+
+  @NotNull
+  private TextAttributes getTextAttributes() {
+    return new TextAttributes(null, Color.decode(state.getMergeRequestCommentHint()), null, null, Font.PLAIN);
   }
 
   private static void transferData(EditorEx editor, DiffRequest request, Key key) {
@@ -115,8 +116,6 @@ public class DiffEditor {
   public void refresh(List<MergeRequestDiscussion> comments) {
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
-
-    System.out.println("Refresh DiffEditor");
 
     listener.refresh(comments);
 

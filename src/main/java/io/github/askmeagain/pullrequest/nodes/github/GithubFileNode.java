@@ -4,11 +4,9 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.*;
-import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.EditorService;
-import io.github.askmeagain.pullrequest.services.PopupService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.github.GithubService;
 import lombok.Getter;
@@ -107,11 +105,6 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
     super.refresh();
     var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
-
-    var popupService = PopupService.getInstance();
-    if (popupService.getActive().map(DiscussionPopup::getId).map(x -> x.equals(mergeRequestId)).orElse(false)) {
-      popupService.getActive().get().refresh(comments);
-    }
 
     var editorService = EditorService.getInstance();
     if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {

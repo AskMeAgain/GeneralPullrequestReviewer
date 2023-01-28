@@ -92,8 +92,6 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
 
-    System.out.println("Refresh Gitlab FileNode");
-
     var editorService = EditorService.getInstance();
     if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {
       editorService.getDiffView().get().refresh(comments);

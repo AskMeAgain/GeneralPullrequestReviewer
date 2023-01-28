@@ -8,7 +8,6 @@ import io.github.askmeagain.pullrequest.TriConsumer;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -16,24 +15,32 @@ import java.awt.*;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-@RequiredArgsConstructor
 public class DiscussionPopup {
 
   private final Runnable refresh;
-  private final List<MergeRequestDiscussion> discussions;
   private final BiConsumer<String, String> onSend;
   private final TriConsumer<String, String, String> onEditComment;
   private final BiConsumer<String, String> onDeleteComment;
+  private final JTabbedPane tabPanel;
   private final JTextArea textArea = new JTextArea();
   private final JButton sendButton = new JButton("Send");
-  private JTabbedPane tabPanel;
   @Getter
   private String id;
-
   @Getter
   private JBPopup popup;
 
-  public void create() {
+  public DiscussionPopup(
+      Runnable refresh,
+      List<MergeRequestDiscussion> discussions,
+      BiConsumer<String, String> onSend,
+      TriConsumer<String, String, String> onEditComment,
+      BiConsumer<String, String> onDeleteComment
+  ) {
+    this.refresh = refresh;
+    this.onSend = onSend;
+    this.onEditComment = onEditComment;
+    this.onDeleteComment = onDeleteComment;
+
     //INTENDED use jTabbedPane here because of scroll_tab_layout hiding title
     tabPanel = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
@@ -43,7 +50,7 @@ public class DiscussionPopup {
         .createPopup();
 
     for (var discussion : discussions) {
-      var discussionPanel = createPopup(discussion);
+      var discussionPanel = createPanel(discussion);
       tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
     }
   }
@@ -57,8 +64,7 @@ public class DiscussionPopup {
     }
   }
 
-  @NotNull
-  private JPanel createPopup(MergeRequestDiscussion discussion) {
+  private JPanel createPanel(MergeRequestDiscussion discussion) {
     var commentScrollPane = new JBScrollPane(createNewCommentChainPanel(discussion));
     var sendTextField = new JBScrollPane(textArea);
 
