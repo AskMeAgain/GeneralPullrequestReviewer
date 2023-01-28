@@ -13,8 +13,8 @@ public class DiffWindowExtension extends DiffExtension {
 
   @Override
   public void onViewerCreated(FrameDiffTool.@NotNull DiffViewer viewer, @NotNull DiffContext context, @NotNull DiffRequest request) {
-    var sourceEditor = ((SimpleDiffViewer) viewer).getEditor1();
-    var targetEditor = ((SimpleDiffViewer) viewer).getEditor2();
+    var targetEditor = ((SimpleDiffViewer) viewer).getEditor1();
+    var sourceEditor = ((SimpleDiffViewer) viewer).getEditor2();
 
     var diffViewer = new DiffEditor(request, sourceEditor, targetEditor);
 

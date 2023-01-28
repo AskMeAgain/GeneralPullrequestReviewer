@@ -22,7 +22,6 @@ public class PullrequestPluginState {
   }
 
   String mergeRequestColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
-  String discussionTextColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
   String mergeRequestCommentHint = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
   String fileColor = toHexColor(SimpleTextAttributes.DARK_TEXT.getFgColor());
 }

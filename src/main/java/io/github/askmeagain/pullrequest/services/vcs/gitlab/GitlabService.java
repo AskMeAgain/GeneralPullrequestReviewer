@@ -12,7 +12,8 @@ import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.dto.gitlab.comment.GitlabMergeRequestCommentRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffs.GitlabMergeRequestFileDiff;
 import io.github.askmeagain.pullrequest.dto.gitlab.diffslegacy.Change;
-import io.github.askmeagain.pullrequest.dto.gitlab.discussion.*;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussion.GitlabDiscussionResponse;
+import io.github.askmeagain.pullrequest.dto.gitlab.discussion.Position;
 import io.github.askmeagain.pullrequest.dto.gitlab.discussionnote.GitlabAddCommentToDiscussionRequest;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.GitlabMergeRequestResponse;
 import io.github.askmeagain.pullrequest.dto.gitlab.mergerequest.Reviewer;
@@ -157,28 +158,13 @@ public final class GitlabService implements VcsService {
             return null;
           }
 
-          var isNotSource = n.getPosition().getOld_line() != null;
-          var start = Optional.of(n.getPosition())
-              .map(Position::getLine_range)
-              .map(LineRange::getStart)
-              .orElse(Start.builder()
-                  .old_line(n.getPosition().getOld_line())
-                  .new_line(n.getPosition().getNew_line())
-                  .build());
-
-          var end = Optional.of(n.getPosition())
-              .map(Position::getLine_range)
-              .map(LineRange::getEnd)
-              .orElse(End.builder()
-                  .old_line(n.getPosition().getOld_line())
-                  .new_line(n.getPosition().getNew_line())
-                  .build());
+          var isSource = n.getPosition().getNew_line() != null && n.getPosition().getOld_line() == null;
 
           return MergeRequestDiscussion.builder()
               .discussionId(discussion.getId())
-              .isSourceDiscussion(n.getPosition().getOld_line() == null)
-              .startLine(isNotSource ? start.getOld_line() - 1 : start.getNew_line() - 1)
-              .endLine(isNotSource ? end.getOld_line() - 1 : end.getNew_line() - 1)
+              .isSourceDiscussion(isSource)
+              .startLine(isSource ? n.getPosition().getNew_line() - 1 : n.getPosition().getOld_line() - 1)
+              .endLine(isSource ? n.getPosition().getNew_line() - 1 : n.getPosition().getOld_line() - 1)
               .reviewComments(discussion.getNotes().stream()
                   .map(note -> ReviewComment.builder()
                       .noteId(note.getId() + "")
@@ -212,7 +198,7 @@ public final class GitlabService implements VcsService {
     Integer new_line = null;
 
     try {
-      if (!comment.isSourceComment()) {
+      if (comment.isSourceComment()) {
         new_line = comment.getLineEnd() + 1;
       } else {
         old_line = comment.getLineEnd() + 1;

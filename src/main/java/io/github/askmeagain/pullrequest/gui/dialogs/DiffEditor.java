@@ -84,7 +84,7 @@ public class DiffEditor {
 
   @NotNull
   private TextAttributes getTextAttributes() {
-    return new TextAttributes(null, Color.decode(state.getDiscussionTextColor()), null, null, Font.PLAIN);
+    return new TextAttributes(null, Color.decode(state.getMergeRequestCommentHint()), null, null, Font.PLAIN);
   }
 
   private void setRangeHighlighter(EditorEx editor, List<MergeRequestDiscussion> reviewDiscussion, List<RangeHighlighter> highlighters) {
