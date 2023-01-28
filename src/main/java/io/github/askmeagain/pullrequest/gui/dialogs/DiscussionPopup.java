@@ -27,7 +27,7 @@ public class DiscussionPopup {
   @Getter
   private String id;
   @Getter
-  private JBPopup popup;
+  private final JBPopup popup;
 
   public DiscussionPopup(
       Runnable refresh,
@@ -57,6 +57,7 @@ public class DiscussionPopup {
 
     //TODO hide other discussions
     for (var discussion : discussions) {
+      id = discussion.getDiscussionId();
       var discussionPanel = createPanel(discussion);
       tabPanel.addTab(discussion.getDiscussionId() + "(" + discussion.getReviewComments().size() + ")", discussionPanel);
     }
@@ -67,8 +68,6 @@ public class DiscussionPopup {
   private JPanel createPanel(MergeRequestDiscussion discussion) {
     var commentScrollPane = new JBScrollPane(createNewCommentChainPanel(discussion));
     var sendTextField = new JBScrollPane(textArea);
-
-    id = discussion.getDiscussionId();
 
     var dialogPanel = FormBuilder.createFormBuilder()
         .addComponent(commentScrollPane)
