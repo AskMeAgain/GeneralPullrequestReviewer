@@ -40,6 +40,11 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     setFoldLineData(comments);
   }
 
+  public void refresh(List<MergeRequestDiscussion> discussions) {
+    setFoldLineData(discussions);
+    currentActivePopup.ifPresent(popup -> popup.refresh(discussions));
+  }
+
   @Override
   public void mouseMoved(@NotNull EditorMouseEvent editorMouseEvent) {
     var editor = editorMouseEvent.getEditor();
@@ -112,11 +117,6 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     popup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
 
     currentActivePopup = Optional.of(popup);
-  }
-
-  public void refresh(List<MergeRequestDiscussion> discussions) {
-    setFoldLineData(discussions);
-    currentActivePopup.ifPresent(x -> x.refresh(discussions));
   }
 
   private void setFoldLineData(List<MergeRequestDiscussion> comments) {
