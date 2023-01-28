@@ -76,7 +76,6 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     } else if (currentActivePopup.isPresent()) {
       //turn off
       currentActivePopup.get().getPopup().cancel();
-      PopupService.getInstance().registerPopup(null);
     }
 
     currentActiveDiscussionId = mergeRequestDiscussion.get(0).getDiscussionId();
@@ -110,8 +109,6 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
         )
     );
 
-
-    PopupService.getInstance().registerPopup(popup);
     popup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
 
     currentActivePopup = Optional.of(popup);
