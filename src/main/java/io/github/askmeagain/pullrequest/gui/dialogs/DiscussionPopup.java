@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 @RequiredArgsConstructor
 public class DiscussionPopup {
 
+  private final Runnable refresh;
   private final List<MergeRequestDiscussion> discussions;
   private final BiConsumer<String, String> onSend;
   private final TriConsumer<String, String, String> onEditComment;
@@ -73,7 +74,10 @@ public class DiscussionPopup {
     sendTextField.setPreferredSize(new Dimension(400, 100));
     commentScrollPane.setPreferredSize(new Dimension(400, 200));
 
-    sendButton.addActionListener(actionEvent -> onSend.accept(textArea.getText(), discussion.getDiscussionId()));
+    sendButton.addActionListener(actionEvent -> {
+      onSend.accept(textArea.getText(), discussion.getDiscussionId());
+      refresh.run();
+    });
 
     return dialogPanel;
   }
@@ -109,6 +113,7 @@ public class DiscussionPopup {
       onEditComment.consume(textArea.getText(), discussionId, noteId);
       fakeLabel.setText(textArea.getText());
       textArea.setText("");
+      refresh.run();
     });
     editButton.setPreferredSize(preferredSize);
     panel.add(editButton);
@@ -117,6 +122,7 @@ public class DiscussionPopup {
     deleteButton.addActionListener(l -> {
       onDeleteComment.accept(discussionId, noteId);
       panel.getParent().remove(panel);
+      refresh.run();
     });
     deleteButton.setPreferredSize(preferredSize);
     panel.add(deleteButton);

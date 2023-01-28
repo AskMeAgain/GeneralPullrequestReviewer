@@ -1,7 +1,5 @@
 package io.github.askmeagain.pullrequest.services;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.Service;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
@@ -10,10 +8,10 @@ import io.github.askmeagain.pullrequest.dto.application.ConnectionConfig;
 import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
+import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.List;
@@ -21,42 +19,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Service
-public final class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
 
-  public static OnHoverOverCommentListener getInstance() {
-    return ApplicationManager.getApplication().getService(OnHoverOverCommentListener.class);
-  }
+public class OnHoverOverCommentListener implements EditorMouseMotionListener, EditorMouseListener {
+
+  private final NodeBehaviour fileNode;
+  private final ConnectionConfig connection;
 
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
-  private DiscussionPopup currentActivePopup;
 
+  private DiscussionPopup currentActivePopup;
   private String currentActiveDiscussionId;
   private final DataRequestService dataRequestService = DataRequestService.getInstance();
 
-  private ConnectionConfig connection;
-
-  public void setDiscussionData(List<MergeRequestDiscussion> comments) {
-    linesPerFoldRegionTarget = comments.stream()
-        .filter(x -> !x.isSourceDiscussion())
-        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
-            .mapToObj(i -> new SimpleEntry<>(i, x))
-            .collect(Collectors.toList()))
-        .flatMap(Collection::stream)
-        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
-
-    linesPerFoldRegionSource = comments.stream()
-        .filter(MergeRequestDiscussion::isSourceDiscussion)
-        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
-            .mapToObj(i -> new SimpleEntry<>(i, x))
-            .collect(Collectors.toList()))
-        .flatMap(Collection::stream)
-        .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
-  }
-
-  public void setData(List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
+  public OnHoverOverCommentListener(NodeBehaviour fileNode, List<MergeRequestDiscussion> comments, ConnectionConfig connection) {
     this.connection = connection;
+    this.fileNode = fileNode;
+
     setDiscussionData(comments);
   }
 
@@ -104,6 +83,7 @@ public final class OnHoverOverCommentListener implements EditorMouseMotionListen
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
 
     currentActivePopup = new DiscussionPopup(
+        fileNode::refresh,
         mergeRequestDiscussion,
         (text, discId) -> vcsService.addCommentToThread(
             editor.getUserData(TransferKey.ProjectId),
@@ -132,5 +112,28 @@ public final class OnHoverOverCommentListener implements EditorMouseMotionListen
     currentActivePopup.create();
     PopupService.getInstance().registerPopup(currentActivePopup);
     currentActivePopup.getPopup().showInScreenCoordinates(editor.getComponent(), e.getMouseEvent().getLocationOnScreen());
+  }
+
+  public void refresh(List<MergeRequestDiscussion> comments) {
+    System.out.println("Refresh Listener");
+    setDiscussionData(comments);
+  }
+
+  private void setDiscussionData(List<MergeRequestDiscussion> comments) {
+    linesPerFoldRegionTarget = comments.stream()
+        .filter(x -> !x.isSourceDiscussion())
+        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
+            .mapToObj(i -> new SimpleEntry<>(i, x))
+            .collect(Collectors.toList()))
+        .flatMap(Collection::stream)
+        .collect(Collectors.groupingBy(SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
+
+    linesPerFoldRegionSource = comments.stream()
+        .filter(MergeRequestDiscussion::isSourceDiscussion)
+        .map(x -> IntStream.range(x.getStartLine(), x.getEndLine() + 1)
+            .mapToObj(i -> new SimpleEntry<>(i, x))
+            .collect(Collectors.toList()))
+        .flatMap(Collection::stream)
+        .collect(Collectors.groupingBy(SimpleEntry::getKey, Collectors.mapping(SimpleEntry::getValue, Collectors.toList())));
   }
 }

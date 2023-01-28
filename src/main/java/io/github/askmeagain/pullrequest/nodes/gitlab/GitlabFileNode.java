@@ -4,11 +4,9 @@ import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.*;
-import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.EditorService;
-import io.github.askmeagain.pullrequest.services.PopupService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
 import lombok.Getter;
@@ -42,13 +40,13 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
     var sourceReviewFile = ReviewFile.builder()
         .fileContent(sourceFile.getFileContent())
-        .fileName(sourceBranch)
+        .fileName(filePath)
         .reviewDiscussions(sourceComments)
         .build();
 
     var targetReviewFile = ReviewFile.builder()
         .fileContent(targetFile.getFileContent())
-        .fileName(targetBranch)
+        .fileName(filePath)
         .reviewDiscussions(targetComments)
         .build();
 
@@ -66,6 +64,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
     request.putUserData(TransferKey.DataContextKeySource, sourceReviewFile);
     request.putUserData(TransferKey.DataContextKeyTarget, targetReviewFile);
+    request.putUserData(TransferKey.FileNode, this);
 
     request.putUserData(TransferKey.FileName, filePath);
     request.putUserData(TransferKey.ProjectId, projectId);
@@ -93,10 +92,7 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
     loadComments(comments);
 
-    var popupService = PopupService.getInstance();
-    if (popupService.getActive().map(DiscussionPopup::getId).map(x -> x.equals(mergeRequestId)).orElse(false)) {
-      popupService.getActive().get().refresh(comments);
-    }
+    System.out.println("Refresh Gitlab FileNode");
 
     var editorService = EditorService.getInstance();
     if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {

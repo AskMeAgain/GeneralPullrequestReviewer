@@ -135,7 +135,7 @@ public final class GithubService implements VcsService {
             .url(discussion.getHtml_url())
             .startLine((discussion.getStart_line() == null ? discussion.getLine() : discussion.getStart_line()) - 1)
             .endLine(discussion.getLine() - 1)
-            .isSourceDiscussion(discussion.getSide().equals("LEFT"))
+            .isSourceDiscussion(discussion.getSide().equals("RIGHT"))
             .discussionId(discussion.getId() + "")
             .reviewComment(ReviewComment.builder()
                 .text(discussion.getBody())

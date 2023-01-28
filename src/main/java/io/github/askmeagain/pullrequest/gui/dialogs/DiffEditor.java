@@ -30,7 +30,7 @@ public class DiffEditor {
   private final DiffRequest request;
   private final EditorEx sourceEditor;
   private final EditorEx targetEditor;
-  private final OnHoverOverCommentListener listener = OnHoverOverCommentListener.getInstance();
+  private OnHoverOverCommentListener listener;
   private final List<RangeHighlighter> sourceRangeHighlighters = new ArrayList<>();
   private final List<RangeHighlighter> targetRangeHighlighters = new ArrayList<>();
 
@@ -48,6 +48,7 @@ public class DiffEditor {
       TransferKey.Connection,
       TransferKey.FileName,
       TransferKey.MergeRequestId,
+      TransferKey.FileNode,
       TransferKey.FileHunk
   );
 
@@ -55,7 +56,8 @@ public class DiffEditor {
     sourceEditor.putUserData(TransferKey.IsSource, true);
     targetEditor.putUserData(TransferKey.IsSource, false);
 
-    listener.setData(
+    listener = new OnHoverOverCommentListener(
+        request.getUserData(TransferKey.FileNode),
         request.getUserData(TransferKey.AllDiscussions),
         request.getUserData(TransferKey.Connection)
     );
@@ -114,7 +116,9 @@ public class DiffEditor {
     var sourceComments = comments.stream().filter(MergeRequestDiscussion::isSourceDiscussion).collect(Collectors.toList());
     var targetComments = comments.stream().filter(x -> !x.isSourceDiscussion()).collect(Collectors.toList());
 
-    listener.setDiscussionData(comments);
+    System.out.println("Refresh DiffEditor");
+
+    listener.refresh(comments);
 
     refreshRemoveRangeHighlighter();
 
