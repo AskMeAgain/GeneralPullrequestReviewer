@@ -86,31 +86,33 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
     currentActiveDiscussionId = mergeRequestDiscussion.get(0).getDiscussionId();
 
     var vcsService = dataRequestService.getMapVcsImplementation().get(connection.getVcsImplementation());
+    var projectId = editor.getUserData(TransferKey.ProjectId);
+    var mergeRequestId = editor.getUserData(TransferKey.MergeRequestId);
 
     var popup = new DiscussionPopup(
         line,
         fileNode::refresh,
         mergeRequestDiscussion,
-        (discId) -> vcsService.resolveComment(),
+        (discId) -> vcsService.resolveComment(projectId, connection, mergeRequestId, discId, true),
         (text, discId) -> vcsService.addCommentToThread(
-            editor.getUserData(TransferKey.ProjectId),
+            projectId,
             connection,
-            editor.getUserData(TransferKey.MergeRequestId),
+            mergeRequestId,
             discId,
             text
         ),
         (text, discId, noteId) -> vcsService.editComment(
             connection,
-            editor.getUserData(TransferKey.ProjectId),
-            editor.getUserData(TransferKey.MergeRequestId),
+            projectId,
+            mergeRequestId,
             discId,
             String.valueOf(noteId),
             text
         ),
         (discId, noteId) -> vcsService.deleteComment(
             connection,
-            editor.getUserData(TransferKey.ProjectId),
-            editor.getUserData(TransferKey.MergeRequestId),
+            projectId,
+            mergeRequestId,
             discId,
             String.valueOf(noteId)
         )

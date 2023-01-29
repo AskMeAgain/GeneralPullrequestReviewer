@@ -5,6 +5,7 @@ import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.EditorService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
@@ -93,14 +94,26 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
 
   @Override
   public void refresh() {
-    super.refresh();
     var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
-    loadComments(comments);
+    //loadComments(comments);
 
     var editorService = EditorService.getInstance();
     if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {
       editorService.getDiffView().get().refresh(comments);
     }
+
+    //TODO refresh should work on discussion nodes
+    removeOrRefreshNodes(
+        comments,
+        this.getChilds(x -> (GitlabDiscussionNode) x),
+        DiscussionNodeMarker::getDiscussion
+    );
+
+    addNewNodeFromLists(
+        comments,
+        this.getChilds(GitlabDiscussionNode::getDiscussion),
+        GitlabDiscussionNode::new
+    );
   }
 
   private void loadComments(List<MergeRequestDiscussion> comments) {
@@ -109,9 +122,12 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     var discussions = comments.stream()
         .map(GitlabDiscussionNode::new).collect(Collectors.toList());
 
+
     discussions.stream()
         .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
+
+    this.getTree().repaint();
   }
 
   @Override

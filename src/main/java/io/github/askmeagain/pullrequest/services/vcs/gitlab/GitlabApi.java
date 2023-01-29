@@ -102,4 +102,12 @@ public interface GitlabApi {
       @Param("discId") String discussionId,
       @Param("noteId") String noteId
   );
+
+  @RequestLine("PUT /projects/{projectId}/merge_requests/{mergeRequestId}/discussions/{discId}?resolved={resolve}")
+  void resolveComment(
+      @Param("projectId") String projectId,
+      @Param("mergeRequestId") String mergeRequestId,
+      @Param("discId") String discId,
+      @Param("resolve") boolean resolve
+  );
 }

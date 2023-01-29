@@ -15,6 +15,7 @@ public class MergeRequestDiscussion {
   int startLine;
   int endLine;
   String url;
+  boolean resolved;
 
   @Singular
   List<ReviewComment> reviewComments;

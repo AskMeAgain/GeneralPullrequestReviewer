@@ -5,25 +5,27 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-@RequiredArgsConstructor
 public class GitlabDiscussionNode extends BaseTreeNode implements DiscussionNodeMarker {
 
   @Getter
   private final String url;
-  private final MergeRequestDiscussion gitlabDiscussion;
+  @Getter
+  private final boolean resolved;
+  @Getter
+  private final MergeRequestDiscussion discussion;
 
-  public GitlabDiscussionNode(MergeRequestDiscussion gitlabDiscussion) {
-    this.gitlabDiscussion = gitlabDiscussion;
-    this.url = gitlabDiscussion.getUrl();
+  public GitlabDiscussionNode(MergeRequestDiscussion discussion) {
+    this.discussion = discussion;
+    this.url = discussion.getUrl();
+    this.resolved = discussion.isResolved();
   }
 
   @Override
   public String toString() {
-    return "Discussion: " + gitlabDiscussion.getDiscussionId();
+    return resolved + "Discussion: " + discussion.getDiscussionId();
   }
 
   public void refresh() {
@@ -34,7 +36,7 @@ public class GitlabDiscussionNode extends BaseTreeNode implements DiscussionNode
   @Override
   public void onCreation() {
     removeAllChildren();
-    gitlabDiscussion.getReviewComments()
+    discussion.getReviewComments()
         .stream()
         .map(ReviewComment::toString)
         .map(DefaultMutableTreeNode::new)

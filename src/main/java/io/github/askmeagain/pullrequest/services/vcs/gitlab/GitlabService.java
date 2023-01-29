@@ -24,7 +24,6 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsServiceProgressionProxy;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -163,6 +162,7 @@ public final class GitlabService implements VcsService {
 
           return MergeRequestDiscussion.builder()
               .discussionId(discussion.getId())
+              .resolved(discussion.getNotes().get(0).isResolved())
               .isSourceDiscussion(isSource)
               .startLine(isSource ? n.getPosition().getNew_line() - 1 : n.getPosition().getOld_line() - 1)
               .endLine(isSource ? n.getPosition().getNew_line() - 1 : n.getPosition().getOld_line() - 1)
@@ -245,8 +245,8 @@ public final class GitlabService implements VcsService {
   }
 
   @Override
-  public void resolveComment() {
-    throw new NotImplementedException("Not implemented");
+  public void resolveComment(String projectId, ConnectionConfig connection, String mergeRequestId, String discId, boolean resolve) {
+    getOrCreateApi(connection).resolveComment(projectId, mergeRequestId, discId, resolve);
   }
 
   @SneakyThrows

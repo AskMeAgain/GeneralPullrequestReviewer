@@ -78,10 +78,10 @@ public abstract class BaseTreeNode extends DefaultMutableTreeNode implements Nod
     throw new RuntimeException("Could not find active project");
   }
 
-  protected <T, X> List<X> getChilds(Function<T, X> func) {
+  protected <T, X> List<X> getChilds(Function<T, X> transformer) {
     var list = new ArrayList<X>();
     for (int i = 0; i < getChildCount(); i++) {
-      list.add(func.apply((T) getChildAt(i)));
+      list.add(transformer.apply((T) getChildAt(i)));
     }
     return list;
   }

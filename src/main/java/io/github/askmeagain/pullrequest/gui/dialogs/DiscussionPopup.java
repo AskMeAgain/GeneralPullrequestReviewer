@@ -98,11 +98,6 @@ public class DiscussionPopup {
       refresh.run();
     });
 
-    resolveButton.addActionListener(actionEvent -> {
-      onResolve.accept(discussion.getDiscussionId());
-      refresh.run();
-    });
-
     return dialogPanel;
   }
 
@@ -113,6 +108,13 @@ public class DiscussionPopup {
       var label = getTextField(discussion.getDiscussionId(), reviewComment);
       panelBuilder = panelBuilder.addComponent(label);
     }
+
+    resolveButton.addActionListener(actionEvent -> {
+      onResolve.accept(discussion.getDiscussionId());
+      refresh.run();
+    });
+
+    panelBuilder.addComponent(resolveButton);
 
     return panelBuilder.addComponentFillVertically(new JPanel(), 10).getPanel();
   }

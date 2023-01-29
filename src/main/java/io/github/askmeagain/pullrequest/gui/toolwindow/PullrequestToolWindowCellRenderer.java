@@ -4,6 +4,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ui.render.RenderingUtil;
 import io.github.askmeagain.pullrequest.PluginUtils;
 import io.github.askmeagain.pullrequest.dto.application.PullrequestPluginState;
+import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.MergeRequestMarker;
 import io.github.askmeagain.pullrequest.services.StateService;
@@ -39,6 +40,13 @@ public class PullrequestToolWindowCellRenderer extends DefaultTreeCellRenderer {
       if (casted.getCanBeMerged()) {
         setIcon(AllIcons.Actions.Commit);
         image = casted.getReviewerUrls().stream().map(this::getImageTag).collect(Collectors.toList());
+      }
+    } else if (value instanceof DiscussionNodeMarker) {
+      var casted = (DiscussionNodeMarker) value;
+      if (casted.isResolved()) {
+        setIcon(AllIcons.Actions.Commit);
+      } else {
+        setIcon(AllIcons.Actions.Cancel);
       }
     }
 

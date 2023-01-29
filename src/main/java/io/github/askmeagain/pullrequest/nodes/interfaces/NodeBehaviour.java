@@ -13,4 +13,5 @@ public interface NodeBehaviour extends MutableTreeNode {
   void onClick();
 
   void onDoubleClick();
+
 }

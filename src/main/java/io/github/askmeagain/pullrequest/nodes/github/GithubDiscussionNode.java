@@ -13,16 +13,20 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class GithubDiscussionNode extends BaseTreeNode implements DiscussionNodeMarker {
   @Getter
   private final String url;
-  private final MergeRequestDiscussion githubDiscussions;
+  @Getter
+  private final boolean resolved;
+  @Getter
+  private final MergeRequestDiscussion discussion;
 
-  public GithubDiscussionNode(MergeRequestDiscussion mergeRequestDiscussion) {
-    this.url = mergeRequestDiscussion.getUrl();
-    this.githubDiscussions = mergeRequestDiscussion;
+  public GithubDiscussionNode(MergeRequestDiscussion discussion) {
+    this.url = discussion.getUrl();
+    this.discussion = discussion;
+    this.resolved = discussion.isResolved();
   }
 
   @Override
   public String toString() {
-    return "Discussion: " + githubDiscussions.getDiscussionId();
+    return "Discussion: " + discussion.getDiscussionId();
   }
 
   public void refresh() {
@@ -33,7 +37,7 @@ public class GithubDiscussionNode extends BaseTreeNode implements DiscussionNode
   @Override
   public void onCreation() {
     removeAllChildren();
-    githubDiscussions.getReviewComments()
+    discussion.getReviewComments()
         .stream()
         .map(ReviewComment::toString)
         .map(DefaultMutableTreeNode::new)

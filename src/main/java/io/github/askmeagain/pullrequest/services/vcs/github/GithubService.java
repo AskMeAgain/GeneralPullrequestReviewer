@@ -178,11 +178,6 @@ public final class GithubService implements VcsService {
   }
 
   @Override
-  public void resolveComment() {
-    throw new NotImplementedException();
-  }
-
-  @Override
   public void addMergeRequestComment(
       String projectId,
       ConnectionConfig connectionName,
@@ -195,20 +190,25 @@ public final class GithubService implements VcsService {
     }
 
     //TODO
-    var startLine = !Objects.equals(comment.getLineStart(), comment.getLineEnd()) ? comment.getLineStart() : null;
+    var startLine = !Objects.equals(comment.getLineStart(), comment.getLineEnd()) ? comment.getLineStart() + 1 : null;
 
     getOrCreateApi(connectionName).addMergeRequestComment(
         GithubMergeRequestCommentRequest.builder()
             .commit_id(comment.getCommitId())
             .body(comment.getText())
             .line(comment.getLineEnd() + 1)
-            .start_line(startLine + 1)
+            .start_line(startLine)
             .side(comment.isSourceComment() ? "LEFT" : "RIGHT")
             .path(comment.isSourceComment() ? comment.getOldFileName() : comment.getNewFileName())
             .build(),
         projectId,
         mergeRequestId
     );
+  }
+
+  @Override
+  public void resolveComment(String projectId, ConnectionConfig connection, String mergeRequestId, String discId, boolean resolve) {
+    throw new NotImplementedException();
   }
 
   private boolean isWithinReach(CommentRequest comment) {

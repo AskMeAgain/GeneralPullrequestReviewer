@@ -22,11 +22,12 @@ public interface VcsService {
 
   void addMergeRequestComment(String projectId, ConnectionConfig connectionName, String mergeRequestId, CommentRequest comment);
 
+  void resolveComment(String projectId, ConnectionConfig connection, String mergeRequestId, String discId, boolean resolve);
+
   void approveMergeRequest(String projectId, ConnectionConfig connection, String mergeRequestId);
 
   ProjectResponse getProject(ConnectionConfig connection, String projectId);
 
   String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId);
 
-  void resolveComment();
 }
