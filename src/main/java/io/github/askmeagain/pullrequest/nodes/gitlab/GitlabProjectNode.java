@@ -37,7 +37,7 @@ public class GitlabProjectNode extends BaseTreeNode implements ProjectMarker {
   }
 
   @Override
-  public void refresh() {
+  public void refresh(Object obj) {
     if (isCollapsed()) {
       return;
     }

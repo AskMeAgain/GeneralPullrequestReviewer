@@ -138,6 +138,7 @@ public final class GithubService implements VcsService {
             .endLine(discussion.getLine() - 1)
             .isSourceDiscussion(discussion.getSide().equals("RIGHT"))
             .discussionId(discussion.getId() + "")
+            .resolved(null) //TODO switch to graphQL
             .reviewComment(ReviewComment.builder()
                 .text(discussion.getBody())
                 .discussionId(discussion.getId() + "")

@@ -29,7 +29,7 @@ public class GitlabConnectionNode extends BaseTreeNode implements ConnectionMark
   }
 
   @Override
-  public void refresh() {
+  public void refresh(Object obj) {
     if (isCollapsed()) {
       return;
     }

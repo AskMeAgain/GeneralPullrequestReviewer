@@ -27,12 +27,12 @@ public abstract class BaseTreeNode extends DefaultMutableTreeNode implements Nod
   private final PluginTreeExpansionListener listener = PluginTreeExpansionListener.getInstance();
 
   @Override
-  public void refresh() {
+  public void refresh(Object obj) {
     for (int i = 0; i < getChildCount(); i++) {
       var child = getChildAt(i);
       if (child instanceof NodeBehaviour) {
         var casted = (NodeBehaviour) child;
-        casted.refresh();
+        casted.refresh(obj);
       }
     }
   }
@@ -109,15 +109,18 @@ public abstract class BaseTreeNode extends DefaultMutableTreeNode implements Nod
     for (var oldValue : oldValues) {
       if (!newValues.contains(transformer.apply(oldValue))) {
         getTreeModel().removeNodeFromParent(oldValue);
-        getTreeModel().reload(this);
       }
     }
 
+    getTreeModel().reload(this);
+
     //we have to do this afterwards, because of temp nodes
     for (var oldValue : oldValues) {
-      if (newValues.contains(transformer.apply(oldValue))) {
-        oldValue.refresh();
-      }
+      var transformedOldValue = transformer.apply(oldValue);
+      newValues.stream()
+          .filter(x -> x.equals(transformedOldValue))
+          .findFirst()
+          .ifPresent(oldValue::refresh);
     }
   }
 }

@@ -20,7 +20,7 @@ public class RootNode extends BaseTreeNode {
   }
 
   @Override
-  public void refresh() {
+  public void refresh(Object obj) {
     removeOrRefreshNodes(
         state.getConnectionConfigs(),
         this.getChilds(Function.identity()),

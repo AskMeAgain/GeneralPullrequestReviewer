@@ -11,26 +11,32 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class GitlabDiscussionNode extends BaseTreeNode implements DiscussionNodeMarker {
 
   @Getter
-  private final String url;
+  private String url;
   @Getter
-  private final boolean resolved;
+  private boolean resolved;
   @Getter
-  private final MergeRequestDiscussion discussion;
+  private MergeRequestDiscussion discussion;
 
   public GitlabDiscussionNode(MergeRequestDiscussion discussion) {
     this.discussion = discussion;
     this.url = discussion.getUrl();
-    this.resolved = discussion.isResolved();
+    this.resolved = discussion.getResolved();
   }
 
   @Override
   public String toString() {
-    return resolved + "Discussion: " + discussion.getDiscussionId();
+    return "Discussion: " + discussion.getDiscussionId();
   }
 
-  public void refresh() {
-    super.refresh();
-    onCreation();
+  @Override
+  public void refresh(Object discussion) {
+    super.refresh(discussion);
+
+    var castedDiscussion = (MergeRequestDiscussion) discussion;
+
+    this.discussion = castedDiscussion;
+    this.url = castedDiscussion.getUrl();
+    this.resolved = castedDiscussion.getResolved();
   }
 
   @Override

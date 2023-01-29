@@ -5,23 +5,21 @@ import io.github.askmeagain.pullrequest.dto.application.ReviewComment;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-@RequiredArgsConstructor
 public class GithubDiscussionNode extends BaseTreeNode implements DiscussionNodeMarker {
   @Getter
-  private final String url;
+  private String url;
   @Getter
-  private final boolean resolved;
+  private boolean resolved;
   @Getter
-  private final MergeRequestDiscussion discussion;
+  private MergeRequestDiscussion discussion;
 
   public GithubDiscussionNode(MergeRequestDiscussion discussion) {
     this.url = discussion.getUrl();
     this.discussion = discussion;
-    this.resolved = discussion.isResolved();
+    this.resolved = discussion.getResolved();
   }
 
   @Override
@@ -29,9 +27,15 @@ public class GithubDiscussionNode extends BaseTreeNode implements DiscussionNode
     return "Discussion: " + discussion.getDiscussionId();
   }
 
-  public void refresh() {
-    super.refresh();
-    onCreation();
+  @Override
+  public void refresh(Object discussion) {
+    super.refresh(discussion);
+
+    var castedDiscussion = (MergeRequestDiscussion) discussion;
+
+    this.discussion = castedDiscussion;
+    this.url = castedDiscussion.getUrl();
+    this.resolved = castedDiscussion.getResolved();
   }
 
   @Override

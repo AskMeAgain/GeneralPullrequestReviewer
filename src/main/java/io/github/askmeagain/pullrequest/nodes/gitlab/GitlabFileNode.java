@@ -93,16 +93,14 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   }
 
   @Override
-  public void refresh() {
+  public void refresh(Object obj) {
     var comments = gitlabService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
-    //loadComments(comments);
 
     var editorService = EditorService.getInstance();
     if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {
       editorService.getDiffView().get().refresh(comments);
     }
 
-    //TODO refresh should work on discussion nodes
     removeOrRefreshNodes(
         comments,
         this.getChilds(x -> (GitlabDiscussionNode) x),
@@ -120,14 +118,14 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
     removeAllChildren();
 
     var discussions = comments.stream()
-        .map(GitlabDiscussionNode::new).collect(Collectors.toList());
-
+        .map(GitlabDiscussionNode::new)
+        .collect(Collectors.toList());
 
     discussions.stream()
         .peek(GitlabDiscussionNode::onCreation)
         .forEach(this::add);
 
-    this.getTree().repaint();
+    getTreeModel().reload(this);
   }
 
   @Override

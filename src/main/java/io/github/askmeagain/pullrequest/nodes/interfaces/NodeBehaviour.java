@@ -4,7 +4,11 @@ import javax.swing.tree.MutableTreeNode;
 
 public interface NodeBehaviour extends MutableTreeNode {
 
-  void refresh();
+  void refresh(Object object);
+
+  default void refresh() {
+    refresh(null);
+  }
 
   void onCreation();
 

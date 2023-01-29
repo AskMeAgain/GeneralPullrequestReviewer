@@ -60,7 +60,7 @@ public class GitlabMergeRequestNode extends BaseTreeNode implements MergeRequest
   }
 
   @Override
-  public void refresh() {
+  public void refresh(Object obj) {
     if (isCollapsed()) {
       return;
     }

@@ -5,6 +5,7 @@ import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
+import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
 import io.github.askmeagain.pullrequest.services.EditorService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
@@ -106,15 +107,25 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   }
 
   @Override
-  public void refresh() {
-    super.refresh();
+  public void refresh(Object obj) {
     var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);
-    loadComments(comments);
 
     var editorService = EditorService.getInstance();
     if (editorService.getDiffView().map(x -> x.getId().equals(filePath)).orElse(false)) {
       editorService.getDiffView().get().refresh(comments);
     }
+
+    removeOrRefreshNodes(
+        comments,
+        this.getChilds(x -> (GithubDiscussionNode) x),
+        DiscussionNodeMarker::getDiscussion
+    );
+
+    addNewNodeFromLists(
+        comments,
+        this.getChilds(GithubDiscussionNode::getDiscussion),
+        GithubDiscussionNode::new
+    );
   }
 
   private void loadComments(List<MergeRequestDiscussion> comments) {
