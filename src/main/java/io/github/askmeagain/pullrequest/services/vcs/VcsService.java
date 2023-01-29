@@ -27,4 +27,6 @@ public interface VcsService {
   ProjectResponse getProject(ConnectionConfig connection, String projectId);
 
   String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId);
+
+  void resolveComment();
 }

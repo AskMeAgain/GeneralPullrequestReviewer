@@ -18,6 +18,7 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsServiceProgressionProxy;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -174,6 +175,11 @@ public final class GithubService implements VcsService {
   ) {
     var response = getOrCreateApi(connection).getDiffHunksOfMergeRequest(projectId, mergeRequestId);
     return new String(response.body().asInputStream().readAllBytes());
+  }
+
+  @Override
+  public void resolveComment() {
+    throw new NotImplementedException();
   }
 
   @Override

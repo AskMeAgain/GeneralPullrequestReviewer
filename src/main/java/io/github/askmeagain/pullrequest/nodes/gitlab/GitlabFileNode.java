@@ -29,6 +29,11 @@ public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
   private final String projectId;
   private final DiffHunk fileHunk;
 
+  @Override
+  public void onDoubleClick() {
+    openFile();
+  }
+
   public void openFile() {
     var sourceFile = gitlabService.getFileOfBranch(projectId, connection, sourceBranch, filePath);
     var targetFile = gitlabService.getFileOfBranch(projectId, connection, targetBranch, filePath);

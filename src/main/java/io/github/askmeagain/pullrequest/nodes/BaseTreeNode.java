@@ -52,6 +52,10 @@ public abstract class BaseTreeNode extends DefaultMutableTreeNode implements Nod
   }
 
   @Override
+  public void onDoubleClick() {
+  }
+
+  @Override
   public void onCreation() {
   }
 

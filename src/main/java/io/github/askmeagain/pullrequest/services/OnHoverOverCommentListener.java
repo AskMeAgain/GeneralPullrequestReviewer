@@ -91,6 +91,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
         line,
         fileNode::refresh,
         mergeRequestDiscussion,
+        (discId) -> vcsService.resolveComment(),
         (text, discId) -> vcsService.addCommentToThread(
             editor.getUserData(TransferKey.ProjectId),
             connection,

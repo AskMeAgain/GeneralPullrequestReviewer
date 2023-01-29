@@ -34,7 +34,11 @@ public class PluginTreeMouseClickListener extends MouseAdapter {
         var lastPathComponent = (DefaultMutableTreeNode) tp.getLastPathComponent();
         if (lastPathComponent instanceof NodeBehaviour) {
           var runnable = (NodeBehaviour) lastPathComponent;
-          runnable.onClick();
+          if (me.getClickCount() == 2) {
+            runnable.onDoubleClick();
+          } else {
+            runnable.onClick();
+          }
         }
       }
     }

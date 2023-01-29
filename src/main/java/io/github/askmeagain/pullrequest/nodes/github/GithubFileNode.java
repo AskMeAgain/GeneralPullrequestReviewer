@@ -101,6 +101,11 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
   }
 
   @Override
+  public void onDoubleClick() {
+    openFile();
+  }
+
+  @Override
   public void refresh() {
     super.refresh();
     var comments = githubService.getCommentsOfPr(projectId, connection, mergeRequestId, filePath);

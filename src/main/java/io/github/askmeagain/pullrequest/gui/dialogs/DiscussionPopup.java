@@ -14,16 +14,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class DiscussionPopup {
 
   private final Runnable refresh;
   private final BiConsumer<String, String> onSend;
+  private final Consumer<String> onResolve;
   private final TriConsumer<String, String, String> onEditComment;
   private final BiConsumer<String, String> onDeleteComment;
   private final JTabbedPane tabPanel;
   private final JTextArea textArea = new JTextArea();
   private final JButton sendButton = new JButton("Send");
+  private final JButton resolveButton = new JButton("Resolve");
   @Getter
   private String id;
   private int line;
@@ -35,10 +38,12 @@ public class DiscussionPopup {
       int line,
       Runnable refresh,
       List<MergeRequestDiscussion> discussions,
+      Consumer<String> onResolve,
       BiConsumer<String, String> onSend,
       TriConsumer<String, String, String> onEditComment,
       BiConsumer<String, String> onDeleteComment
   ) {
+    this.onResolve = onResolve;
     this.line = line;
     this.onSend = onSend;
     this.refresh = refresh;
@@ -80,7 +85,7 @@ public class DiscussionPopup {
     var dialogPanel = FormBuilder.createFormBuilder()
         .addComponent(commentScrollPane)
         .addComponent(sendTextField)
-        .addComponent(sendButton)
+        .addLabeledComponent(sendButton, resolveButton)
         .addComponentFillVertically(new JPanel(), 0)
         .getPanel();
 
@@ -90,6 +95,11 @@ public class DiscussionPopup {
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText(), discussion.getDiscussionId());
       textArea.setText("");
+      refresh.run();
+    });
+
+    resolveButton.addActionListener(actionEvent -> {
+      onResolve.accept(discussion.getDiscussionId());
       refresh.run();
     });
 

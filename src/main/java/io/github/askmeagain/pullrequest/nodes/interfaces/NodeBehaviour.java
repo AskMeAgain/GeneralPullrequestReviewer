@@ -11,4 +11,6 @@ public interface NodeBehaviour extends MutableTreeNode {
   void beforeExpanded();
 
   void onClick();
+
+  void onDoubleClick();
 }

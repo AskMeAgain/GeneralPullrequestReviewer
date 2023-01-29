@@ -24,6 +24,7 @@ import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsServiceProgressionProxy;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -241,6 +242,11 @@ public final class GitlabService implements VcsService {
   @Override
   public String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId) {
     throw new UnsupportedOperationException("unsupported");
+  }
+
+  @Override
+  public void resolveComment() {
+    throw new NotImplementedException("Not implemented");
   }
 
   @SneakyThrows

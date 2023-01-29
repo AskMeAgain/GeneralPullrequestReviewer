@@ -4,6 +4,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.ThrowableComputable;
 import io.github.askmeagain.pullrequest.dto.application.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.swing.*;
 import java.util.List;
@@ -79,6 +80,11 @@ public class VcsServiceProgressionProxy implements VcsService {
   @Override
   public String getDiffHunk(String projectId, ConnectionConfig connection, String mergeRequestId) {
     return withProgress(() -> vcsService.getDiffHunk(projectId, connection, mergeRequestId), "Fetching diff hunk");
+  }
+
+  @Override
+  public void resolveComment() {
+    throw new NotImplementedException("Not implemented");
   }
 
   private <T> T withProgress(ThrowableComputable<T, Exception> runnable, String title) {
