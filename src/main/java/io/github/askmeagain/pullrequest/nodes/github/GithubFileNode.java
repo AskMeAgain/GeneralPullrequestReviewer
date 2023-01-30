@@ -68,6 +68,7 @@ public class GithubFileNode extends BaseTreeNode implements FileNodeMarker {
 
     request.putUserData(TransferKey.DataContextKeySource, sourceReviewFile);
     request.putUserData(TransferKey.DataContextKeyTarget, targetReviewFile);
+    request.putUserData(TransferKey.FileNode, this);
 
     request.putUserData(TransferKey.FileName, filePath);
     request.putUserData(TransferKey.ProjectId, projectId);

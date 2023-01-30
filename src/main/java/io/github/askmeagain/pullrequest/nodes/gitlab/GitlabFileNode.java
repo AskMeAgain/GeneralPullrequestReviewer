@@ -7,6 +7,7 @@ import io.github.askmeagain.pullrequest.dto.application.*;
 import io.github.askmeagain.pullrequest.nodes.BaseTreeNode;
 import io.github.askmeagain.pullrequest.nodes.interfaces.DiscussionNodeMarker;
 import io.github.askmeagain.pullrequest.nodes.interfaces.FileNodeMarker;
+import io.github.askmeagain.pullrequest.nodes.interfaces.ResolvableMarker;
 import io.github.askmeagain.pullrequest.services.EditorService;
 import io.github.askmeagain.pullrequest.services.vcs.VcsService;
 import io.github.askmeagain.pullrequest.services.vcs.gitlab.GitlabService;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker {
+public class GitlabFileNode extends BaseTreeNode implements FileNodeMarker, ResolvableMarker {
 
   private final String sourceBranch;
   private final String targetBranch;

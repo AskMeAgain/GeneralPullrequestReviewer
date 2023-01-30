@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 public class DiscussionPopup {
 
   private final Runnable refresh;
+  private final boolean isResolvable;
   private final BiConsumer<String, String> onSend;
   private final Consumer<String> onResolve;
   private final TriConsumer<String, String, String> onEditComment;
@@ -38,12 +39,14 @@ public class DiscussionPopup {
       int line,
       Runnable refresh,
       List<MergeRequestDiscussion> discussions,
+      boolean isResolvable,
       Consumer<String> onResolve,
       BiConsumer<String, String> onSend,
       TriConsumer<String, String, String> onEditComment,
       BiConsumer<String, String> onDeleteComment
   ) {
     this.onResolve = onResolve;
+    this.isResolvable = isResolvable;
     this.line = line;
     this.onSend = onSend;
     this.refresh = refresh;
@@ -91,6 +94,8 @@ public class DiscussionPopup {
 
     sendTextField.setPreferredSize(new Dimension(400, 100));
     commentScrollPane.setPreferredSize(new Dimension(400, 200));
+
+    resolveButton.setEnabled(isResolvable);
 
     sendButton.addActionListener(actionEvent -> {
       onSend.accept(textArea.getText(), discussion.getDiscussionId());

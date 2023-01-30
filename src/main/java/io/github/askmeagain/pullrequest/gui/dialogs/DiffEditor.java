@@ -93,7 +93,7 @@ public class DiffEditor {
       var endOffset = editor.getDocument().getLineEndOffset(discussion.getEndLine());
       var markupModel = editor.getMarkupModel();
 
-      var highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.EXACT_RANGE);
+      var highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION, textAttributes, HighlighterTargetArea.LINES_IN_RANGE);
       highlighters.add(highlighter);
     }
   }

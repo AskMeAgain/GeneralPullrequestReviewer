@@ -9,6 +9,7 @@ import io.github.askmeagain.pullrequest.dto.application.MergeRequestDiscussion;
 import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
+import io.github.askmeagain.pullrequest.nodes.interfaces.ResolvableMarker;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -93,6 +94,7 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
         line,
         fileNode::refresh,
         mergeRequestDiscussion,
+        fileNode instanceof ResolvableMarker,
         (discId) -> vcsService.resolveComment(projectId, connection, mergeRequestId, discId, true),
         (text, discId) -> vcsService.addCommentToThread(
             projectId,
