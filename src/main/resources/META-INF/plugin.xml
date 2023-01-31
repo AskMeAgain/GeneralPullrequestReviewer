@@ -8,7 +8,7 @@
         <!--........................this will be replaced by the pathPluginXml gradle task...........................-->
     </description>
 
-    <idea-version since-build="213.4928.7"/>
+    <idea-version since-build="223.0"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
@@ -18,7 +18,7 @@
         <applicationConfigurable
                 parentId="tools"
                 instance="io.github.askmeagain.pullrequest.services.SettingsGuiService"
-                id="io.github.askmeagain.more.shortcuts.settings.SettingsGuiManager"
+                id="io.github.askmeagain.pullrequest.services.SettingsGuiService"
                 displayName="Pullrequests"/>
         <toolWindow id="Pullrequests" secondary="false"
                     icon="AllIcons.Diff.MagicResolveToolbar"
