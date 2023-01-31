@@ -1,6 +1,7 @@
 package io.github.askmeagain.pullrequest.gui.dialogs;
 
 import com.intellij.diff.requests.DiffRequest;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
@@ -134,5 +135,15 @@ public class DiffEditor {
 
     sourceRangeHighlighters.clear();
     targetRangeHighlighters.clear();
+  }
+
+  public void scrolleToDiscussion(MergeRequestDiscussion discussion) {
+    if (discussion.isSourceDiscussion()) {
+      sourceEditor.getCaretModel().moveToOffset(discussion.getStartLine());
+      sourceEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+    } else {
+      targetEditor.getCaretModel().moveToOffset(discussion.getStartLine());
+      targetEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+    }
   }
 }

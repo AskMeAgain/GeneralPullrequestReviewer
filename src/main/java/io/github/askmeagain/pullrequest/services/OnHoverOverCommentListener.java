@@ -10,6 +10,7 @@ import io.github.askmeagain.pullrequest.dto.application.TransferKey;
 import io.github.askmeagain.pullrequest.gui.dialogs.DiscussionPopup;
 import io.github.askmeagain.pullrequest.nodes.interfaces.NodeBehaviour;
 import io.github.askmeagain.pullrequest.nodes.interfaces.ResolvableMarker;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -27,7 +28,9 @@ public class OnHoverOverCommentListener implements EditorMouseMotionListener, Ed
   private final NodeBehaviour fileNode;
   private final ConnectionConfig connection;
 
+  @Getter
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionSource;
+  @Getter
   private Map<Integer, List<MergeRequestDiscussion>> linesPerFoldRegionTarget;
 
   private Optional<DiscussionPopup> currentActivePopup = Optional.empty();

@@ -44,6 +44,8 @@
                     text="Open File"/>
             <action class="io.github.askmeagain.pullrequest.actions.RefreshNodeAction"
                     text="Refresh"/>
+            <action class="io.github.askmeagain.pullrequest.actions.GoToDiscussionAction"
+                    text="Go To Discussion"/>
             <action class="io.github.askmeagain.pullrequest.actions.OpenSettingsAction"
                     id="io.github.askmeagain.pullrequest.actions.OpenSettingsAction.WithoutIcon"
                     text="Open Settings"/>
